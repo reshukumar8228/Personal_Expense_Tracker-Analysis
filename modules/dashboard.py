@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 import plotly.graph_objects as go
 from database.db import get_connection
-from utils.helpers import format_currency, get_current_year_month
+from utils.helpers import format_currency, get_current_year_month, get_user_categories
 
 def calculate_financial_health_score(income: float, expenses: float, budgets_df: pd.DataFrame, transactions_df: pd.DataFrame) -> tuple[int, str, str]:
     """Calculate Financial Health Index (0-100) and return score, status, and CSS badge class."""
@@ -290,26 +290,45 @@ def render_dashboard(user: dict):
 
     with r_col2:
         st.subheader("⚡ Quick Entry")
+        q_type = st.radio("Transaction Type", ["income", "expense"], horizontal=True, key="dash_q_type")
+        q_categories = get_user_categories(user_id, q_type)
+
+        q_category = st.selectbox("Category", q_categories, key=f"dash_q_cat_{q_type}")
+        q_custom_cat = ""
+        if q_category == "Other":
+            q_custom_cat = st.text_input("Enter Custom Category Name", placeholder="e.g. Pet Care, Side Hustle", key=f"dash_q_custom_cat_{q_type}")
+
         with st.form("quick_add_form"):
-            q_type = st.radio("Type", ["expense", "income"], horizontal=True)
             q_amount = st.number_input("Amount", min_value=0.01, step=1.0, value=30.0)
-            q_category = st.selectbox("Category", [
-                "Groceries", "Dining Out", "Transportation", "Utilities", "Housing & Rent",
-                "Entertainment", "Shopping", "Subscriptions", "Salary", "Freelance", "Miscellaneous"
-            ])
             q_date = st.date_input("Date", value=datetime.date.today())
-            q_method = st.selectbox("Payment Method", ["Credit Card", "Debit Card", "Bank Transfer", "UPI", "Cash"])
+            q_method = st.selectbox("Payment Method", ["Credit Card", "Debit Card", "Bank Transfer", "UPI", "Cash", "PayPal"])
             q_notes = st.text_input("Notes", placeholder="e.g. Lunch with team")
 
             q_submit = st.form_submit_button("Save Transaction", use_container_width=True, type="primary")
             if q_submit:
+                final_cat = q_category
+                if q_category == "Other":
+                    if not q_custom_cat.strip():
+                        st.error("Please enter a custom category name.")
+                        st.stop()
+                    final_cat = q_custom_cat.strip()
+                    # Save custom category for future reuse
+                    conn = get_connection()
+                    cursor = conn.cursor()
+                    cursor.execute("""
+                        INSERT OR IGNORE INTO categories (user_id, name, type, icon, color)
+                        VALUES (?, ?, ?, '🏷️', '#38bdf8')
+                    """, (user_id, final_cat, q_type))
+                    conn.commit()
+                    conn.close()
+
                 conn = get_connection()
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (user_id, q_date.strftime("%Y-%m-%d"), q_type, q_category, q_amount, q_method, q_notes))
+                """, (user_id, q_date.strftime("%Y-%m-%d"), q_type, final_cat, q_amount, q_method, q_notes))
                 conn.commit()
                 conn.close()
-                st.success("Transaction recorded!")
+                st.success(f"Transaction recorded under '{final_cat}'!")
                 st.rerun()

@@ -18,17 +18,9 @@ def render_budgets(user: dict):
 
     conn = get_connection()
 
-    # Load Expense Categories (Deduplicated)
-    categories_df = pd.read_sql_query("""
-        SELECT DISTINCT name FROM categories WHERE user_id = ? AND type = 'expense' ORDER BY name
-    """, conn, params=(user_id,))
-    
-    raw_cats = categories_df["name"].tolist() if not categories_df.empty else [
-        "Housing & Rent", "Groceries", "Dining Out", "Transportation", "Utilities",
-        "Entertainment", "Healthcare", "Shopping", "Subscriptions", "Travel", "Personal Care", "Miscellaneous"
-    ]
-    # Ensure strict uniqueness and order preservation
-    expense_cats = list(dict.fromkeys(raw_cats))
+    # Load Expense Categories (including custom expense categories created by user)
+    from utils.helpers import get_user_categories
+    expense_cats = [c for c in get_user_categories(user_id, "expense") if c != "Other"]
 
     # Load Budgets for selected month
     budgets_df = pd.read_sql_query("""

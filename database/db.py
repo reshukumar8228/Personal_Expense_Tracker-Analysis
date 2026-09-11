@@ -115,21 +115,36 @@ def seed_default_categories(user_id: int, conn=None):
     cursor = conn.cursor()
 
     default_cats = [
+        # Income categories
         ("Salary", "income", "💰", "#10b981"),
         ("Freelance", "income", "💻", "#059669"),
-        ("Investments", "income", "📈", "#047857"),
+        ("Business", "income", "🏢", "#047857"),
+        ("Investment", "income", "📈", "#34d399"),
+        ("Interest", "income", "🪙", "#6ee7b7"),
+        ("Bonus", "income", "🎁", "#a7f3d0"),
+        ("Gift", "income", "🎈", "#10b981"),
+        ("Rental Income", "income", "🔑", "#059669"),
+        ("Refund", "income", "↩️", "#34d399"),
+        ("Investments", "income", "📈", "#34d399"),
         ("Other Income", "income", "💵", "#34d399"),
+        
+        # Expense categories
+        ("Food & Dining", "expense", "🍽️", "#ec4899"),
+        ("Rent / Housing", "expense", "🏠", "#ef4444"),
+        ("Transportation", "expense", "🚗", "#3b82f6"),
+        ("Shopping", "expense", "🛍️", "#f97316"),
+        ("Utilities & Bills", "expense", "💡", "#6366f1"),
+        ("Healthcare", "expense", "🏥", "#14b8a6"),
+        ("Education", "expense", "📚", "#64748b"),
+        ("Entertainment", "expense", "🎬", "#8b5cf6"),
+        ("Travel", "expense", "✈️", "#06b6d4"),
+        ("Insurance", "expense", "🛡️", "#38bdf8"),
+        ("Subscriptions", "expense", "📱", "#a855f7"),
+        ("Personal Care", "expense", "💅", "#e11d48"),
         ("Housing & Rent", "expense", "🏠", "#ef4444"),
         ("Groceries", "expense", "🛒", "#f59e0b"),
         ("Dining Out", "expense", "🍽️", "#ec4899"),
-        ("Transportation", "expense", "🚗", "#3b82f6"),
         ("Utilities", "expense", "💡", "#6366f1"),
-        ("Entertainment", "expense", "🎬", "#8b5cf6"),
-        ("Healthcare", "expense", "🏥", "#14b8a6"),
-        ("Shopping", "expense", "🛍️", "#f97316"),
-        ("Subscriptions", "expense", "📱", "#a855f7"),
-        ("Travel", "expense", "✈️", "#06b6d4"),
-        ("Personal Care", "expense", "💅", "#e11d48"),
         ("Miscellaneous", "expense", "📦", "#64748b"),
     ]
 

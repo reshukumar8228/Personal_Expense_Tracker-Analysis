@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import datetime
 from database.db import get_connection
-from utils.helpers import format_currency, CATEGORY_ICONS
+from utils.helpers import format_currency, CATEGORY_ICONS, get_user_categories
 
 def render_transactions(user: dict):
     """Render Transactions Management page."""
@@ -15,23 +15,24 @@ def render_transactions(user: dict):
     tab_view, tab_add, tab_recurring = st.tabs(["📋 View & Filter", "➕ Add Transaction", "🔁 Recurring Expenses"])
 
     conn = get_connection()
-    categories_df = pd.read_sql_query("SELECT name, type FROM categories WHERE user_id = ?", conn, params=(user_id,))
-
-    income_cats = categories_df[categories_df["type"] == "income"]["name"].tolist() if not categories_df.empty else ["Salary", "Freelance", "Investments", "Other Income"]
-    expense_cats = categories_df[categories_df["type"] == "expense"]["name"].tolist() if not categories_df.empty else [
-        "Housing & Rent", "Groceries", "Dining Out", "Transportation", "Utilities",
-        "Entertainment", "Healthcare", "Shopping", "Subscriptions", "Travel", "Personal Care", "Miscellaneous"
-    ]
 
     # Tab 1: View & Filter Transactions
     with tab_view:
         with st.expander("🔍 Search & Multi-Criteria Filters", expanded=True):
             f_col1, f_col2, f_col3, f_col4 = st.columns(4)
             with f_col1:
-                filter_type = st.selectbox("Transaction Type", ["All", "income", "expense"])
+                filter_type = st.selectbox("Transaction Type", ["All", "income", "expense"], key="tx_filter_type")
             with f_col2:
-                all_cats = ["All"] + sorted(list(set(income_cats + expense_cats)))
-                filter_cat = st.selectbox("Category", all_cats)
+                if filter_type == "income":
+                    cat_options = ["All"] + get_user_categories(user_id, "income")
+                elif filter_type == "expense":
+                    cat_options = ["All"] + get_user_categories(user_id, "expense")
+                else:
+                    inc_c = get_user_categories(user_id, "income")
+                    exp_c = get_user_categories(user_id, "expense")
+                    cat_options = ["All"] + list(dict.fromkeys(inc_c + exp_c))
+                
+                filter_cat = st.selectbox("Category", cat_options, key=f"tx_filter_cat_{filter_type}")
             with f_col3:
                 filter_method = st.selectbox("Payment Method", ["All", "Credit Card", "Debit Card", "Bank Transfer", "UPI", "Cash", "PayPal"])
             with f_col4:
@@ -101,7 +102,7 @@ def render_transactions(user: dict):
             e_col1, e_col2 = st.columns([1, 2])
             with e_col1:
                 selected_id = st.number_input("Enter Transaction ID to Modify/Delete", min_value=1, step=1, value=int(tx_df.iloc[0]["id"]))
-            
+
             target_tx = tx_df[tx_df["id"] == selected_id]
             if not target_tx.empty:
                 tx_row = target_tx.iloc[0]
@@ -118,24 +119,42 @@ def render_transactions(user: dict):
                     with act_col1:
                         with st.popover("✏️ Edit Transaction"):
                             st.subheader(f"Edit Transaction #{selected_id}")
+                            edit_type = st.radio("Type", ["income", "expense"], index=0 if tx_row["type"] == "income" else 1, horizontal=True, key=f"edit_t_{selected_id}")
+                            edit_cats = get_user_categories(user_id, edit_type)
+
+                            cat_idx = edit_cats.index(tx_row["category"]) if tx_row["category"] in edit_cats else (len(edit_cats) - 1 if "Other" in edit_cats else 0)
+                            edit_cat = st.selectbox("Category", edit_cats, index=cat_idx, key=f"edit_c_{selected_id}_{edit_type}")
+                            edit_custom_cat = ""
+                            if edit_cat == "Other":
+                                edit_custom_cat = st.text_input("Enter Custom Category Name", value=tx_row["category"] if tx_row["category"] not in edit_cats else "", key=f"edit_cust_{selected_id}_{edit_type}")
+
                             with st.form(f"edit_form_{selected_id}"):
-                                edit_type = st.radio("Type", ["income", "expense"], index=0 if tx_row["type"] == "income" else 1)
                                 edit_date = st.date_input("Date", value=datetime.datetime.strptime(tx_row["date"], "%Y-%m-%d").date())
-                                cats_list = income_cats if edit_type == "income" else expense_cats
-                                cat_idx = cats_list.index(tx_row["category"]) if tx_row["category"] in cats_list else 0
-                                edit_cat = st.selectbox("Category", cats_list, index=cat_idx)
                                 edit_amount = st.number_input("Amount", min_value=0.01, value=float(tx_row["amount"]))
                                 edit_method = st.selectbox("Payment Method", ["Credit Card", "Debit Card", "Bank Transfer", "UPI", "Cash", "PayPal"])
                                 edit_notes = st.text_input("Notes", value=str(tx_row["notes"] or ""))
                                 edit_rec = st.checkbox("Is Recurring?", value=bool(tx_row["is_recurring"]))
 
                                 if st.form_submit_button("Save Changes", type="primary"):
+                                    final_edit_cat = edit_cat
+                                    if edit_cat == "Other":
+                                        if not edit_custom_cat.strip():
+                                            st.error("Please enter a custom category name.")
+                                            st.stop()
+                                        final_edit_cat = edit_custom_cat.strip()
+                                        cursor = conn.cursor()
+                                        cursor.execute("""
+                                            INSERT OR IGNORE INTO categories (user_id, name, type, icon, color)
+                                            VALUES (?, ?, ?, '🏷️', '#38bdf8')
+                                        """, (user_id, final_edit_cat, edit_type))
+                                        conn.commit()
+
                                     cursor = conn.cursor()
                                     cursor.execute("""
                                         UPDATE transactions
                                         SET date = ?, type = ?, category = ?, amount = ?, payment_method = ?, notes = ?, is_recurring = ?
                                         WHERE id = ? AND user_id = ?
-                                    """, (edit_date.strftime("%Y-%m-%d"), edit_type, edit_cat, edit_amount, edit_method, edit_notes, 1 if edit_rec else 0, selected_id, user_id))
+                                    """, (edit_date.strftime("%Y-%m-%d"), edit_type, final_edit_cat, edit_amount, edit_method, edit_notes, 1 if edit_rec else 0, selected_id, user_id))
                                     conn.commit()
                                     st.success("Transaction updated!")
                                     st.rerun()
@@ -146,16 +165,25 @@ def render_transactions(user: dict):
     # Tab 2: Add New Transaction
     with tab_add:
         st.subheader("➕ Create New Financial Entry")
+        a_type = st.radio("Transaction Type", ["income", "expense"], horizontal=True, key="tx_tab_add_type")
+        available_cats = get_user_categories(user_id, a_type)
+
+        a_col1, a_col2 = st.columns(2)
+        with a_col1:
+            a_category = st.selectbox("Category", available_cats, key=f"tx_tab_add_cat_{a_type}")
+
+        with a_col2:
+            a_custom_cat = ""
+            if a_category == "Other":
+                a_custom_cat = st.text_input("Enter Custom Category Name", placeholder="e.g. Pet Care, Side Hustle", key=f"tx_tab_add_custom_cat_{a_type}")
+
         with st.form("full_add_tx_form"):
-            a_col1, a_col2 = st.columns(2)
-            with a_col1:
-                a_type = st.radio("Transaction Type", ["expense", "income"], horizontal=True)
+            f_col1, f_col2 = st.columns(2)
+            with f_col1:
                 a_date = st.date_input("Date", value=datetime.date.today())
                 a_amount = st.number_input("Amount", min_value=0.01, step=1.0, value=50.0)
 
-            with a_col2:
-                available_cats = income_cats if a_type == "income" else expense_cats
-                a_category = st.selectbox("Category", available_cats)
+            with f_col2:
                 a_method = st.selectbox("Payment Method", ["Credit Card", "Debit Card", "Bank Transfer", "UPI", "Cash", "PayPal"])
                 a_notes = st.text_input("Notes / Description", placeholder="e.g. Grocery restock at Costco")
 
@@ -167,13 +195,26 @@ def render_transactions(user: dict):
 
             sub_btn = st.form_submit_button("➕ Add Transaction", type="primary", use_container_width=True)
             if sub_btn:
+                final_a_cat = a_category
+                if a_category == "Other":
+                    if not a_custom_cat.strip():
+                        st.error("Please enter a custom category name.")
+                        st.stop()
+                    final_a_cat = a_custom_cat.strip()
+                    cursor = conn.cursor()
+                    cursor.execute("""
+                        INSERT OR IGNORE INTO categories (user_id, name, type, icon, color)
+                        VALUES (?, ?, ?, '🏷️', '#38bdf8')
+                    """, (user_id, final_a_cat, a_type))
+                    conn.commit()
+
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes, is_recurring, recurring_frequency)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (user_id, a_date.strftime("%Y-%m-%d"), a_type, a_category, a_amount, a_method, a_notes, 1 if a_is_rec else 0, a_rec_freq))
+                """, (user_id, a_date.strftime("%Y-%m-%d"), a_type, final_a_cat, a_amount, a_method, a_notes, 1 if a_is_rec else 0, a_rec_freq))
                 conn.commit()
-                st.success("New transaction created successfully!")
+                st.success(f"New transaction created under '{final_a_cat}'!")
                 st.rerun()
 
     # Tab 3: Recurring Expenses & Subscriptions
