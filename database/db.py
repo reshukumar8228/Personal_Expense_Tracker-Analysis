@@ -4,7 +4,7 @@ import datetime
 import random
 import hashlib
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "smartspend.db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "expense_tracker.db")
 
 def get_connection():
     """Get a SQLite database connection with row factory enabled."""

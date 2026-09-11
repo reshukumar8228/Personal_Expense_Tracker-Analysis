@@ -1,6 +1,6 @@
-# SmartSpend — Personal Finance & Expense Intelligence Platform
+# Personal Expense Tracker — Finance & Intelligence Platform
 
-SmartSpend is a complete, modern, and fully functional web application built with **Python, Streamlit, SQLite, Pandas, NumPy, Plotly, Scikit-learn, OpenPyXL, and FPDF2**.
+Personal Expense Tracker is a complete, modern, and fully functional web application built with **Python, Streamlit, SQLite, Pandas, NumPy, Plotly, Scikit-learn, OpenPyXL, and FPDF2**.
 
 ---
 

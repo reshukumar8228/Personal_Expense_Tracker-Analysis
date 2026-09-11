@@ -74,7 +74,7 @@ def init_session_state():
 
 def render_auth_page():
     """Render Login & Registration UI tabs."""
-    st.markdown("<h1 style='text-align: center; font-weight: 800; background: linear-gradient(135deg, #0ea5e9, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>SmartSpend</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-weight: 800; background: linear-gradient(135deg, #0ea5e9, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Personal Expense Tracker</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #8b949e; margin-bottom: 30px;'>Personal Finance & Expense Intelligence Platform</p>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1, 2, 1])
@@ -126,7 +126,7 @@ def render_auth_page():
                             st.error(msg)
 
         with tab_demo:
-            st.subheader("Explore SmartSpend Instant Demo")
+            st.subheader("Explore Personal Expense Tracker Instant Demo")
             st.info("Experience all features immediately with realistic 6-month sample financial data!")
             if st.button("🚀 Launch Demo Account", use_container_width=True, type="primary"):
                 # Create or get demo user
@@ -138,7 +138,7 @@ def render_auth_page():
                     pw_hash, salt = hash_password("demo1234")
                     cursor.execute("""
                         INSERT INTO users (username, email, password_hash, salt, currency)
-                        VALUES ('demouser', 'demo@smartspend.app', ?, ?, 'USD')
+                        VALUES ('demouser', 'demo@expensetracker.app', ?, ?, 'USD')
                     """, (pw_hash, salt))
                     conn.commit()
                     user_id = cursor.lastrowid

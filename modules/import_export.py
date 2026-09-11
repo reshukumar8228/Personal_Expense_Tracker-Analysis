@@ -3,15 +3,15 @@ import pandas as pd
 import datetime
 import io
 from database.db import get_connection
-from utils.helpers import format_currency
+from utils.helpers import format_currency, format_pdf_currency, sanitize_pdf_text
 from fpdf import FPDF
 
 class PDFReport(FPDF):
-    """Custom FPDF Class for SmartSpend Executive Reports."""
+    """Custom FPDF Class for Personal Expense Tracker Executive Reports."""
     def header(self):
         self.set_font("Helvetica", "B", 16)
         self.set_text_color(14, 165, 233) # Bright Blue
-        self.cell(0, 10, "SmartSpend - Financial Executive Intelligence Report", new_x="LMARGIN", new_y="NEXT", align="C")
+        self.cell(0, 10, "Personal Expense Tracker - Financial Executive Intelligence Report", new_x="LMARGIN", new_y="NEXT", align="C")
         self.set_font("Helvetica", "I", 9)
         self.set_text_color(139, 148, 158)
         self.cell(0, 5, f"Generated on: {datetime.datetime.now().strftime('%B %d, %Y at %H:%M')}", new_x="LMARGIN", new_y="NEXT", align="C")
@@ -26,7 +26,7 @@ class PDFReport(FPDF):
 def generate_pdf_report(user: dict, transactions_df: pd.DataFrame, budgets_df: pd.DataFrame) -> bytes:
     """Generate a clean, professional multi-page PDF financial report."""
     currency = user.get("currency", "USD")
-    username = user.get("username", "User")
+    username = sanitize_pdf_text(user.get("username", "User"))
 
     pdf = PDFReport()
     pdf.alias_nb_pages()
@@ -45,10 +45,10 @@ def generate_pdf_report(user: dict, transactions_df: pd.DataFrame, budgets_df: p
     savings_rate = (net_bal / total_inc * 100) if total_inc > 0 else 0.0
 
     pdf.set_font("Helvetica", "", 10)
-    pdf.cell(45, 8, f"Total Income: {format_currency(total_inc, currency)}", border=1)
-    pdf.cell(45, 8, f"Total Expenses: {format_currency(total_exp, currency)}", border=1)
-    pdf.cell(45, 8, f"Net Surplus: {format_currency(net_bal, currency)}", border=1)
-    pdf.cell(45, 8, f"Savings Rate: {savings_rate:.1f}%", border=1)
+    pdf.cell(45, 8, f"Income: {format_pdf_currency(total_inc, currency)}", border=1)
+    pdf.cell(45, 8, f"Expenses: {format_pdf_currency(total_exp, currency)}", border=1)
+    pdf.cell(45, 8, f"Surplus: {format_pdf_currency(net_bal, currency)}", border=1)
+    pdf.cell(45, 8, f"Savings: {savings_rate:.1f}%", border=1)
     pdf.ln(12)
 
     # Category Breakdown Table
@@ -67,11 +67,11 @@ def generate_pdf_report(user: dict, transactions_df: pd.DataFrame, budgets_df: p
             cat_totals = exp_df.groupby("category")["amount"].sum().reset_index()
             pdf.set_font("Helvetica", "", 9)
             for _, row in cat_totals.iterrows():
-                c_name = row["category"]
+                c_name = sanitize_pdf_text(row["category"])
                 c_amt = row["amount"]
                 pct = (c_amt / total_exp * 100) if total_exp > 0 else 0.0
                 pdf.cell(70, 6, c_name, border=1)
-                pdf.cell(50, 6, f"{c_amt:,.2f}", border=1)
+                pdf.cell(50, 6, format_pdf_currency(c_amt, currency), border=1)
                 pdf.cell(60, 6, f"{pct:.1f}%", border=1)
                 pdf.ln()
 
@@ -86,7 +86,7 @@ def generate_pdf_report(user: dict, transactions_df: pd.DataFrame, budgets_df: p
     pdf.cell(20, 6, "Type", border=1, fill=True)
     pdf.cell(40, 6, "Category", border=1, fill=True)
     pdf.cell(30, 6, "Amount", border=1, fill=True)
-    pdf.cell(30, 6, "Method", border=1, fill=True)
+    pdf.cell(35, 6, "Method", border=1, fill=True)
     pdf.cell(35, 6, "Notes", border=1, fill=True)
     pdf.ln()
 
@@ -95,11 +95,11 @@ def generate_pdf_report(user: dict, transactions_df: pd.DataFrame, budgets_df: p
     for _, r in recent.iterrows():
         pdf.cell(25, 6, str(r["date"]), border=1)
         pdf.cell(20, 6, str(r["type"]).capitalize(), border=1)
-        pdf.cell(40, 6, str(r["category"])[:20], border=1)
-        amt_str = f"+{r['amount']:,.2f}" if r["type"] == "income" else f"-{r['amount']:,.2f}"
+        pdf.cell(40, 6, sanitize_pdf_text(str(r["category"]))[:20], border=1)
+        amt_str = f"+{format_pdf_currency(r['amount'], currency)}" if r["type"] == "income" else f"-{format_pdf_currency(r['amount'], currency)}"
         pdf.cell(30, 6, amt_str, border=1)
-        pdf.cell(30, 6, str(r["payment_method"])[:18], border=1)
-        pdf.cell(35, 6, str(r["notes"] or "")[:20], border=1)
+        pdf.cell(35, 6, sanitize_pdf_text(str(r["payment_method"]))[:18], border=1)
+        pdf.cell(35, 6, sanitize_pdf_text(str(r["notes"] or ""))[:20], border=1)
         pdf.ln()
 
     return bytes(pdf.output())
@@ -133,7 +133,7 @@ def render_import_export(user: dict):
         ])
 
         csv_tmpl = sample_df.to_csv(index=False).encode('utf-8')
-        st.download_button("📥 Download Sample CSV Template", data=csv_tmpl, file_name="smartspend_import_template.csv", mime="text/csv")
+        st.download_button("📥 Download Sample CSV Template", data=csv_tmpl, file_name="expense_tracker_import_template.csv", mime="text/csv")
 
         uploaded_file = st.file_uploader("Choose CSV or XLSX file", type=["csv", "xlsx"])
         if uploaded_file:
@@ -185,7 +185,7 @@ def render_import_export(user: dict):
                 st.download_button(
                     "📥 Download Transactions CSV",
                     data=csv_data,
-                    file_name=f"smartspend_transactions_{datetime.date.today()}.csv",
+                    file_name=f"expense_tracker_transactions_{datetime.date.today()}.csv",
                     mime="text/csv",
                     use_container_width=True
                 )
@@ -204,7 +204,7 @@ def render_import_export(user: dict):
                 st.download_button(
                     "📊 Download Excel Workbook (.xlsx)",
                     data=excel_buffer.getvalue(),
-                    file_name=f"smartspend_full_report_{datetime.date.today()}.xlsx",
+                    file_name=f"expense_tracker_full_report_{datetime.date.today()}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     use_container_width=True
                 )
@@ -222,7 +222,7 @@ def render_import_export(user: dict):
                     st.download_button(
                         "📄 Download PDF Financial Report",
                         data=pdf_bytes,
-                        file_name=f"smartspend_report_{datetime.date.today()}.pdf",
+                        file_name=f"expense_tracker_report_{datetime.date.today()}.pdf",
                         mime="application/pdf",
                         use_container_width=True
                     )

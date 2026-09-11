@@ -1,25 +1,26 @@
 import streamlit as st
 
 def inject_custom_css(theme: str = "Dark Fintech"):
-    """Inject high-end modern CSS styling with Tailwind/Geist inspired color palette and rich UI components."""
+    """Inject ultra-sleek modern CSS styling with Tailwind/Geist inspired design tokens."""
     is_dark = theme != "Light Modern"
 
     if is_dark:
-        bg_main = "#0b0f17"
-        bg_card = "#141b27"
-        bg_card_elevated = "#1d2636"
+        bg_main = "#090d16"
+        bg_card = "#111827"
+        bg_card_elevated = "#1f2937"
         border_color = "rgba(255, 255, 255, 0.08)"
         border_color_hover = "rgba(56, 189, 248, 0.4)"
-        text_primary = "#f8fafc"
-        text_secondary = "#94a3b8"
-        text_muted = "#64748b"
+        text_primary = "#f9fafb"
+        text_secondary = "#9ca3af"
+        text_muted = "#6b7280"
         accent_blue = "#38bdf8"
-        accent_purple = "#a855f7"
+        accent_indigo = "#6366f1"
+        accent_purple = "#c084fc"
         accent_green = "#34d399"
         accent_red = "#f87171"
         accent_amber = "#fbbf24"
-        card_shadow = "0 8px 32px 0 rgba(0, 0, 0, 0.36)"
-        glow_primary = "0 0 20px rgba(56, 189, 248, 0.15)"
+        card_shadow = "0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05)"
+        glow_primary = "0 0 25px rgba(56, 189, 248, 0.2)"
     else:
         bg_main = "#f8fafc"
         bg_card = "#ffffff"
@@ -30,12 +31,13 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         text_secondary = "#475569"
         text_muted = "#94a3b8"
         accent_blue = "#0284c7"
+        accent_indigo = "#4f46e5"
         accent_purple = "#7e22ce"
         accent_green = "#10b981"
         accent_red = "#ef4444"
         accent_amber = "#d97706"
-        card_shadow = "0 4px 20px -2px rgba(0, 0, 0, 0.05)"
-        glow_primary = "0 0 15px rgba(2, 132, 199, 0.1)"
+        card_shadow = "0 4px 20px -2px rgba(0, 0, 0, 0.06)"
+        glow_primary = "0 0 15px rgba(2, 132, 199, 0.12)"
 
     css = f"""
     <style>
@@ -59,15 +61,15 @@ def inject_custom_css(theme: str = "Dark Fintech"):
     [data-testid="stSidebar"] {{
         background-color: {bg_card};
         border-right: 1px solid {border_color};
-        box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.15);
     }}
 
     /* Navigation Radio Items Restyling */
     [data-testid="stSidebar"] .stRadio > label {{
-        font-size: 0.8rem !important;
+        font-size: 0.78rem !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.05em !important;
+        letter-spacing: 0.08em !important;
         color: {text_muted} !important;
         margin-bottom: 12px !important;
     }}
@@ -118,16 +120,16 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         right: -10%;
         width: 300px;
         height: 300px;
-        background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(168, 85, 247, 0.05) 50%, transparent 70%);
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.14) 0%, rgba(168, 85, 247, 0.06) 50%, transparent 70%);
         pointer-events: none;
     }}
 
     .hero-title {{
-        font-size: 1.8rem;
+        font-size: 1.85rem;
         font-weight: 800;
         letter-spacing: -0.02em;
         margin: 0 0 6px 0;
-        background: linear-gradient(135deg, #f8fafc 0%, #38bdf8 50%, #a855f7 100%);
+        background: linear-gradient(135deg, #f9fafb 0%, #38bdf8 50%, #c084fc 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }}
@@ -192,7 +194,7 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         position: absolute;
         top: 0; left: 0; right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #8b5cf6, #a855f7);
+        background: linear-gradient(90deg, #8b5cf6, #c084fc);
     }}
 
     .kpi-card.border-health::before {{
@@ -242,25 +244,25 @@ def inject_custom_css(theme: str = "Dark Fintech"):
     }}
 
     .health-excellent {{
-        background: rgba(52, 211, 153, 0.12);
+        background: rgba(52, 211, 153, 0.14);
         color: #34d399;
         border: 1px solid rgba(52, 211, 153, 0.3);
     }}
 
     .health-good {{
-        background: rgba(56, 189, 248, 0.12);
+        background: rgba(56, 189, 248, 0.14);
         color: #38bdf8;
         border: 1px solid rgba(56, 189, 248, 0.3);
     }}
 
     .health-fair {{
-        background: rgba(251, 191, 36, 0.12);
+        background: rgba(251, 191, 36, 0.14);
         color: #fbbf24;
         border: 1px solid rgba(251, 191, 36, 0.3);
     }}
 
     .health-poor {{
-        background: rgba(248, 113, 113, 0.12);
+        background: rgba(248, 113, 113, 0.14);
         color: #f87171;
         border: 1px solid rgba(248, 113, 113, 0.3);
     }}
@@ -357,12 +359,20 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%) !important;
         color: #ffffff !important;
         border: none !important;
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3) !important;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
     }}
 
     .stButton > button[kind="primary"]:hover {{
-        box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4) !important;
+        box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45) !important;
         transform: translateY(-1px);
+    }}
+
+    /* Form Controls & Inputs */
+    .stTextInput input, .stNumberInput input, .stSelectbox select {{
+        border-radius: 10px !important;
+        border: 1px solid {border_color} !important;
+        background-color: {bg_card_elevated} !important;
+        color: {text_primary} !important;
     }}
 
     /* Dataframe container */

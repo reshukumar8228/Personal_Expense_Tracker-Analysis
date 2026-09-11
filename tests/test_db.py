@@ -32,7 +32,7 @@ class TestDatabase(unittest.TestCase):
         cursor = conn.cursor()
 
         uname = f"testuser_{int(time.time()*1000)}"
-        email = f"test_{int(time.time()*1000)}@smartspend.app"
+        email = f"test_{int(time.time()*1000)}@expensetracker.app"
 
         cursor.execute("""
             INSERT INTO users (username, email, password_hash, salt, currency)

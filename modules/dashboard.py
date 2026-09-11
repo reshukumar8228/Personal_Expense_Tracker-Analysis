@@ -68,7 +68,7 @@ def render_dashboard(user: dict):
         st.markdown(f"""
         <div class="hero-card">
             <div class="hero-title">Welcome back, {username}! 👋</div>
-            <div class="hero-subtitle">SmartSpend Financial Intelligence Overview & Real-Time Analytics</div>
+            <div class="hero-subtitle">Personal Expense Tracker Intelligence Overview & Real-Time Analytics</div>
         </div>
         """, unsafe_allow_html=True)
     with h_col2:

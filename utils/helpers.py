@@ -12,6 +12,16 @@ CURRENCY_SYMBOLS = {
     "AUD": "A$",
 }
 
+PDF_CURRENCY_SYMBOLS = {
+    "USD": "$",
+    "EUR": "EUR ",
+    "GBP": "GBP ",
+    "INR": "INR ",
+    "JPY": "JPY ",
+    "CAD": "CAD ",
+    "AUD": "AUD ",
+}
+
 CATEGORY_ICONS = {
     # Income
     "Salary": "💰",
@@ -90,20 +100,33 @@ def get_user_categories(user_id: int, tx_type: str) -> list[str]:
     else:
         base_defaults = ["Food & Dining", "Rent / Housing", "Transportation", "Shopping", "Utilities & Bills", "Healthcare", "Education", "Entertainment", "Travel", "Insurance", "Subscriptions", "Personal Care"]
 
-    # Combine db stored categories + base defaults without duplicates
-    combined = list(dict.fromkeys(db_cats + base_defaults))
-    if "Other" in combined:
-        combined.remove("Other")
-    combined.append("Other")
+    combined = list(dict.fromkeys(base_defaults + db_cats))
+    for item in ["Other", "Other Income"]:
+        if item in combined:
+            combined.remove(item)
 
+    combined.append("Other")
     return combined
 
 def format_currency(amount: float, currency_code: str = "USD") -> str:
-    """Format float amount into currency string."""
+    """Format float amount into currency string for web display."""
     symbol = CURRENCY_SYMBOLS.get(currency_code, "$")
     if amount is None:
         amount = 0.0
     return f"{symbol}{amount:,.2f}"
+
+def format_pdf_currency(amount: float, currency_code: str = "USD") -> str:
+    """Format currency for FPDF standard font compatibility (strips non-Latin1 symbols)."""
+    symbol = PDF_CURRENCY_SYMBOLS.get(currency_code, f"{currency_code} ")
+    if amount is None:
+        amount = 0.0
+    return f"{symbol}{amount:,.2f}"
+
+def sanitize_pdf_text(text: str) -> str:
+    """Sanitize strings by stripping non-Latin1 unicode characters for FPDF cell output."""
+    if not text:
+        return ""
+    return str(text).encode('latin-1', 'replace').decode('latin-1').replace('?', '')
 
 def get_month_name(year_month: str) -> str:
     """Convert YYYY-MM string into full Month Year string."""
