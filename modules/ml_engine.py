@@ -192,7 +192,7 @@ def render_ml_engine(user: dict):
             y="Category",
             orientation="h",
             color="Predicted Spend",
-            color_continuous_scale="Viridis",
+            color_continuous_scale="Purples",
             title="Predicted Category Expenditures"
         )
         l_pred = get_plotly_layout(user_theme)

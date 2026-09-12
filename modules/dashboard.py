@@ -213,8 +213,8 @@ def render_dashboard(user: dict):
                     y=df_monthly["income"],
                     name="Income",
                     marker=dict(
-                        color="#10b981",
-                        line=dict(color="#34d399", width=1)
+                        color="#4169E1",
+                        line=dict(color="#879BFF", width=1)
                     )
                 ))
             if "expense" in df_monthly.columns:
@@ -223,8 +223,8 @@ def render_dashboard(user: dict):
                     y=df_monthly["expense"],
                     name="Expense",
                     marker=dict(
-                        color="#f43f5e",
-                        line=dict(color="#fb7185", width=1)
+                        color="#C52DDB",
+                        line=dict(color="#E052F2", width=1)
                     )
                 ))
 
@@ -248,7 +248,7 @@ def render_dashboard(user: dict):
         exp_df = tx_df[tx_df["type"] == "expense"] if not tx_df.empty else pd.DataFrame()
         if not exp_df.empty:
             cat_sum = exp_df.groupby("category")["amount"].sum().reset_index()
-            colors_palette = ["#38bdf8", "#8b5cf6", "#f43f5e", "#f59e0b", "#10b981", "#06b6d4", "#ec4899", "#64748b"]
+            colors_palette = ["#4169E1", "#879BFF", "#C52DDB", "#8B3DCE", "#38BDF8", "#F59E0B", "#E052F2", "#6C7BAE"]
 
             fig_pie = go.Figure(data=[go.Pie(
                 labels=cat_sum["category"],

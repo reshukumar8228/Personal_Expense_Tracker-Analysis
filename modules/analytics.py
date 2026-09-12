@@ -61,9 +61,9 @@ def render_analytics(user: dict):
             m_summary = filtered_df.groupby(["year_month", "type"])["amount"].sum().unstack(fill_value=0).reset_index()
             fig_bar = go.Figure()
             if "income" in m_summary.columns:
-                fig_bar.add_trace(go.Bar(x=m_summary["year_month"], y=m_summary["income"], name="Income", marker_color="#10b981"))
+                fig_bar.add_trace(go.Bar(x=m_summary["year_month"], y=m_summary["income"], name="Income", marker_color="#4169E1"))
             if "expense" in m_summary.columns:
-                fig_bar.add_trace(go.Bar(x=m_summary["year_month"], y=m_summary["expense"], name="Expense", marker_color="#ef4444"))
+                fig_bar.add_trace(go.Bar(x=m_summary["year_month"], y=m_summary["expense"], name="Expense", marker_color="#C52DDB"))
             l_bar = get_plotly_layout(user_theme)
             l_bar.update(barmode="group", height=350)
             fig_bar.update_layout(l_bar)
@@ -82,7 +82,7 @@ def render_analytics(user: dict):
                 title="Cumulative Net Balance Over Time",
                 labels={"cumulative_balance": f"Balance ({currency})", "date": "Date"}
             )
-            fig_line.update_traces(line_color="#38bdf8", line_width=3)
+            fig_line.update_traces(line_color="#879BFF", line_width=3)
             l_line = get_plotly_layout(user_theme)
             l_line.update(height=350)
             fig_line.update_layout(l_line)
@@ -93,6 +93,7 @@ def render_analytics(user: dict):
         exp_df = filtered_df[filtered_df["type"] == "expense"]
         if not exp_df.empty:
             d1, d2 = st.columns(2)
+            theme_palette = ["#4169E1", "#879BFF", "#C52DDB", "#8B3DCE", "#38BDF8", "#F59E0B", "#E052F2"]
 
             with d1:
                 st.subheader("📊 Expense Transaction Size Histogram")
@@ -101,6 +102,7 @@ def render_analytics(user: dict):
                     x="amount",
                     nbins=20,
                     color="category",
+                    color_discrete_sequence=theme_palette,
                     title="Transaction Size Distribution",
                     labels={"amount": f"Transaction Amount ({currency})"}
                 )
@@ -116,6 +118,7 @@ def render_analytics(user: dict):
                     x="category",
                     y="amount",
                     color="category",
+                    color_discrete_sequence=theme_palette,
                     title="Outlier Purchase Detection per Category",
                     labels={"amount": f"Amount ({currency})"}
                 )
@@ -134,7 +137,7 @@ def render_analytics(user: dict):
                 path=["type", "category", "payment_method"],
                 values="amount",
                 color="amount",
-                color_continuous_scale="RdBu_r",
+                color_continuous_scale="Purples",
                 title="Hierarchical Breakdown of Expenses"
             )
             l_tree = get_plotly_layout(user_theme)
@@ -161,7 +164,7 @@ def render_analytics(user: dict):
                 labels=dict(x="Week of Month", y="Day of Week", color=f"Spend ({currency})"),
                 x=[f"Week {w}" for w in heatmap_data.columns],
                 y=heatmap_data.index,
-                color_continuous_scale="Viridis",
+                color_continuous_scale="Magma",
                 aspect="auto"
             )
             l_heat = get_plotly_layout(user_theme)

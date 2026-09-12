@@ -44,7 +44,7 @@ def main():
     # 5. Sidebar Navigation
     st.sidebar.markdown("""
         <div style="text-align: center; padding: 10px 0;">
-            <h2 style="margin: 0; background: linear-gradient(135deg, #0ea5e9, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 1.3rem;">Personal Expense Tracker</h2>
+            <h2 style="margin: 0; background: linear-gradient(135deg, #879BFF, #C52DDB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 1.3rem;">Personal Expense Tracker</h2>
             <p class="sidebar-user-sub" style="margin-top: 2px;">Expense Intelligence Platform</p>
         </div>
     """, unsafe_allow_html=True)
