@@ -63,11 +63,26 @@ Personal Expense Tracker is a complete, modern, and fully functional web applica
 ## 🛠️ Technology Stack
 
 - **Frontend & App Framework**: Streamlit
-- **Database**: SQLite3 (with WAL mode & PBKDF2 hashing)
+- **Database Layer**: Supabase PostgreSQL (Managed Cloud Database) with automatic local SQLite fallback for offline development
 - **Data Processing**: Pandas, NumPy
 - **Interactive Data Visualization**: Plotly Express & Plotly Graph Objects
 - **Machine Learning**: Scikit-Learn (LinearRegression, RandomForestRegressor)
 - **Excel & PDF Export**: OpenPyXL, FPDF2
+
+---
+
+## ⚡ Supabase Database Setup
+
+1. Create a free account at **[supabase.com](https://supabase.com)** and create a new project.
+2. Navigate to **Project Settings -> Database -> Connection String** and copy your URI connection string.
+3. Create a `.env` file in the project root:
+   ```env
+   DATABASE_URL=postgresql://postgres.yourprojectref:yourpassword@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+   ```
+4. Alternatively, if deploying on **Streamlit Community Cloud**, paste your connection string under **App Settings -> Secrets**:
+   ```toml
+   DATABASE_URL = "postgresql://postgres.yourprojectref:yourpassword@aws-0-us-east-1.pooler.supabase.com:6543/postgres"
+   ```
 
 ---
 
@@ -92,6 +107,7 @@ streamlit run app.py
 ```bash
 python -m unittest discover -s tests -p "test_*.py"
 ```
+
 
 ---
 
