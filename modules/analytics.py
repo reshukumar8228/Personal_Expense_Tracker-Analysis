@@ -13,7 +13,7 @@ def render_analytics(user: dict):
     user_theme = user.get("theme", "Dark Fintech")
     user_id = user["id"]
 
-    st.markdown("## 📈 Advanced Analytics & Financial Intelligence")
+    st.markdown("## 📈 Analytics & Financial Intelligence")
     st.markdown("<p class='page-subtitle'>Multi-dimensional interactive charts, spending heatmaps, treemaps, and outlier detection</p>", unsafe_allow_html=True)
 
     conn = get_connection()

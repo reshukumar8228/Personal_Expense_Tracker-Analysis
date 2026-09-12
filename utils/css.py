@@ -485,6 +485,87 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         background: {bg_card};
     }}
 
+    /* Selected Transaction Banner */
+    .selected-tx-card {{
+        background: linear-gradient(135deg, rgba(65, 105, 225, 0.15) 0%, rgba(197, 45, 219, 0.12) 100%);
+        border: 1px solid rgba(135, 155, 255, 0.4);
+        border-radius: 16px;
+        padding: 18px 22px;
+        margin-top: 16px;
+        margin-bottom: 20px;
+        box-shadow: {glow_primary};
+    }}
+
+    .selected-tx-header {{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }}
+
+    .selected-tx-title {{
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: {text_primary};
+    }}
+
+    .selected-tx-badge {{
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }}
+
+    /* Auth Page Modern SaaS Styling */
+    .auth-card {{
+        background: linear-gradient(145deg, #151C45 0%, #0E1435 100%);
+        border: 1px solid rgba(135, 155, 255, 0.25);
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 12px 40px rgba(4, 7, 24, 0.6), 0 0 0 1px rgba(135, 155, 255, 0.15);
+        margin: 10px auto 30px auto;
+    }}
+
+    .auth-brand-logo {{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }}
+
+    .auth-logo-icon {{
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, #4169E1 0%, #C52DDB 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 16px rgba(65, 105, 225, 0.4);
+    }}
+
+    .auth-headline {{
+        font-size: 1.65rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        text-align: center;
+        background: linear-gradient(135deg, #FFFFFF 0%, #879BFF 50%, #C52DDB 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 4px;
+    }}
+
+    .auth-subtitle {{
+        font-size: 0.9rem;
+        color: {text_secondary};
+        text-align: center;
+        margin-bottom: 24px;
+    }}
+
     /* Progress bar */
     .stProgress > div > div > div > div {{
         border-radius: 10px;
@@ -501,5 +582,3 @@ def inject_custom_css(theme: str = "Dark Fintech"):
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
-
-

@@ -109,7 +109,7 @@ def render_import_export(user: dict):
     currency = user.get("currency", "USD")
     user_id = user["id"]
 
-    st.markdown("## 📥 Data Import & Export Hub")
+    st.markdown("## 📥 Import & Export")
     st.markdown("<p class='page-subtitle'>Import CSV/Excel data, export spreadsheets, and generate professional PDF reports</p>", unsafe_allow_html=True)
 
     conn = get_connection()

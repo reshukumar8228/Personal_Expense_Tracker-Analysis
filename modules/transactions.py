@@ -9,8 +9,8 @@ def render_transactions(user: dict):
     currency = user.get("currency", "USD")
     user_id = user["id"]
 
-    st.markdown("## 💳 Transactions Hub")
-    st.markdown("<p class='page-subtitle'>Add, manage, search, and audit all your financial records</p>", unsafe_allow_html=True)
+    st.markdown("## 💳 Transactions")
+    st.markdown("<p class='page-subtitle'>Add, manage, filter, and audit all your financial records with direct row selection</p>", unsafe_allow_html=True)
 
     tab_view, tab_add, tab_recurring = st.tabs(["📋 View & Filter", "➕ Add Transaction", "🔁 Recurring Expenses"])
 
@@ -71,7 +71,7 @@ def render_transactions(user: dict):
             total_exp = tx_df[tx_df["type"] == "expense"]["amount"].sum()
             st.info(f"Showing **{len(tx_df)}** transactions | Total Income: **{format_currency(total_inc, currency)}** | Total Expenses: **{format_currency(total_exp, currency)}** | Net: **{format_currency(total_inc - total_exp, currency)}**")
 
-            # Table view
+            # Table view with direct single-row selection
             display_df = tx_df.copy()
             display_df["icon"] = display_df["category"].apply(lambda c: CATEGORY_ICONS.get(c, "🏷️"))
             display_df["Formatted Category"] = display_df["icon"] + " " + display_df["category"]
@@ -81,10 +81,14 @@ def render_transactions(user: dict):
             )
 
             cols_to_show = ["id", "date", "type", "Formatted Category", "Formatted Amount", "payment_method", "notes", "is_recurring"]
-            st.dataframe(
+            
+            event = st.dataframe(
                 display_df[cols_to_show],
                 use_container_width=True,
                 hide_index=True,
+                selection_mode="single-row",
+                on_select="rerun",
+                key="tx_selection_dataframe",
                 column_config={
                     "id": st.column_config.NumberColumn("ID", width="small"),
                     "date": st.column_config.TextColumn("Date"),
@@ -97,45 +101,134 @@ def render_transactions(user: dict):
                 }
             )
 
-            # Action Bar: Edit or Delete Transaction
-            st.markdown("#### 🛠️ Manage Selected Transaction")
-            e_col1, e_col2 = st.columns([1, 2])
-            with e_col1:
-                selected_id = st.number_input("Enter Transaction ID to Modify/Delete", min_value=1, step=1, value=int(tx_df.iloc[0]["id"]))
+            # Determine selected transaction ID
+            selected_row_indices = []
+            if hasattr(event, "selection"):
+                if hasattr(event.selection, "rows"):
+                    selected_row_indices = event.selection.rows
+                elif isinstance(event.selection, dict):
+                    selected_row_indices = event.selection.get("rows", [])
 
-            target_tx = tx_df[tx_df["id"] == selected_id]
-            if not target_tx.empty:
-                tx_row = target_tx.iloc[0]
-                with e_col2:
-                    act_col1, act_col2 = st.columns(2)
-                    with act_col2:
-                        if st.button("🗑️ Delete Transaction", type="primary", use_container_width=True):
-                            cursor = conn.cursor()
-                            cursor.execute("DELETE FROM transactions WHERE id = ? AND user_id = ?", (selected_id, user_id))
-                            conn.commit()
-                            st.success(f"Transaction #{selected_id} deleted!")
-                            st.rerun()
+            # Dropdown sync fallback for convenience
+            tx_options = ["(Click table row above or select here)"] + [
+                f"ID #{row['id']} | {row['date']} | {row['category']} | {format_currency(row['amount'], currency)}"
+                for _, row in tx_df.iterrows()
+            ]
 
-                    with act_col1:
-                        with st.popover("✏️ Edit Transaction"):
-                            st.subheader(f"Edit Transaction #{selected_id}")
-                            edit_type = st.radio("Type", ["income", "expense"], index=0 if tx_row["type"] == "income" else 1, horizontal=True, key=f"edit_t_{selected_id}")
+            default_dd_index = 0
+            if selected_row_indices and len(selected_row_indices) > 0:
+                default_dd_index = selected_row_indices[0] + 1
+
+            selected_dd_text = st.selectbox(
+                "🎯 Active Transaction Selection:",
+                tx_options,
+                index=min(default_dd_index, len(tx_options) - 1),
+                key="tx_selector_dd_sync"
+            )
+
+            selected_tx_id = None
+            if selected_dd_text != "(Click table row above or select here)":
+                try:
+                    selected_tx_id = int(selected_dd_text.split("ID #")[1].split(" |")[0])
+                except Exception:
+                    selected_tx_id = None
+            elif selected_row_indices and len(selected_row_indices) > 0:
+                sel_idx = selected_row_indices[0]
+                if sel_idx < len(tx_df):
+                    selected_tx_id = int(tx_df.iloc[sel_idx]["id"])
+
+            st.markdown("---")
+            st.markdown("### 🛠️ Transaction Operations")
+
+            if selected_tx_id is not None:
+                target_tx = tx_df[tx_df["id"] == selected_tx_id]
+                if not target_tx.empty:
+                    tx_row = target_tx.iloc[0]
+
+                    # Highlight Card Banner
+                    st.markdown(f"""
+                        <div class="selected-tx-card">
+                            <div class="selected-tx-header">
+                                <div class="selected-tx-title">📌 Selected Transaction #{tx_row['id']}</div>
+                                <span class="selected-tx-badge" style="background: {'rgba(56, 189, 248, 0.2)' if tx_row['type']=='income' else 'rgba(197, 45, 219, 0.2)'}; color: {'#38BDF8' if tx_row['type']=='income' else '#C52DDB'}; border: 1px solid {'#38BDF8' if tx_row['type']=='income' else '#C52DDB'};">
+                                    {tx_row['type'].upper()}
+                                </span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; font-size: 0.9rem;">
+                                <div><span style="color: #6C7BAE; font-size: 0.78rem;">Date</span><br><b>{tx_row['date']}</b></div>
+                                <div><span style="color: #6C7BAE; font-size: 0.78rem;">Category</span><br><b>{tx_row['category']}</b></div>
+                                <div><span style="color: #6C7BAE; font-size: 0.78rem;">Amount</span><br><b style="color: {'#38BDF8' if tx_row['type']=='income' else '#C52DDB'}">{format_currency(tx_row['amount'], currency)}</b></div>
+                                <div><span style="color: #6C7BAE; font-size: 0.78rem;">Payment Method</span><br><b>{tx_row['payment_method']}</b></div>
+                                <div><span style="color: #6C7BAE; font-size: 0.78rem;">Notes</span><br><b>{tx_row['notes'] or 'None'}</b></div>
+                                <div><span style="color: #6C7BAE; font-size: 0.78rem;">Recurring?</span><br><b>{'Yes' if tx_row['is_recurring'] else 'No'}</b></div>
+                            </div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                    btn_col1, btn_col2 = st.columns(2)
+                    with btn_col1:
+                        toggle_edit = st.button("✏️ Edit Selected Transaction", type="primary", use_container_width=True, key=f"btn_edit_trigger_{selected_tx_id}")
+                    with btn_col2:
+                        toggle_del = st.button("🗑️ Delete Selected Transaction", use_container_width=True, key=f"btn_del_trigger_{selected_tx_id}")
+
+                    # Edit Interface
+                    if toggle_edit:
+                        st.session_state[f"show_edit_form_{selected_tx_id}"] = True
+                        st.session_state[f"show_del_confirm_{selected_tx_id}"] = False
+
+                    if toggle_del:
+                        st.session_state[f"show_del_confirm_{selected_tx_id}"] = True
+                        st.session_state[f"show_edit_form_{selected_tx_id}"] = False
+
+                    # Render Delete Confirmation Prompt
+                    if st.session_state.get(f"show_del_confirm_{selected_tx_id}", False):
+                        st.error(f"⚠️ **Delete Confirmation**: Are you sure you want to permanently delete Transaction **#{selected_tx_id}** ({tx_row['category']} — {format_currency(tx_row['amount'], currency)})?")
+                        dc_1, dc_2 = st.columns(2)
+                        with dc_1:
+                            if st.button("🚨 Yes, Delete Transaction", type="primary", use_container_width=True, key=f"confirm_del_btn_{selected_tx_id}"):
+                                cursor = conn.cursor()
+                                cursor.execute("DELETE FROM transactions WHERE id = ? AND user_id = ?", (selected_tx_id, user_id))
+                                conn.commit()
+                                st.session_state[f"show_del_confirm_{selected_tx_id}"] = False
+                                st.success(f"✅ Transaction #{selected_tx_id} deleted successfully!")
+                                st.rerun()
+                        with dc_2:
+                            if st.button("❌ Cancel Deletion", use_container_width=True, key=f"cancel_del_btn_{selected_tx_id}"):
+                                st.session_state[f"show_del_confirm_{selected_tx_id}"] = False
+                                st.rerun()
+
+                    # Render Edit Form Container
+                    if st.session_state.get(f"show_edit_form_{selected_tx_id}", False):
+                        with st.expander(f"✏️ Modify Transaction #{selected_tx_id}", expanded=True):
+                            edit_type = st.radio("Transaction Type", ["income", "expense"], index=0 if tx_row["type"] == "income" else 1, horizontal=True, key=f"edit_type_radio_{selected_tx_id}")
                             edit_cats = get_user_categories(user_id, edit_type)
 
                             cat_idx = edit_cats.index(tx_row["category"]) if tx_row["category"] in edit_cats else (len(edit_cats) - 1 if "Other" in edit_cats else 0)
-                            edit_cat = st.selectbox("Category", edit_cats, index=cat_idx, key=f"edit_c_{selected_id}_{edit_type}")
+                            edit_cat = st.selectbox("Category", edit_cats, index=cat_idx, key=f"edit_cat_select_{selected_tx_id}_{edit_type}")
                             edit_custom_cat = ""
                             if edit_cat == "Other":
-                                edit_custom_cat = st.text_input("Enter Custom Category Name", value=tx_row["category"] if tx_row["category"] not in edit_cats else "", key=f"edit_cust_{selected_id}_{edit_type}")
+                                edit_custom_cat = st.text_input("Custom Category Name", value=tx_row["category"] if tx_row["category"] not in edit_cats else "", key=f"edit_cust_cat_input_{selected_tx_id}_{edit_type}")
 
-                            with st.form(f"edit_form_{selected_id}"):
-                                edit_date = st.date_input("Date", value=datetime.datetime.strptime(tx_row["date"], "%Y-%m-%d").date())
-                                edit_amount = st.number_input("Amount", min_value=0.01, value=float(tx_row["amount"]))
-                                edit_method = st.selectbox("Payment Method", ["Credit Card", "Debit Card", "Bank Transfer", "UPI", "Cash", "PayPal"])
-                                edit_notes = st.text_input("Notes", value=str(tx_row["notes"] or ""))
-                                edit_rec = st.checkbox("Is Recurring?", value=bool(tx_row["is_recurring"]))
+                            with st.form(f"edit_tx_form_{selected_tx_id}"):
+                                ef_col1, ef_col2 = st.columns(2)
+                                with ef_col1:
+                                    edit_date = st.date_input("Date", value=datetime.datetime.strptime(tx_row["date"], "%Y-%m-%d").date())
+                                    edit_amount = st.number_input("Amount", min_value=0.01, value=float(tx_row["amount"]), step=1.0)
+                                with ef_col2:
+                                    method_list = ["Credit Card", "Debit Card", "Bank Transfer", "UPI", "Cash", "PayPal"]
+                                    m_idx = method_list.index(tx_row["payment_method"]) if tx_row["payment_method"] in method_list else 0
+                                    edit_method = st.selectbox("Payment Method", method_list, index=m_idx)
+                                    edit_notes = st.text_input("Notes / Description", value=str(tx_row["notes"] or ""))
 
-                                if st.form_submit_button("Save Changes", type="primary"):
+                                edit_rec = st.checkbox("Mark as Recurring Expense", value=bool(tx_row["is_recurring"]))
+
+                                ef_act1, ef_act2 = st.columns(2)
+                                with ef_act1:
+                                    save_btn = st.form_submit_button("💾 Save Changes", type="primary", use_container_width=True)
+                                with ef_act2:
+                                    cancel_btn = st.form_submit_button("❌ Cancel Edit", use_container_width=True)
+
+                                if save_btn:
                                     final_edit_cat = edit_cat
                                     if edit_cat == "Other":
                                         if not edit_custom_cat.strip():
@@ -154,10 +247,23 @@ def render_transactions(user: dict):
                                         UPDATE transactions
                                         SET date = ?, type = ?, category = ?, amount = ?, payment_method = ?, notes = ?, is_recurring = ?
                                         WHERE id = ? AND user_id = ?
-                                    """, (edit_date.strftime("%Y-%m-%d"), edit_type, final_edit_cat, edit_amount, edit_method, edit_notes, 1 if edit_rec else 0, selected_id, user_id))
+                                    """, (edit_date.strftime("%Y-%m-%d"), edit_type, final_edit_cat, edit_amount, edit_method, edit_notes, 1 if edit_rec else 0, selected_tx_id, user_id))
                                     conn.commit()
-                                    st.success("Transaction updated!")
+                                    st.session_state[f"show_edit_form_{selected_tx_id}"] = False
+                                    st.success(f"✅ Transaction #{selected_tx_id} updated successfully!")
                                     st.rerun()
+
+                                if cancel_btn:
+                                    st.session_state[f"show_edit_form_{selected_tx_id}"] = False
+                                    st.rerun()
+
+            else:
+                st.info("💡 **No transaction currently selected.** Click any row in the table above or pick from the dropdown to edit or delete.")
+                b_col1, b_col2 = st.columns(2)
+                with b_col1:
+                    st.button("✏️ Edit Selected Transaction", disabled=True, use_container_width=True, help="Select a transaction row first")
+                with b_col2:
+                    st.button("🗑️ Delete Selected Transaction", disabled=True, use_container_width=True, help="Select a transaction row first")
 
         else:
             st.warning("No transactions found matching the selected criteria.")

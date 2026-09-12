@@ -9,7 +9,7 @@ def render_budgets(user: dict):
     currency = user.get("currency", "USD")
     user_id = user["id"]
 
-    st.markdown("## 🎯 Budget Management & Monitoring")
+    st.markdown("## 🎯 Budgets & Monitoring")
     st.markdown("<p class='page-subtitle'>Set spending caps, track limits, and receive over-budget alerts</p>", unsafe_allow_html=True)
 
     b_col1, b_col2 = st.columns([2, 1])

@@ -112,7 +112,7 @@ def render_ml_engine(user: dict):
     user_theme = user.get("theme", "Dark Fintech")
     user_id = user["id"]
 
-    st.markdown("## 🤖 Machine Learning Expense Forecasting")
+    st.markdown("## 🤖 Forecast & Expense Trajectory")
     st.markdown("<p class='page-subtitle'>Scikit-learn predictive model estimating your next-month spending trajectory</p>", unsafe_allow_html=True)
 
     with st.spinner("Training predictive machine learning model..."):

@@ -43,30 +43,44 @@ def main():
 
     # 5. Sidebar Navigation
     st.sidebar.markdown("""
-        <div style="text-align: center; padding: 10px 0;">
-            <h2 style="margin: 0; background: linear-gradient(135deg, #879BFF, #C52DDB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 1.3rem;">Personal Expense Tracker</h2>
-            <p class="sidebar-user-sub" style="margin-top: 2px;">Expense Intelligence Platform</p>
+        <div style="padding: 12px 6px 16px 6px; border-bottom: 1px solid rgba(135, 155, 255, 0.15); margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #4169E1, #C52DDB); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(65, 105, 225, 0.35);">
+                    📉
+                </div>
+                <div>
+                    <div style="font-weight: 800; font-size: 0.98rem; letter-spacing: 0.05em; background: linear-gradient(135deg, #FFFFFF 0%, #879BFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">PERSONAL FINANCE</div>
+                    <div style="font-size: 0.72rem; color: #6C7BAE; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;">Expense Intelligence</div>
+                </div>
+            </div>
         </div>
     """, unsafe_allow_html=True)
 
     st.sidebar.markdown(f"""
         <div class="sidebar-user-card">
-            <div class="sidebar-user-name">👤 {user.get('username', 'User')}</div>
-            <div class="sidebar-user-sub">Currency: <b>{user.get('currency', 'USD')}</b></div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #879BFF, #4169E1); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: #fff;">
+                    {user.get('username', 'U')[0].upper()}
+                </div>
+                <div>
+                    <div class="sidebar-user-name">{user.get('username', 'User')}</div>
+                    <div class="sidebar-user-sub">Currency: <span style="color: #38BDF8; font-weight: 700;">{user.get('currency', 'USD')}</span></div>
+                </div>
+            </div>
         </div>
     """, unsafe_allow_html=True)
 
     page = st.sidebar.radio(
         "Navigation",
         [
-            "📊 Executive Dashboard",
-            "💳 Transactions Hub",
-            "🎯 Budget Management",
-            "📈 Advanced Analytics",
-            "🤖 ML Expense Forecast",
-            "🧠 Smart Insights",
+            "📊 Dashboard",
+            "💳 Transactions",
+            "🎯 Budgets",
+            "📈 Analytics",
+            "🤖 Forecast",
+            "🧠 Insights",
             "🎯 Savings Goals",
-            "📥 Import & Export Hub",
+            "📥 Import & Export",
             "⚙️ Settings"
         ],
         index=0
@@ -77,21 +91,21 @@ def main():
         logout_user()
 
     # 6. Page Router
-    if page == "📊 Executive Dashboard":
+    if page == "📊 Dashboard":
         render_dashboard(user)
-    elif page == "💳 Transactions Hub":
+    elif page == "💳 Transactions":
         render_transactions(user)
-    elif page == "🎯 Budget Management":
+    elif page == "🎯 Budgets":
         render_budgets(user)
-    elif page == "📈 Advanced Analytics":
+    elif page == "📈 Analytics":
         render_analytics(user)
-    elif page == "🤖 ML Expense Forecast":
+    elif page == "🤖 Forecast":
         render_ml_engine(user)
-    elif page == "🧠 Smart Insights":
+    elif page == "🧠 Insights":
         render_insights(user)
     elif page == "🎯 Savings Goals":
         render_savings(user)
-    elif page == "📥 Import & Export Hub":
+    elif page == "📥 Import & Export":
         render_import_export(user)
     elif page == "⚙️ Settings":
         render_settings(user)

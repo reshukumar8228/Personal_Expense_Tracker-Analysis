@@ -9,7 +9,7 @@ def render_insights(user: dict):
     currency = user.get("currency", "USD")
     user_id = user["id"]
 
-    st.markdown("## 🧠 Smart Insights & Financial Intelligence")
+    st.markdown("## 🧠 Insights & Recommendations")
     st.markdown("<p class='page-subtitle'>Data-driven recommendations, spending anomaly detection, and 50/30/20 rule breakdown</p>", unsafe_allow_html=True)
 
     conn = get_connection()
