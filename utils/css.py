@@ -582,3 +582,232 @@ def inject_custom_css(theme: str = "Dark Fintech"):
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
+
+
+def inject_auth_css():
+    """Inject custom CSS specifically matching the reference image for Login & Signup."""
+    css = """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    /* Background matching the reference image vibrant royal blue */
+    .stApp {
+        background: linear-gradient(135deg, #003366 0%, #004080 35%, #0059b3 70%, #0073e6 100%) !important;
+        min-height: 100vh;
+        font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    /* Hide standard Streamlit header chrome and footer */
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+
+    /* Centered Auth Card Container */
+    .auth-page-wrapper {
+        max-width: 400px;
+        margin: 20px auto 40px auto;
+        padding: 0 10px;
+    }
+
+    .auth-card-box {
+        background: #ffffff !important;
+        border-radius: 26px !important;
+        padding: 38px 32px 32px 32px !important;
+        box-shadow: 0 20px 50px rgba(0, 20, 60, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+        position: relative;
+    }
+
+    /* Title: "Login Form" / "Signup Form" */
+    .auth-title {
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 32px !important;
+        font-weight: 700 !important;
+        color: #000000 !important;
+        text-align: center !important;
+        margin: 0 0 22px 0 !important;
+        letter-spacing: -0.5px !important;
+        line-height: 1.2 !important;
+    }
+
+    /* Slide Controls Pill Container */
+    .slide-controls-pill {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 50px;
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+        border-radius: 16px;
+        padding: 4px;
+        box-sizing: border-box;
+        margin-bottom: 24px;
+        position: relative;
+    }
+
+    /* Streamlit Buttons inside slide controls */
+    .slide-controls-pill [data-testid="column"] {
+        padding: 0 2px !important;
+    }
+    .slide-controls-pill [data-testid="column"] .stButton button {
+        height: 42px !important;
+        border-radius: 12px !important;
+        font-size: 16px !important;
+        width: 100% !important;
+        padding: 0 !important;
+        border: none !important;
+        font-family: 'Poppins', sans-serif !important;
+        transition: all 0.3s ease !important;
+    }
+    .slide-controls-pill [data-testid="column"] .stButton button[kind="primary"] {
+        background: linear-gradient(to right, #003366, #004080, #0059b3, #0073e6) !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        box-shadow: 0 3px 10px rgba(0, 64, 128, 0.3) !important;
+    }
+    .slide-controls-pill [data-testid="column"] .stButton button[kind="secondary"] {
+        background: transparent !important;
+        color: #1e293b !important;
+        font-weight: 500 !important;
+        box-shadow: none !important;
+    }
+    .slide-controls-pill [data-testid="column"] .stButton button[kind="secondary"]:hover {
+        background: #f1f5f9 !important;
+        color: #003366 !important;
+    }
+
+    /* Form container */
+    .auth-card-box [data-testid="stForm"] {
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+    }
+
+    /* Inputs */
+    .auth-card-box [data-testid="stTextInput"] {
+        margin-bottom: 16px !important;
+    }
+    .auth-card-box [data-testid="stTextInput"] input {
+        border-radius: 14px !important;
+        border: 1px solid #d1d5db !important;
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        height: 48px !important;
+        padding: 0 18px !important;
+        font-size: 15px !important;
+        font-family: 'Poppins', sans-serif !important;
+        box-shadow: none !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    .auth-card-box [data-testid="stTextInput"] input:focus {
+        border-color: #0059b3 !important;
+        box-shadow: 0 0 0 3px rgba(0, 89, 179, 0.18) !important;
+        outline: none !important;
+    }
+    .auth-card-box [data-testid="stTextInput"] input::placeholder {
+        color: #9ca3af !important;
+        font-weight: 400 !important;
+        font-size: 15px !important;
+    }
+
+    /* Left-aligned "Forgot password?" Link */
+    .forgot-password-row {
+        margin: -6px 0 18px 0;
+        text-align: left;
+    }
+    .forgot-password-row [data-testid="stPopover"] > button {
+        background: transparent !important;
+        border: none !important;
+        color: #4361ee !important;
+        padding: 0 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        box-shadow: none !important;
+        text-decoration: none !important;
+        cursor: pointer !important;
+        font-family: 'Poppins', sans-serif !important;
+    }
+    .forgot-password-row [data-testid="stPopover"] > button:hover {
+        text-decoration: underline !important;
+        color: #003366 !important;
+    }
+
+    /* Submit Button */
+    .auth-card-box [data-testid="stFormSubmitButton"] {
+        margin-top: 6px !important;
+        margin-bottom: 20px !important;
+    }
+    .auth-card-box [data-testid="stFormSubmitButton"] button {
+        background: linear-gradient(to right, #003366, #004080, #0059b3, #0073e6) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 14px !important;
+        height: 48px !important;
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 15px rgba(0, 64, 128, 0.35) !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        width: 100% !important;
+        font-family: 'Poppins', sans-serif !important;
+    }
+    .auth-card-box [data-testid="stFormSubmitButton"] button:hover {
+        background: linear-gradient(to right, #002244, #003366, #004080, #0059b3) !important;
+        box-shadow: 0 6px 20px rgba(0, 64, 128, 0.45) !important;
+        transform: translateY(-1px);
+    }
+
+    /* Footer switch text */
+    .auth-switch-footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 14px;
+        color: #1e293b;
+        margin-top: 14px;
+        text-align: center;
+    }
+    .auth-switch-footer [data-testid="column"] {
+        padding: 0 !important;
+    }
+    .auth-switch-footer button {
+        background: transparent !important;
+        border: none !important;
+        color: #4361ee !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        cursor: pointer !important;
+        font-family: 'Poppins', sans-serif !important;
+        line-height: inherit !important;
+    }
+    .auth-switch-footer button:hover {
+        text-decoration: underline !important;
+        color: #003366 !important;
+    }
+
+    /* Demo Quick Launch Button */
+    .demo-launch-wrapper {
+        text-align: center;
+        margin-top: 18px;
+    }
+    .demo-launch-wrapper button {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 12px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        padding: 8px 16px !important;
+        backdrop-filter: blur(8px) !important;
+        transition: all 0.25s ease !important;
+    }
+    .demo-launch-wrapper button:hover {
+        background: rgba(255, 255, 255, 0.25) !important;
+        border-color: #ffffff !important;
+    }
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
+

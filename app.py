@@ -30,7 +30,6 @@ def main():
 
     # 3. Check Authentication
     if not st.session_state.authenticated or not st.session_state.user:
-        inject_custom_css("Dark Fintech")
         render_auth_page()
         return
 
