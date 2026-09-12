@@ -32,14 +32,19 @@ class TestDatabase(unittest.TestCase):
         cursor = conn.cursor()
 
         uname = f"testuser_{int(time.time()*1000)}"
+        full_name = "Test User Full Name"
         email = f"test_{int(time.time()*1000)}@expensetracker.app"
 
         cursor.execute("""
-            INSERT INTO users (username, email, password_hash, salt, currency)
-            VALUES (?, ?, 'hash123', 'salt123', 'USD')
-        """, (uname, email))
+            INSERT INTO users (username, full_name, email, password_hash, salt, currency)
+            VALUES (?, ?, ?, 'hash123', 'salt123', 'USD')
+        """, (uname, full_name, email))
         user_id = cursor.lastrowid
         conn.commit()
+
+        cursor.execute("SELECT full_name FROM users WHERE id = ?", (user_id,))
+        row = cursor.fetchone()
+        self.assertEqual(row["full_name"], full_name)
         conn.close()
 
         # Seed demo data

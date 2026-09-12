@@ -154,8 +154,10 @@ class PgConnectionWrapper:
         return getattr(self._conn, name)
 
 
-def is_postgres() -> bool:
-    """Check if PostgreSQL/Supabase is configured."""
+def is_postgres(conn=None) -> bool:
+    """Check if PostgreSQL/Supabase is configured and currently active."""
+    if conn is not None:
+        return isinstance(conn, PgConnectionWrapper)
     return get_db_url() is not None
 
 
@@ -184,12 +186,13 @@ def init_db():
     conn = get_connection()
     cursor = conn.cursor()
 
-    if is_postgres():
+    if isinstance(conn, PgConnectionWrapper):
         # PostgreSQL DDL Schema
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 username VARCHAR(255) UNIQUE NOT NULL,
+                full_name VARCHAR(255),
                 email VARCHAR(255) UNIQUE NOT NULL,
                 password_hash TEXT NOT NULL,
                 salt TEXT NOT NULL,
@@ -262,6 +265,7 @@ def init_db():
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
+                full_name TEXT,
                 email TEXT UNIQUE NOT NULL,
                 password_hash TEXT NOT NULL,
                 salt TEXT NOT NULL,
@@ -335,6 +339,18 @@ def init_db():
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
             )
         """)
+
+    # Safe migration: ensure full_name column exists in users table
+    try:
+        if isinstance(conn, PgConnectionWrapper):
+            cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS full_name VARCHAR(255);")
+        else:
+            cursor.execute("PRAGMA table_info(users);")
+            columns = [row[1] if isinstance(row, (tuple, list)) else row["name"] for row in cursor.fetchall()]
+            if "full_name" not in columns:
+                cursor.execute("ALTER TABLE users ADD COLUMN full_name TEXT;")
+    except Exception as e:
+        pass
 
     conn.commit()
     conn.close()

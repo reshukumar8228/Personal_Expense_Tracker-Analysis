@@ -4,8 +4,6 @@ import os
 import secrets
 from database.db import get_connection, seed_default_categories, seed_demo_data
 
-from utils.css import inject_auth_css
-
 def hash_password(password: str, salt: str = None) -> tuple[str, str]:
     """Hash password with PBKDF2 HMAC SHA256 and salt."""
     if not salt:
@@ -23,31 +21,40 @@ def verify_password(password: str, stored_hash: str, salt: str) -> bool:
     computed_hash, _ = hash_password(password, salt)
     return computed_hash == stored_hash
 
-def register_user(username: str, email: str, password: str, currency: str = "USD") -> tuple[bool, str]:
-    """Register a new user in the database."""
+def register_user(full_name: str, email: str, password: str, currency: str = "USD") -> tuple[bool, str]:
+    """Register a new user in the database with full name, email, and hashed password."""
+    full_name = full_name.strip()
+    email = email.strip()
     conn = get_connection()
     cursor = conn.cursor()
     try:
+        # Derive base username from full name or email
+        base_username = full_name.lower().replace(" ", "_")
+        base_username = "".join(c for c in base_username if c.isalnum() or c == "_")
+        if not base_username:
+            base_username = email.split("@")[0].strip() or "user"
+
+        username = base_username
         # Prevent collision if derived username already exists
         cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
         if cursor.fetchone():
-            username = f"{username}_{secrets.token_hex(2)}"
+            username = f"{base_username}_{secrets.token_hex(2)}"
 
         pw_hash, salt = hash_password(password)
         cursor.execute("""
-            INSERT INTO users (username, email, password_hash, salt, currency)
-            VALUES (?, ?, ?, ?, ?)
-        """, (username, email, pw_hash, salt, currency))
+            INSERT INTO users (username, full_name, email, password_hash, salt, currency)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (username, full_name, email, pw_hash, salt, currency))
         user_id = cursor.lastrowid
         conn.commit()
 
-        # Seed categories for new user
+        # Seed default categories for new user
         seed_default_categories(user_id)
-        return True, "Registration successful! You can now log in."
+        return True, "Your account has been created successfully! Please log in to continue."
     except Exception as e:
         err_msg = str(e)
-        if "UNIQUE constraint failed: users.email" in err_msg:
-            return False, "Email address is already registered."
+        if "UNIQUE constraint failed: users.email" in err_msg or "users_email_key" in err_msg or "unique constraint" in err_msg.lower():
+            return False, "This email address is already registered. Please log in instead."
         return False, f"Registration failed: {err_msg}"
     finally:
         conn.close()
@@ -63,12 +70,12 @@ def login_user(username_or_email: str, password: str) -> tuple[dict | None, str]
     conn.close()
 
     if not user:
-        return None, "Invalid username/email or password."
+        return None, "Invalid email/username or password."
 
     user_dict = dict(user)
     if verify_password(password, user_dict["password_hash"], user_dict["salt"]):
         return user_dict, "Login successful!"
-    return None, "Invalid username/email or password."
+    return None, "Invalid email/username or password."
 
 def init_session_state():
     """Initialize Streamlit session state keys if not already set."""
@@ -78,7 +85,7 @@ def init_session_state():
         st.session_state.authenticated = False
 
 def render_auth_page():
-    """Render Login & Registration UI using exact HTML, CSS, and JS slider design."""
+    """Render Login & Registration UI with modern fintech styling, eye toggle, and structured auth flow."""
     # 1. Process query parameters for login, signup, or instant demo
     params = dict(st.query_params)
     if "auth_action" in params:
@@ -94,37 +101,41 @@ def render_auth_page():
                 st.rerun()
             else:
                 st.session_state.auth_error = msg
+                st.session_state.auth_active_tab = "login"
                 st.query_params.clear()
                 st.rerun()
 
         elif action == "signup":
+            name = (params.get("full_name") or params.get("name") or params.get("signup_name") or "").strip()
             email = params.get("email", "").strip()
             password = params.get("password", "")
-            confirm = params.get("confirm", "")
-            if confirm and password != confirm:
-                st.session_state.auth_error = "Passwords do not match."
+
+            if not name:
+                st.session_state.auth_error = "Full Name is required."
+                st.session_state.auth_active_tab = "signup"
+                st.query_params.clear()
+                st.rerun()
+            elif not email or "@" not in email or "." not in email:
+                st.session_state.auth_error = "Please enter a valid email address."
+                st.session_state.auth_active_tab = "signup"
                 st.query_params.clear()
                 st.rerun()
             elif len(password) < 6:
                 st.session_state.auth_error = "Password must be at least 6 characters long."
+                st.session_state.auth_active_tab = "signup"
                 st.query_params.clear()
                 st.rerun()
             else:
-                username = email.split("@")[0].strip() or "user"
-                success, msg = register_user(username, email, password)
+                success, msg = register_user(name, email, password)
                 if success:
-                    user, _ = login_user(email, password)
-                    if user:
-                        st.session_state.user = user
-                        st.session_state.authenticated = True
-                        st.query_params.clear()
-                        st.rerun()
-                    else:
-                        st.session_state.auth_success = msg
-                        st.query_params.clear()
-                        st.rerun()
+                    # Account created: Do NOT redirect directly to dashboard. Route to Login with success message.
+                    st.session_state.auth_success = "Your account has been created successfully! Please log in to continue."
+                    st.session_state.auth_active_tab = "login"
+                    st.query_params.clear()
+                    st.rerun()
                 else:
                     st.session_state.auth_error = msg
+                    st.session_state.auth_active_tab = "signup"
                     st.query_params.clear()
                     st.rerun()
 
@@ -136,8 +147,8 @@ def render_auth_page():
             if not demo_user:
                 pw_hash, salt = hash_password("demo1234")
                 cursor.execute("""
-                    INSERT INTO users (username, email, password_hash, salt, currency)
-                    VALUES ('demouser', 'demo@expensetracker.app', ?, ?, 'USD')
+                    INSERT INTO users (username, full_name, email, password_hash, salt, currency)
+                    VALUES ('demouser', 'Demo User', 'demo@expensetracker.app', ?, ?, 'USD')
                 """, (pw_hash, salt))
                 conn.commit()
                 user_id = cursor.lastrowid
@@ -158,20 +169,27 @@ def render_auth_page():
             st.query_params.clear()
             st.rerun()
 
+    # Determine active tab
+    active_tab = st.session_state.pop("auth_active_tab", "login")
+    login_checked = "checked" if active_tab == "login" else ""
+    signup_checked = "checked" if active_tab == "signup" else ""
+    slider_left = "0%" if active_tab == "login" else "50%"
+    login_margin_left = "0%" if active_tab == "login" else "-50%"
+
     # Error & Success message banners
     error_html = ""
     if "auth_error" in st.session_state and st.session_state.auth_error:
-        error_html = f'<div style="background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 10px 14px; border-radius: 12px; margin-bottom: 18px; font-size: 14px; text-align: center; font-weight: 500;">❌ {st.session_state.auth_error}</div>'
+        error_html = f'<div style="background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; text-align: center; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;"><span>❌</span> <span>{st.session_state.auth_error}</span></div>'
         del st.session_state.auth_error
 
     success_html = ""
     if "auth_success" in st.session_state and st.session_state.auth_success:
-        success_html = f'<div style="background: #dcfce7; border: 1px solid #22c55e; color: #15803d; padding: 10px 14px; border-radius: 12px; margin-bottom: 18px; font-size: 14px; text-align: center; font-weight: 500;">✅ {st.session_state.auth_success}</div>'
+        success_html = f'<div style="background: #dcfce7; border: 1px solid #22c55e; color: #15803d; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; text-align: center; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);"><span>✅</span> <span>{st.session_state.auth_success}</span></div>'
         del st.session_state.auth_success
 
     auth_ui_html = f"""
     <style>
-    @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
     html, body, .stApp {{
       background: -webkit-linear-gradient(left, #003366, #004080, #0059b3, #0073e6) !important;
@@ -202,11 +220,11 @@ def render_auth_page():
 
     .wrapper {{
       overflow: hidden;
-      max-width: 390px;
-      background: #fff;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0px 15px 25px rgba(0,0,0,0.2);
+      max-width: 400px;
+      background: #ffffff;
+      padding: 32px 28px;
+      border-radius: 18px;
+      box-shadow: 0px 20px 35px rgba(0, 0, 0, 0.25);
       margin: 0 auto;
     }}
 
@@ -215,83 +233,68 @@ def render_auth_page():
       width: 200%;
     }}
 
-    .wrapper .title {{
+    .wrapper .title-text .title {{
       width: 50%;
-      font-size: 35px;
-      font-weight: 600;
+      font-size: 28px;
+      font-weight: 700;
       text-align: center;
-      color: #000;
-      transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+      color: #0f172a;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }}
+
+    .wrapper .title-text .title.login {{
+      margin-left: {login_margin_left};
     }}
 
     .wrapper .slide-controls {{
       position: relative;
       display: flex;
-      height: 50px;
+      height: 48px;
       width: 100%;
       overflow: hidden;
-      margin: 30px 0 10px 0;
+      margin: 24px 0 10px 0;
       justify-content: space-between;
-      border: 1px solid lightgrey;
-      border-radius: 15px;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      background: #f8fafc;
     }}
 
     .slide-controls .slide {{
       height: 100%;
       width: 100%;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 500;
+      font-size: 16px;
+      font-weight: 600;
       text-align: center;
-      line-height: 48px;
+      line-height: 46px;
       cursor: pointer;
       z-index: 1;
-      transition: all 0.6s ease;
+      transition: all 0.4s ease;
+      user-select: none;
+    }}
+
+    .slide-controls label.login {{
+      color: {'#ffffff' if active_tab == 'login' else '#475569'};
     }}
 
     .slide-controls label.signup {{
-      color: #000;
+      color: {'#ffffff' if active_tab == 'signup' else '#475569'};
     }}
 
     .slide-controls .slider-tab {{
       position: absolute;
       height: 100%;
       width: 50%;
-      left: 0;
+      left: {slider_left};
       z-index: 0;
-      border-radius: 15px;
-      background: -webkit-linear-gradient(left,#003366,#004080,#0059b3, #0073e6);
-      background: linear-gradient(to right,#003366,#004080,#0059b3, #0073e6);
-      transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+      border-radius: 12px;
+      background: -webkit-linear-gradient(left, #003366, #004080, #0059b3, #0073e6);
+      background: linear-gradient(to right, #003366, #004080, #0059b3, #0073e6);
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 4px 12px rgba(0, 64, 128, 0.3);
     }}
 
     input[type="radio"] {{
       display: none;
-    }}
-
-    #signup:checked ~ .slider-tab {{
-      left: 50%;
-    }}
-
-    #signup:checked ~ label.signup {{
-      color: #fff;
-      cursor: default;
-      user-select: none;
-    }}
-
-    #signup:checked ~ label.login {{
-      color: #000;
-      cursor: pointer;
-    }}
-
-    #login:checked ~ label.signup {{
-      color: #000;
-      cursor: pointer;
-    }}
-
-    #login:checked ~ label.login {{
-      cursor: default;
-      user-select: none;
     }}
 
     .wrapper .form-container {{
@@ -306,73 +309,107 @@ def render_auth_page():
 
     .form-container .form-inner form {{
       width: 50%;
-      transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }}
+
+    .form-container .form-inner form.login {{
+      margin-left: {login_margin_left};
     }}
 
     .form-inner form .field {{
-      height: 50px;
+      height: 48px;
       width: 100%;
-      margin-top: 20px;
+      margin-top: 16px;
+      position: relative;
     }}
 
     .form-inner form .field input {{
       height: 100%;
       width: 100%;
       outline: none;
-      padding-left: 15px;
-      border-radius: 15px;
-      border: 1px solid lightgrey;
-      border-bottom-width: 2px;
-      font-size: 17px;
-      transition: all 0.3s ease;
-      background: #fff;
-      color: #000;
+      padding-left: 16px;
+      padding-right: 16px;
+      border-radius: 12px;
+      border: 1.5px solid #e2e8f0;
+      font-size: 15px;
+      transition: all 0.25s ease;
+      background: #f8fafc;
+      color: #0f172a;
       box-sizing: border-box;
+      font-family: inherit;
+    }}
+
+    .form-inner form .field.password-field input {{
+      padding-right: 48px !important;
     }}
 
     .form-inner form .field input:focus {{
-      border-color: #1a75ff;
+      border-color: #0059b3;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 89, 179, 0.15);
     }}
 
     .form-inner form .field input::placeholder {{
-      color: #999;
-      transition: all 0.3s ease;
+      color: #94a3b8;
+      font-size: 14px;
     }}
 
-    form .field input:focus::placeholder {{
-      color: #1a75ff;
+    .toggle-password-btn {{
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      outline: none;
+      z-index: 5;
     }}
 
-    .form-inner form .pass-link {{
-      margin-top: 8px;
+    .toggle-password-btn:hover {{
+      color: #004080;
+      background: rgba(0, 64, 128, 0.08);
     }}
 
-    .form-inner form .signup-link {{
+    .toggle-password-btn:focus-visible {{
+      outline: 2px solid #0059b3;
+    }}
+
+    .form-inner form .switch-tab-link {{
       text-align: center;
-      margin-top: 28px;
-      font-size: 15px;
-      color: #333;
+      margin-top: 22px;
+      font-size: 14px;
+      color: #64748b;
     }}
 
-    .form-inner form .pass-link a,
-    .form-inner form .signup-link a {{
-      color: #1a75ff;
+    .form-inner form .switch-tab-link a {{
+      color: #0059b3;
+      font-weight: 600;
       text-decoration: none;
       cursor: pointer;
+      transition: color 0.2s;
     }}
 
-    .form-inner form .pass-link a:hover,
-    .form-inner form .signup-link a:hover {{
+    .form-inner form .switch-tab-link a:hover {{
+      color: #003366;
       text-decoration: underline;
     }}
 
     form .btn {{
-      height: 50px;
+      height: 48px;
       width: 100%;
-      border-radius: 15px;
+      border-radius: 12px;
       position: relative;
       overflow: hidden;
       margin-top: 22px;
+      box-shadow: 0 4px 14px rgba(0, 64, 128, 0.25);
     }}
 
     form .btn .btn-layer {{
@@ -380,9 +417,9 @@ def render_auth_page():
       width: 300%;
       position: absolute;
       left: -100%;
-      background: -webkit-linear-gradient(right,#003366,#004080,#0059b3, #0073e6);
-      background: linear-gradient(to right,#003366,#004080,#0059b3, #0073e6);
-      border-radius: 15px;
+      background: -webkit-linear-gradient(right, #003366, #004080, #0059b3, #0073e6);
+      background: linear-gradient(to right, #003366, #004080, #0059b3, #0073e6);
+      border-radius: 12px;
       transition: all 0.4s ease;
     }}
 
@@ -397,12 +434,14 @@ def render_auth_page():
       position: relative;
       background: none;
       border: none;
-      color: #fff;
+      color: #ffffff;
       padding-left: 0;
-      border-radius: 15px;
-      font-size: 20px;
-      font-weight: 500;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
+      letter-spacing: 0.02em;
+      font-family: inherit;
     }}
 
     .demo-btn-wrapper {{
@@ -412,22 +451,24 @@ def render_auth_page():
 
     .demo-link-btn {{
       display: inline-block;
-      padding: 9px 22px;
+      padding: 10px 24px;
       background: rgba(255, 255, 255, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.35);
       border-radius: 12px;
       color: #ffffff !important;
       text-decoration: none !important;
       font-size: 14px;
-      font-weight: 500;
-      backdrop-filter: blur(8px);
+      font-weight: 600;
+      backdrop-filter: blur(10px);
       transition: all 0.25s ease;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }}
 
     .demo-link-btn:hover {{
       background: rgba(255, 255, 255, 0.28);
       border-color: #ffffff;
+      transform: translateY(-1px);
     }}
     </style>
 
@@ -435,48 +476,71 @@ def render_auth_page():
       {error_html}
       {success_html}
       <div class="title-text">
-        <div class="title login">Login Form</div>
-        <div class="title signup">Signup Form</div>
+        <div class="title login">Welcome Back</div>
+        <div class="title signup">Create Account</div>
       </div>
       <div class="form-container">
         <div class="slide-controls">
-          <input type="radio" name="slide" id="login" checked>
-          <input type="radio" name="slide" id="signup">
+          <input type="radio" name="slide" id="login" {login_checked}>
+          <input type="radio" name="slide" id="signup" {signup_checked}>
           <label for="login" class="slide login">Login</label>
-          <label for="signup" class="slide signup">Signup</label>
+          <label for="signup" class="slide signup">Sign Up</label>
           <div class="slider-tab"></div>
         </div>
         <div class="form-inner">
+          <!-- LOGIN FORM -->
           <form action="" method="GET" class="login" id="loginForm">
             <input type="hidden" name="auth_action" value="login">
             <div class="field">
-              <input type="text" name="email" id="loginEmail" placeholder="Email Address" required>
+              <input type="text" name="email" id="loginEmail" placeholder="Email Address or Username" required autocomplete="username">
             </div>
-            <div class="field">
-              <input type="password" name="password" id="loginPass" placeholder="Password" required>
+            <div class="field password-field">
+              <input type="password" name="password" id="loginPass" placeholder="Password" required autocomplete="current-password">
+              <button type="button" class="toggle-password-btn" id="toggleLoginPass" aria-label="Show password" title="Show password">
+                <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="eye-closed" style="display:none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
             </div>
-            <div class="pass-link"><a href="#" id="forgotPassLink">Forgot password?</a></div>
             <div class="field btn">
               <div class="btn-layer"></div>
-              <input type="submit" value="Login">
+              <input type="submit" id="loginSubmitBtn" value="Login">
             </div>
-            <div class="signup-link">Not a member? <a href="#" id="signupNowLink">Signup now</a></div>
+            <div class="switch-tab-link">Don't have an account? <a href="#" id="signupNowLink">Sign up now</a></div>
           </form>
+
+          <!-- SIGNUP FORM -->
           <form action="" method="GET" class="signup" id="signupForm">
             <input type="hidden" name="auth_action" value="signup">
             <div class="field">
-              <input type="text" name="email" id="signupEmail" placeholder="Email Address" required>
+              <input type="text" name="full_name" id="signupName" placeholder="Full Name" required autocomplete="name">
             </div>
             <div class="field">
-              <input type="password" name="password" id="signupPass" placeholder="Password" required>
+              <input type="email" name="email" id="signupEmail" placeholder="Email Address" required autocomplete="email">
             </div>
-            <div class="field">
-              <input type="password" name="confirm" id="signupConfirm" placeholder="Confirm password" required>
+            <div class="field password-field">
+              <input type="password" name="password" id="signupPass" placeholder="Password (min 6 characters)" required autocomplete="new-password">
+              <button type="button" class="toggle-password-btn" id="toggleSignupPass" aria-label="Show password" title="Show password">
+                <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="eye-closed" style="display:none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
             </div>
             <div class="field btn">
               <div class="btn-layer"></div>
-              <input type="submit" value="Signup">
+              <input type="submit" id="signupSubmitBtn" value="Create Account">
             </div>
+            <div class="switch-tab-link">Already have an account? <a href="#" id="loginNowLink">Log in</a></div>
           </form>
         </div>
       </div>
@@ -488,57 +552,136 @@ def render_auth_page():
 
     <script>
     (function() {{
-      const loginText = document.querySelector(".title-text .login");
-      const loginForm = document.querySelector("form.login");
+      const loginText = document.querySelector(".title-text .title.login");
+      const loginForm = document.querySelector(".form-container .form-inner form.login");
       const loginBtn = document.querySelector("label.login");
       const signupBtn = document.querySelector("label.signup");
-      const signupLink = document.querySelector("form .signup-link a");
-      const forgotPass = document.getElementById("forgotPassLink");
+      const signupLink = document.getElementById("signupNowLink");
+      const loginLink = document.getElementById("loginNowLink");
       const signupForm = document.getElementById("signupForm");
+      const loginFormEl = document.getElementById("loginForm");
       const loginRadio = document.getElementById("login");
       const signupRadio = document.getElementById("signup");
+      const sliderTab = document.querySelector(".slider-tab");
 
-      if (signupBtn) {{
-        signupBtn.onclick = (() => {{
-          if (signupRadio) signupRadio.checked = true;
-          if (loginForm) loginForm.style.marginLeft = "-50%";
-          if (loginText) loginText.style.marginLeft = "-50%";
-        }});
+      function switchToSignup() {{
+        if (signupRadio) signupRadio.checked = true;
+        if (loginForm) loginForm.style.marginLeft = "-50%";
+        if (loginText) loginText.style.marginLeft = "-50%";
+        if (sliderTab) sliderTab.style.left = "50%";
+        if (loginBtn) loginBtn.style.color = "#475569";
+        if (signupBtn) signupBtn.style.color = "#ffffff";
       }}
-      if (loginBtn) {{
-        loginBtn.onclick = (() => {{
-          if (loginRadio) loginRadio.checked = true;
-          if (loginForm) loginForm.style.marginLeft = "0%";
-          if (loginText) loginText.style.marginLeft = "0%";
-        }});
+
+      function switchToLogin() {{
+        if (loginRadio) loginRadio.checked = true;
+        if (loginForm) loginForm.style.marginLeft = "0%";
+        if (loginText) loginText.style.marginLeft = "0%";
+        if (sliderTab) sliderTab.style.left = "0%";
+        if (loginBtn) loginBtn.style.color = "#ffffff";
+        if (signupBtn) signupBtn.style.color = "#475569";
       }}
+
+      if (signupBtn) signupBtn.onclick = switchToSignup;
+      if (loginBtn) loginBtn.onclick = switchToLogin;
+
       if (signupLink) {{
-        signupLink.onclick = ((e) => {{
+        signupLink.onclick = function(e) {{
           e.preventDefault();
-          if (signupBtn) signupBtn.click();
+          switchToSignup();
           return false;
+        }};
+      }}
+
+      if (loginLink) {{
+        loginLink.onclick = function(e) {{
+          e.preventDefault();
+          switchToLogin();
+          return false;
+        }};
+      }}
+
+      // Password Toggle Helper
+      function setupPasswordToggle(toggleBtnId, inputId) {{
+        const btn = document.getElementById(toggleBtnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input) return;
+
+        btn.addEventListener('click', function(e) {{
+          e.preventDefault();
+          e.stopPropagation();
+          const isPassword = input.type === 'password';
+          input.type = isPassword ? 'text' : 'password';
+          btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+          btn.setAttribute('title', isPassword ? 'Hide password' : 'Show password');
+
+          const eyeOpen = btn.querySelector('.eye-open');
+          const eyeClosed = btn.querySelector('.eye-closed');
+          if (eyeOpen && eyeClosed) {{
+            eyeOpen.style.display = isPassword ? 'none' : 'block';
+            eyeClosed.style.display = isPassword ? 'block' : 'none';
+          }}
+          input.focus();
         }});
       }}
-      if (forgotPass) {{
-        forgotPass.onclick = ((e) => {{
-          e.preventDefault();
-          alert("Password Reset Info:\\nFor security in this local environment, please contact administrator or reset your password directly in the database.");
-          return false;
-        }});
-      }}
+
+      setupPasswordToggle('toggleLoginPass', 'loginPass');
+      setupPasswordToggle('toggleSignupPass', 'signupPass');
+
+      // Form validation
       if (signupForm) {{
         signupForm.onsubmit = function(e) {{
-          const p1 = document.getElementById("signupPass").value;
-          const p2 = document.getElementById("signupConfirm").value;
-          if (p1 !== p2) {{
+          const nameInput = document.getElementById("signupName");
+          const emailInput = document.getElementById("signupEmail");
+          const passInput = document.getElementById("signupPass");
+
+          const name = nameInput ? nameInput.value.trim() : "";
+          const email = emailInput ? emailInput.value.trim() : "";
+          const pass = passInput ? passInput.value : "";
+
+          if (!name) {{
             e.preventDefault();
-            alert("Passwords do not match. Please verify.");
+            alert("Please enter your Full Name.");
+            if (nameInput) nameInput.focus();
             return false;
           }}
-          if (p1.length < 6) {{
+          if (!email || !email.includes("@")) {{
             e.preventDefault();
-            alert("Password must be at least 6 characters.");
+            alert("Please enter a valid email address.");
+            if (emailInput) emailInput.focus();
             return false;
+          }}
+          if (pass.length < 6) {{
+            e.preventDefault();
+            alert("Password must be at least 6 characters long.");
+            if (passInput) passInput.focus();
+            return false;
+          }}
+
+          const submitBtn = document.getElementById("signupSubmitBtn");
+          if (submitBtn) {{
+            submitBtn.value = "Creating Account...";
+          }}
+          return true;
+        }};
+      }}
+
+      if (loginFormEl) {{
+        loginFormEl.onsubmit = function(e) {{
+          const emailInput = document.getElementById("loginEmail");
+          const passInput = document.getElementById("loginPass");
+
+          const email = emailInput ? emailInput.value.trim() : "";
+          const pass = passInput ? passInput.value : "";
+
+          if (!email || !pass) {{
+            e.preventDefault();
+            alert("Please enter your email/username and password.");
+            return false;
+          }}
+          const submitBtn = document.getElementById("loginSubmitBtn");
+          if (submitBtn) {{
+            submitBtn.value = "Logging in...";
           }}
           return true;
         }};
@@ -554,4 +697,3 @@ def logout_user():
     st.session_state.user = None
     st.session_state.authenticated = False
     st.rerun()
-

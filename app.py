@@ -55,14 +55,17 @@ def main():
         </div>
     """, unsafe_allow_html=True)
 
+    display_name = user.get("full_name") or user.get("username") or "User"
+    user_initial = display_name[0].upper() if display_name else "U"
+
     st.sidebar.markdown(f"""
         <div class="sidebar-user-card">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #879BFF, #4169E1); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: #fff;">
-                    {user.get('username', 'U')[0].upper()}
+                    {user_initial}
                 </div>
                 <div>
-                    <div class="sidebar-user-name">{user.get('username', 'User')}</div>
+                    <div class="sidebar-user-name">{display_name}</div>
                     <div class="sidebar-user-sub">Currency: <span style="color: #38BDF8; font-weight: 700;">{user.get('currency', 'USD')}</span></div>
                 </div>
             </div>

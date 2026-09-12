@@ -60,7 +60,7 @@ def calculate_financial_health_score(income: float, expenses: float, budgets_df:
 def render_dashboard(user: dict):
     """Render Personal Executive Dashboard page."""
     currency = user.get("currency", "USD")
-    username = user.get("username", "User")
+    display_name = user.get("full_name") or user.get("username") or "User"
     user_id = user["id"]
 
     # Header Card
@@ -68,7 +68,7 @@ def render_dashboard(user: dict):
     with h_col1:
         st.markdown(f"""
         <div class="hero-card">
-            <div class="hero-title">Welcome back, {username}! 👋</div>
+            <div class="hero-title">Welcome back, {display_name}! 👋</div>
             <div class="hero-subtitle">Personal Expense Tracker Intelligence Overview & Real-Time Analytics</div>
         </div>
         """, unsafe_allow_html=True)

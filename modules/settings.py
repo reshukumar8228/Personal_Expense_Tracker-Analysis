@@ -15,9 +15,10 @@ def render_settings(user: dict):
     with tab_profile:
         st.subheader("Update Profile Details")
         with st.form("update_profile_form"):
-            curr_username = user.get("username", "")
+            curr_full_name = user.get("full_name") or user.get("username", "")
             curr_email = user.get("email", "")
 
+            new_name = st.text_input("Full Name", value=curr_full_name)
             new_email = st.text_input("Email Address", value=curr_email)
             submit_profile = st.form_submit_button("Save Profile Changes", type="primary")
 
@@ -25,12 +26,13 @@ def render_settings(user: dict):
                 conn = get_connection()
                 cursor = conn.cursor()
                 cursor.execute("""
-                    UPDATE users SET email = ? WHERE id = ?
-                """, (new_email, user_id))
+                    UPDATE users SET full_name = ?, email = ? WHERE id = ?
+                """, (new_name.strip(), new_email.strip(), user_id))
                 conn.commit()
                 conn.close()
 
-                st.session_state.user["email"] = new_email
+                st.session_state.user["full_name"] = new_name.strip()
+                st.session_state.user["email"] = new_email.strip()
                 st.success("Profile details updated successfully!")
                 st.rerun()
 
