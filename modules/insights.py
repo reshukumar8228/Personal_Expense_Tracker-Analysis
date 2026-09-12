@@ -10,7 +10,7 @@ def render_insights(user: dict):
     user_id = user["id"]
 
     st.markdown("## 🧠 Smart Insights & Financial Intelligence")
-    st.markdown("<p style='color: #8b949e;'>Data-driven recommendations, spending anomaly detection, and 50/30/20 rule breakdown</p>", unsafe_allow_html=True)
+    st.markdown("<p class='page-subtitle'>Data-driven recommendations, spending anomaly detection, and 50/30/20 rule breakdown</p>", unsafe_allow_html=True)
 
     conn = get_connection()
     tx_df = pd.read_sql_query("""

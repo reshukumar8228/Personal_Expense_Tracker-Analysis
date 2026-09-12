@@ -10,7 +10,7 @@ def render_savings(user: dict):
     user_id = user["id"]
 
     st.markdown("## 🎯 Savings Goals & Wealth Accumulation")
-    st.markdown("<p style='color: #8b949e;'>Track progress towards major financial milestones and long-term targets</p>", unsafe_allow_html=True)
+    st.markdown("<p class='page-subtitle'>Track progress towards major financial milestones and long-term targets</p>", unsafe_allow_html=True)
 
     conn = get_connection()
     goals_df = pd.read_sql_query("""
@@ -37,10 +37,10 @@ def render_savings(user: dict):
                     st.markdown(f"""
                     <div class="spend-card">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 style="margin: 0; color: #38bdf8;">🎯 {name}</h3>
+                            <h3 style="margin: 0; color: #0284c7;" class="kpi-value-heading">🎯 {name}</h3>
                             <span class="health-badge {'health-excellent' if pct >= 1.0 else 'health-good'}">{status} ({pct*100:.1f}%)</span>
                         </div>
-                        <p style="color: #8b949e; margin-top: 4px; font-size: 0.9rem;">Target Date: <b>{target_date}</b> | {notes or 'No notes'}</p>
+                        <p class="sidebar-user-sub" style="margin-top: 4px; font-size: 0.9rem;">Target Date: <b>{target_date}</b> | {notes or 'No notes'}</p>
                     </div>
                     """, unsafe_allow_html=True)
 

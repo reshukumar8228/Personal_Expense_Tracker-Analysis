@@ -10,7 +10,7 @@ def render_budgets(user: dict):
     user_id = user["id"]
 
     st.markdown("## 🎯 Budget Management & Monitoring")
-    st.markdown("<p style='color: #8b949e;'>Set spending caps, track limits, and receive over-budget alerts</p>", unsafe_allow_html=True)
+    st.markdown("<p class='page-subtitle'>Set spending caps, track limits, and receive over-budget alerts</p>", unsafe_allow_html=True)
 
     b_col1, b_col2 = st.columns([2, 1])
     with b_col2:

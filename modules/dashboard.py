@@ -4,6 +4,7 @@ import datetime
 import plotly.graph_objects as go
 from database.db import get_connection
 from utils.helpers import format_currency, get_current_year_month, get_user_categories
+from utils.css import get_plotly_layout
 
 def calculate_financial_health_score(income: float, expenses: float, budgets_df: pd.DataFrame, transactions_df: pd.DataFrame) -> tuple[int, str, str]:
     """Calculate Financial Health Index (0-100) and return score, status, and CSS badge class."""
@@ -227,19 +228,17 @@ def render_dashboard(user: dict):
                     )
                 ))
 
-            fig.update_layout(
+            user_theme = user.get("theme", "Dark Fintech")
+            bar_layout = get_plotly_layout(user_theme)
+            bar_layout.update(
                 barmode="group",
                 bargap=0.25,
                 bargroupgap=0.1,
                 margin=dict(l=20, r=20, t=20, b=20),
                 height=340,
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#94a3b8", family="Plus Jakarta Sans"),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-                xaxis=dict(showgrid=False),
-                yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.06)")
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
             )
+            fig.update_layout(bar_layout)
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("No transaction data available for the selected period.")
@@ -259,14 +258,13 @@ def render_dashboard(user: dict):
                 textinfo="label+percent",
                 insidetextorientation="radial"
             )])
-            fig_pie.update_layout(
+            pie_layout = get_plotly_layout(user_theme)
+            pie_layout.update(
                 margin=dict(l=10, r=10, t=10, b=10),
                 height=340,
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#94a3b8", family="Plus Jakarta Sans"),
                 showlegend=False
             )
+            fig_pie.update_layout(pie_layout)
             st.plotly_chart(fig_pie, use_container_width=True)
         else:
             st.info("No expense records found.")

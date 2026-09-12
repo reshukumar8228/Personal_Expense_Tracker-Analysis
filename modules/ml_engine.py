@@ -5,6 +5,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from database.db import get_connection
 from utils.helpers import format_currency, CATEGORY_ICONS
+from utils.css import get_plotly_layout
 
 def predict_next_month_expenses(user_id: int) -> dict:
     """
@@ -108,10 +109,11 @@ def predict_next_month_expenses(user_id: int) -> dict:
 def render_ml_engine(user: dict):
     """Render ML Next-Month Expense Prediction UI."""
     currency = user.get("currency", "USD")
+    user_theme = user.get("theme", "Dark Fintech")
     user_id = user["id"]
 
     st.markdown("## 🤖 Machine Learning Expense Forecasting")
-    st.markdown("<p style='color: #8b949e;'>Scikit-learn predictive model estimating your next-month spending trajectory</p>", unsafe_allow_html=True)
+    st.markdown("<p class='page-subtitle'>Scikit-learn predictive model estimating your next-month spending trajectory</p>", unsafe_allow_html=True)
 
     with st.spinner("Training predictive machine learning model..."):
         res = predict_next_month_expenses(user_id)
@@ -193,13 +195,9 @@ def render_ml_engine(user: dict):
             color_continuous_scale="Viridis",
             title="Predicted Category Expenditures"
         )
-        fig.update_layout(
-            height=350,
-            showlegend=False,
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#8b949e")
-        )
+        l_pred = get_plotly_layout(user_theme)
+        l_pred.update(height=350, showlegend=False)
+        fig.update_layout(l_pred)
         st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("---")

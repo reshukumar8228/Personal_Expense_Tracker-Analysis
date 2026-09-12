@@ -45,14 +45,14 @@ def main():
     st.sidebar.markdown("""
         <div style="text-align: center; padding: 10px 0;">
             <h2 style="margin: 0; background: linear-gradient(135deg, #0ea5e9, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 1.3rem;">Personal Expense Tracker</h2>
-            <p style="font-size: 0.75rem; color: #8b949e; margin-top: 2px;">Expense Intelligence Platform</p>
+            <p class="sidebar-user-sub" style="margin-top: 2px;">Expense Intelligence Platform</p>
         </div>
     """, unsafe_allow_html=True)
 
     st.sidebar.markdown(f"""
-        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1);">
-            <div style="font-size: 0.85rem; font-weight: 700; color: #f0f6fc;">👤 {user.get('username', 'User')}</div>
-            <div style="font-size: 0.75rem; color: #8b949e;">Currency: <b>{user.get('currency', 'USD')}</b></div>
+        <div class="sidebar-user-card">
+            <div class="sidebar-user-name">👤 {user.get('username', 'User')}</div>
+            <div class="sidebar-user-sub">Currency: <b>{user.get('currency', 'USD')}</b></div>
         </div>
     """, unsafe_allow_html=True)
 

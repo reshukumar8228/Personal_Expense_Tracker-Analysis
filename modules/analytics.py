@@ -5,14 +5,16 @@ import plotly.express as px
 import plotly.graph_objects as go
 from database.db import get_connection
 from utils.helpers import format_currency
+from utils.css import get_plotly_layout
 
 def render_analytics(user: dict):
     """Render Advanced Financial Analytics & Interactive Visualizations page."""
     currency = user.get("currency", "USD")
+    user_theme = user.get("theme", "Dark Fintech")
     user_id = user["id"]
 
     st.markdown("## 📈 Advanced Analytics & Financial Intelligence")
-    st.markdown("<p style='color: #8b949e;'>Multi-dimensional interactive charts, spending heatmaps, treemaps, and outlier detection</p>", unsafe_allow_html=True)
+    st.markdown("<p class='page-subtitle'>Multi-dimensional interactive charts, spending heatmaps, treemaps, and outlier detection</p>", unsafe_allow_html=True)
 
     conn = get_connection()
     tx_df = pd.read_sql_query("""
@@ -62,13 +64,9 @@ def render_analytics(user: dict):
                 fig_bar.add_trace(go.Bar(x=m_summary["year_month"], y=m_summary["income"], name="Income", marker_color="#10b981"))
             if "expense" in m_summary.columns:
                 fig_bar.add_trace(go.Bar(x=m_summary["year_month"], y=m_summary["expense"], name="Expense", marker_color="#ef4444"))
-            fig_bar.update_layout(
-                barmode="group",
-                height=350,
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#8b949e")
-            )
+            l_bar = get_plotly_layout(user_theme)
+            l_bar.update(barmode="group", height=350)
+            fig_bar.update_layout(l_bar)
             st.plotly_chart(fig_bar, use_container_width=True)
 
         with c2:
@@ -85,12 +83,9 @@ def render_analytics(user: dict):
                 labels={"cumulative_balance": f"Balance ({currency})", "date": "Date"}
             )
             fig_line.update_traces(line_color="#38bdf8", line_width=3)
-            fig_line.update_layout(
-                height=350,
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#8b949e")
-            )
+            l_line = get_plotly_layout(user_theme)
+            l_line.update(height=350)
+            fig_line.update_layout(l_line)
             st.plotly_chart(fig_line, use_container_width=True)
 
     # Tab 2: Histograms & Box Plots for Outlier Detection
@@ -109,12 +104,9 @@ def render_analytics(user: dict):
                     title="Transaction Size Distribution",
                     labels={"amount": f"Transaction Amount ({currency})"}
                 )
-                fig_hist.update_layout(
-                    height=350,
-                    paper_bgcolor="rgba(0,0,0,0)",
-                    plot_bgcolor="rgba(0,0,0,0)",
-                    font=dict(color="#8b949e")
-                )
+                l_hist = get_plotly_layout(user_theme)
+                l_hist.update(height=350)
+                fig_hist.update_layout(l_hist)
                 st.plotly_chart(fig_hist, use_container_width=True)
 
             with d2:
@@ -127,13 +119,9 @@ def render_analytics(user: dict):
                     title="Outlier Purchase Detection per Category",
                     labels={"amount": f"Amount ({currency})"}
                 )
-                fig_box.update_layout(
-                    height=350,
-                    showlegend=False,
-                    paper_bgcolor="rgba(0,0,0,0)",
-                    plot_bgcolor="rgba(0,0,0,0)",
-                    font=dict(color="#8b949e")
-                )
+                l_box = get_plotly_layout(user_theme)
+                l_box.update(height=350, showlegend=False)
+                fig_box.update_layout(l_box)
                 st.plotly_chart(fig_box, use_container_width=True)
 
     # Tab 3: Hierarchical Category Treemap
@@ -149,11 +137,9 @@ def render_analytics(user: dict):
                 color_continuous_scale="RdBu_r",
                 title="Hierarchical Breakdown of Expenses"
             )
-            fig_tree.update_layout(
-                height=450,
-                paper_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#8b949e")
-            )
+            l_tree = get_plotly_layout(user_theme)
+            l_tree.update(height=450)
+            fig_tree.update_layout(l_tree)
             st.plotly_chart(fig_tree, use_container_width=True)
 
     # Tab 4: Spending Heatmap (Day of Week vs Week of Month)
@@ -178,10 +164,7 @@ def render_analytics(user: dict):
                 color_continuous_scale="Viridis",
                 aspect="auto"
             )
-            fig_heat.update_layout(
-                height=400,
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#8b949e")
-            )
+            l_heat = get_plotly_layout(user_theme)
+            l_heat.update(height=400)
+            fig_heat.update_layout(l_heat)
             st.plotly_chart(fig_heat, use_container_width=True)

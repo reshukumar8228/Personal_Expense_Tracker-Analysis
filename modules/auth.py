@@ -75,7 +75,7 @@ def init_session_state():
 def render_auth_page():
     """Render Login & Registration UI tabs."""
     st.markdown("<h1 style='text-align: center; font-weight: 800; background: linear-gradient(135deg, #0ea5e9, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Personal Expense Tracker</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #8b949e; margin-bottom: 30px;'>Personal Finance & Expense Intelligence Platform</p>", unsafe_allow_html=True)
+    st.markdown("<p class='page-subtitle' style='text-align: center; margin-bottom: 30px;'>Personal Finance & Expense Intelligence Platform</p>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:

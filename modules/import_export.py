@@ -110,7 +110,7 @@ def render_import_export(user: dict):
     user_id = user["id"]
 
     st.markdown("## 📥 Data Import & Export Hub")
-    st.markdown("<p style='color: #8b949e;'>Import CSV/Excel data, export spreadsheets, and generate professional PDF reports</p>", unsafe_allow_html=True)
+    st.markdown("<p class='page-subtitle'>Import CSV/Excel data, export spreadsheets, and generate professional PDF reports</p>", unsafe_allow_html=True)
 
     conn = get_connection()
     tx_df = pd.read_sql_query("SELECT * FROM transactions WHERE user_id = ? ORDER BY date DESC", conn, params=(user_id,))

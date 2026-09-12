@@ -1,5 +1,36 @@
 import streamlit as st
 
+def get_plotly_layout(theme: str = "Dark Fintech") -> dict:
+    """Return theme-aware Plotly layout configuration dictionary."""
+    is_dark = theme != "Light Modern"
+    if is_dark:
+        font_color = "#94a3b8"
+        grid_color = "rgba(255, 255, 255, 0.08)"
+        zeroline_color = "rgba(255, 255, 255, 0.12)"
+    else:
+        font_color = "#334155"
+        grid_color = "rgba(0, 0, 0, 0.08)"
+        zeroline_color = "rgba(0, 0, 0, 0.12)"
+
+    return {
+        "paper_bgcolor": "rgba(0,0,0,0)",
+        "plot_bgcolor": "rgba(0,0,0,0)",
+        "font": dict(color=font_color, family="Plus Jakarta Sans"),
+        "xaxis": dict(
+            showgrid=False,
+            color=font_color,
+            gridcolor=grid_color,
+            zerolinecolor=zeroline_color
+        ),
+        "yaxis": dict(
+            showgrid=True,
+            color=font_color,
+            gridcolor=grid_color,
+            zerolinecolor=zeroline_color
+        ),
+        "legend": dict(font=dict(color=font_color))
+    }
+
 def inject_custom_css(theme: str = "Dark Fintech"):
     """Inject ultra-sleek modern CSS styling with Tailwind/Geist inspired design tokens."""
     is_dark = theme != "Light Modern"
@@ -21,23 +52,25 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         accent_amber = "#fbbf24"
         card_shadow = "0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05)"
         glow_primary = "0 0 25px rgba(56, 189, 248, 0.2)"
+        hero_title_gradient = "linear-gradient(135deg, #f9fafb 0%, #38bdf8 50%, #c084fc 100%)"
     else:
-        bg_main = "#f8fafc"
+        bg_main = "#fafafa"
         bg_card = "#ffffff"
         bg_card_elevated = "#f1f5f9"
         border_color = "#e2e8f0"
         border_color_hover = "#cbd5e1"
         text_primary = "#0f172a"
-        text_secondary = "#475569"
-        text_muted = "#94a3b8"
+        text_secondary = "#334155"
+        text_muted = "#64748b"
         accent_blue = "#0284c7"
         accent_indigo = "#4f46e5"
         accent_purple = "#7e22ce"
         accent_green = "#10b981"
         accent_red = "#ef4444"
         accent_amber = "#d97706"
-        card_shadow = "0 4px 20px -2px rgba(0, 0, 0, 0.06)"
+        card_shadow = "0 4px 20px -2px rgba(0, 0, 0, 0.06), 0 0 0 1px #e2e8f0"
         glow_primary = "0 0 15px rgba(2, 132, 199, 0.12)"
+        hero_title_gradient = "linear-gradient(135deg, #0f172a 0%, #0284c7 50%, #7e22ce 100%)"
 
     css = f"""
     <style>
@@ -53,6 +86,35 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         color: {text_primary};
     }}
 
+    /* Page Subtitle Utility */
+    .page-subtitle {{
+        color: {text_secondary} !important;
+        font-size: 0.95rem;
+        margin-top: -6px;
+        margin-bottom: 20px;
+    }}
+
+    /* Sidebar User Profile Card */
+    .sidebar-user-card {{
+        background: {bg_card_elevated};
+        padding: 12px 14px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        border: 1px solid {border_color};
+        box-shadow: {card_shadow};
+    }}
+
+    .sidebar-user-name {{
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: {text_primary} !important;
+    }}
+
+    .sidebar-user-sub {{
+        font-size: 0.78rem;
+        color: {text_secondary} !important;
+    }}
+
     /* Hide default Streamlit elements */
     #MainMenu {{visibility: hidden;}}
     footer {{visibility: hidden;}}
@@ -61,11 +123,12 @@ def inject_custom_css(theme: str = "Dark Fintech"):
     [data-testid="stSidebar"] {{
         background-color: {bg_card};
         border-right: 1px solid {border_color};
-        box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.06);
     }}
 
     /* Navigation Radio Items Restyling */
-    [data-testid="stSidebar"] .stRadio > label {{
+    [data-testid="stSidebar"] .stRadio > label,
+    [data-testid="stSidebar"] .stRadio > label * {{
         font-size: 0.78rem !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
@@ -79,26 +142,40 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         border: 1px solid transparent;
         padding: 10px 14px;
         border-radius: 10px;
-        color: {text_secondary};
-        font-weight: 600;
-        font-size: 0.92rem;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         margin-bottom: 4px;
         cursor: pointer;
     }}
 
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label:hover {{
-        background: rgba(56, 189, 248, 0.08);
-        color: {text_primary};
-        border-color: rgba(56, 189, 248, 0.2);
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label * {{
+        color: {text_secondary} !important;
+        font-weight: 600;
+        font-size: 0.92rem;
     }}
 
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label[data-checked="true"] {{
-        background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
-        border: 1px solid rgba(56, 189, 248, 0.4);
-        color: {accent_blue};
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover,
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover * {{
+        background: rgba(2, 132, 199, 0.08);
+        color: {text_primary} !important;
+    }}
+
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-checked="true"],
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-checked="true"] * {{
+        background: linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(99, 102, 241, 0.12) 100%);
+        border: 1px solid rgba(2, 132, 199, 0.3);
+        color: {accent_blue} !important;
         font-weight: 700;
         box-shadow: {glow_primary};
+    }}
+
+    /* Streamlit Metrics */
+    [data-testid="stMetricValue"] {{
+        color: {text_primary} !important;
+        font-weight: 800 !important;
+    }}
+    [data-testid="stMetricLabel"] {{
+        color: {text_secondary} !important;
+        font-weight: 600 !important;
     }}
 
     /* Hero Banner Header Card */
@@ -120,7 +197,7 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         right: -10%;
         width: 300px;
         height: 300px;
-        background: radial-gradient(circle, rgba(56, 189, 248, 0.14) 0%, rgba(168, 85, 247, 0.06) 50%, transparent 70%);
+        background: radial-gradient(circle, rgba(2, 132, 199, 0.12) 0%, rgba(168, 85, 247, 0.06) 50%, transparent 70%);
         pointer-events: none;
     }}
 
@@ -129,7 +206,7 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         font-weight: 800;
         letter-spacing: -0.02em;
         margin: 0 0 6px 0;
-        background: linear-gradient(135deg, #f9fafb 0%, #38bdf8 50%, #c084fc 100%);
+        background: {hero_title_gradient};
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }}
@@ -244,27 +321,27 @@ def inject_custom_css(theme: str = "Dark Fintech"):
     }}
 
     .health-excellent {{
-        background: rgba(52, 211, 153, 0.14);
-        color: #34d399;
-        border: 1px solid rgba(52, 211, 153, 0.3);
+        background: rgba(16, 185, 129, 0.14);
+        color: {accent_green};
+        border: 1px solid rgba(16, 185, 129, 0.3);
     }}
 
     .health-good {{
-        background: rgba(56, 189, 248, 0.14);
-        color: #38bdf8;
-        border: 1px solid rgba(56, 189, 248, 0.3);
+        background: rgba(2, 132, 199, 0.14);
+        color: {accent_blue};
+        border: 1px solid rgba(2, 132, 199, 0.3);
     }}
 
     .health-fair {{
-        background: rgba(251, 191, 36, 0.14);
-        color: #fbbf24;
-        border: 1px solid rgba(251, 191, 36, 0.3);
+        background: rgba(245, 158, 11, 0.14);
+        color: {accent_amber};
+        border: 1px solid rgba(245, 158, 11, 0.3);
     }}
 
     .health-poor {{
-        background: rgba(248, 113, 113, 0.14);
-        color: #f87171;
-        border: 1px solid rgba(248, 113, 113, 0.3);
+        background: rgba(239, 68, 68, 0.14);
+        color: {accent_red};
+        border: 1px solid rgba(239, 68, 68, 0.3);
     }}
 
     /* Styled Alert Boxes */
@@ -274,24 +351,24 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         margin-bottom: 16px;
         font-size: 0.9rem;
         line-height: 1.5;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: {card_shadow};
     }}
 
     .alert-warning {{
-        background: rgba(251, 191, 36, 0.08);
-        border: 1px solid rgba(251, 191, 36, 0.3);
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.3);
         color: {text_primary};
     }}
 
     .alert-danger {{
-        background: rgba(248, 113, 113, 0.08);
-        border: 1px solid rgba(248, 113, 113, 0.3);
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.3);
         color: {text_primary};
     }}
 
     .alert-success {{
-        background: rgba(52, 211, 153, 0.08);
-        border: 1px solid rgba(52, 211, 153, 0.3);
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.3);
         color: {text_primary};
     }}
 
@@ -302,6 +379,7 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         border-radius: 14px;
         padding: 20px;
         margin-bottom: 16px;
+        color: {text_primary};
         box-shadow: {card_shadow};
         transition: border-color 0.2s ease;
     }}
@@ -333,7 +411,7 @@ def inject_custom_css(theme: str = "Dark Fintech"):
     .stTabs [aria-selected="true"] {{
         background-color: {bg_card_elevated} !important;
         color: {accent_blue} !important;
-        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        border: 1px solid rgba(2, 132, 199, 0.3) !important;
         box-shadow: {glow_primary};
     }}
 
@@ -391,3 +469,4 @@ def inject_custom_css(theme: str = "Dark Fintech"):
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
+

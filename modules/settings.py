@@ -7,7 +7,7 @@ def render_settings(user: dict):
     user_id = user["id"]
 
     st.markdown("## ⚙️ Account Settings & Preferences")
-    st.markdown("<p style='color: #8b949e;'>Customize your currency, visual theme, and profile details</p>", unsafe_allow_html=True)
+    st.markdown("<p class='page-subtitle'>Customize your currency, visual theme, and profile details</p>", unsafe_allow_html=True)
 
     tab_profile, tab_preferences, tab_danger = st.tabs(["👤 Profile Information", "🎨 Preferences & Theme", "⚠️ Data Management"])
 

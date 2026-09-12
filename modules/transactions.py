@@ -10,7 +10,7 @@ def render_transactions(user: dict):
     user_id = user["id"]
 
     st.markdown("## 💳 Transactions Hub")
-    st.markdown("<p style='color: #8b949e;'>Add, manage, search, and audit all your financial records</p>", unsafe_allow_html=True)
+    st.markdown("<p class='page-subtitle'>Add, manage, search, and audit all your financial records</p>", unsafe_allow_html=True)
 
     tab_view, tab_add, tab_recurring = st.tabs(["📋 View & Filter", "➕ Add Transaction", "🔁 Recurring Expenses"])
 
