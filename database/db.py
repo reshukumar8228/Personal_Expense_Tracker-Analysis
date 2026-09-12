@@ -13,6 +13,24 @@ except ImportError:
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "expense_tracker.db")
 
+import urllib.parse
+
+def normalize_db_url(url: str) -> str:
+    """Safely URL-encode password in PostgreSQL connection strings if special chars exist."""
+    if not url or not ("postgresql://" in url or "postgres://" in url):
+        return url
+    prefix = "postgresql://" if url.startswith("postgresql://") else "postgres://"
+    rest = url[len(prefix):]
+    if "@" in rest:
+        last_at_idx = rest.rfind("@")
+        credentials = rest[:last_at_idx]
+        host_and_db = rest[last_at_idx + 1:]
+        if ":" in credentials:
+            user, password = credentials.split(":", 1)
+            encoded_password = urllib.parse.quote_plus(urllib.parse.unquote_plus(password))
+            return f"{prefix}{user}:{encoded_password}@{host_and_db}"
+    return url
+
 def get_db_url() -> str | None:
     """Detect PostgreSQL database URL from environment or Streamlit secrets."""
     url = os.getenv("DATABASE_URL") or os.getenv("SUPABASE_DB_URL")
@@ -29,6 +47,9 @@ def get_db_url() -> str | None:
 
     if url and url.startswith("postgres://"):
         url = url.replace("postgres://", "postgresql://", 1)
+
+    if url:
+        url = normalize_db_url(url.strip())
 
     return url
 

@@ -22,3 +22,14 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Python cache & build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Streamlit secrets & local databases
+.streamlit/secrets.toml
+*.db
+
