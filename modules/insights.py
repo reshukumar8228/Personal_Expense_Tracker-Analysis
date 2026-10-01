@@ -105,7 +105,8 @@ def render_insights(user: dict):
 
     rec_subs = tx_df[(tx_df["is_recurring"] == 1) & (tx_df["type"] == "expense")]
     if not rec_subs.empty:
-        rec_total = rec_subs["amount"].sum()
+        latest_rec = rec_subs.sort_values("date").groupby("category").last()
+        rec_total = latest_rec["amount"].sum()
         advice_list.append(f"📱 <b>Audit Recurring Subscriptions:</b> You have active recurring subscriptions totaling <b>{format_currency(rec_total, currency)}</b> monthly. Review unused memberships.")
 
     if not advice_list:

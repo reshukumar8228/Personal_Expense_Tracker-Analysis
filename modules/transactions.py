@@ -42,7 +42,10 @@ def render_transactions(user: dict):
             with d_col1:
                 start_d = st.date_input("From Date", value=datetime.date(datetime.date.today().year, 1, 1))
             with d_col2:
-                end_d = st.date_input("To Date", value=datetime.date.today())
+                import calendar
+                t_today = datetime.date.today()
+                _, last_day = calendar.monthrange(t_today.year, t_today.month)
+                end_d = st.date_input("To Date", value=datetime.date(t_today.year, t_today.month, last_day))
 
         # Construct dynamic SQL query
         query = "SELECT * FROM transactions WHERE user_id = ? AND date >= ? AND date <= ?"
@@ -333,7 +336,9 @@ def render_transactions(user: dict):
         """, conn, params=(user_id,))
 
         if not rec_df.empty:
-            total_rec_monthly = rec_df[rec_df["type"] == "expense"]["amount"].sum()
+            exp_rec = rec_df[rec_df["type"] == "expense"]
+            latest_rec = exp_rec.sort_values("date").groupby("category").last() if not exp_rec.empty else pd.DataFrame()
+            total_rec_monthly = latest_rec["amount"].sum() if not latest_rec.empty else 0.0
             st.metric("Total Monthly Recurring Subscriptions", format_currency(total_rec_monthly, currency))
 
             st.dataframe(

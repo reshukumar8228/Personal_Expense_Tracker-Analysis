@@ -169,7 +169,7 @@ def get_connection():
         try:
             import psycopg2
             import psycopg2.extras
-            pg_conn = psycopg2.connect(db_url)
+            pg_conn = psycopg2.connect(db_url, connect_timeout=3)
             return PgConnectionWrapper(pg_conn)
         except Exception as e:
             print(f"[WARNING] Could not connect to PostgreSQL ({e}). Falling back to local SQLite.")
@@ -436,6 +436,10 @@ def seed_demo_data(user_id: int):
 
     for year, month in months:
         ym_str = f"{year}:{month:02d}".replace(":", "-")
+        is_current_month = (year == today.year and month == today.month)
+        max_day = min(today.day, 28) if is_current_month else 28
+        max_day = max(1, max_day)
+
         # 1. Add Income
         salary_date = datetime.date(year, month, 1).strftime("%Y-%m-%d")
         cursor.execute("""
@@ -443,8 +447,9 @@ def seed_demo_data(user_id: int):
             VALUES (?, ?, 'income', 'Salary', 5200.00, 'Bank Transfer', 'Monthly Salary Direct Deposit')
         """, (user_id, salary_date))
 
-        if random.random() > 0.4:
-            fl_day = random.randint(10, 22)
+        fl_chance = random.random() > 0.4
+        if (is_current_month and fl_chance and max_day >= 1) or (not is_current_month and fl_chance):
+            fl_day = random.randint(1, max_day) if is_current_month else random.randint(10, 22)
             fl_date = datetime.date(year, month, fl_day).strftime("%Y-%m-%d")
             cursor.execute("""
                 INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes)
@@ -452,48 +457,64 @@ def seed_demo_data(user_id: int):
             """, (user_id, fl_date, round(random.uniform(400, 1200), 2)))
 
         # 2. Add Fixed Expenses
+        rent_day = 1 if max_day == 1 else min(3, max_day)
         cursor.execute("""
             INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes, is_recurring, recurring_frequency)
             VALUES (?, ?, 'expense', 'Housing & Rent', 1650.00, 'Bank Transfer', 'Monthly Apartment Rent', 1, 'Monthly')
-        """, (user_id, datetime.date(year, month, 3).strftime("%Y-%m-%d")))
+        """, (user_id, datetime.date(year, month, rent_day).strftime("%Y-%m-%d")))
 
+        util_day = 1 if max_day == 1 else min(5, max_day)
         cursor.execute("""
             INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes, is_recurring, recurring_frequency)
             VALUES (?, ?, 'expense', 'Utilities', ?, 'Credit Card', 'Electric & Fiber Water Bill', 1, 'Monthly')
-        """, (user_id, datetime.date(year, month, 5).strftime("%Y-%m-%d"), round(random.uniform(140, 210), 2)))
+        """, (user_id, datetime.date(year, month, util_day).strftime("%Y-%m-%d"), round(random.uniform(140, 210), 2)))
 
+        sub_day = 1 if max_day == 1 else min(7, max_day)
         cursor.execute("""
             INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes, is_recurring, recurring_frequency)
             VALUES (?, ?, 'expense', 'Subscriptions', 45.99, 'Credit Card', 'Netflix, Spotify & Cloud Storage', 1, 'Monthly')
-        """, (user_id, datetime.date(year, month, 7).strftime("%Y-%m-%d")))
+        """, (user_id, datetime.date(year, month, sub_day).strftime("%Y-%m-%d")))
 
         # 3. Add Variable Expenses throughout month
-        for g in range(4):
-            day = random.randint(g * 7 + 1, min((g + 1) * 7, 28))
+        num_groceries = 4 if not is_current_month else (4 if max_day >= 22 else (3 if max_day >= 15 else (2 if max_day >= 8 else 1)))
+        for g in range(num_groceries):
+            if is_current_month:
+                day = random.randint(1, max_day)
+            else:
+                day = random.randint(g * 7 + 1, min((g + 1) * 7, 28))
             g_date = datetime.date(year, month, day).strftime("%Y-%m-%d")
             cursor.execute("""
                 INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes)
                 VALUES (?, ?, 'expense', 'Groceries', ?, ?, 'Weekly Supermarket Shopping')
             """, (user_id, g_date, round(random.uniform(90, 180), 2), random.choice(payment_methods)))
 
-        for _ in range(random.randint(4, 6)):
-            day = random.randint(1, 28)
+        num_dining = random.randint(4, 6) if not is_current_month else max(1, min(5, int(round(4 * (max_day / 28.0) + 1))))
+        for _ in range(num_dining):
+            day = random.randint(1, max_day) if is_current_month else random.randint(1, 28)
             d_date = datetime.date(year, month, day).strftime("%Y-%m-%d")
             cursor.execute("""
                 INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes)
                 VALUES (?, ?, 'expense', 'Dining Out', ?, ?, 'Dinner / Coffee with friends')
             """, (user_id, d_date, round(random.uniform(25, 95), 2), random.choice(payment_methods)))
 
-        for _ in range(random.randint(2, 4)):
-            day = random.randint(1, 28)
+        num_trans = random.randint(2, 4) if not is_current_month else max(1, min(3, int(round(3 * (max_day / 28.0) + 1))))
+        for _ in range(num_trans):
+            day = random.randint(1, max_day) if is_current_month else random.randint(1, 28)
             t_date = datetime.date(year, month, day).strftime("%Y-%m-%d")
             cursor.execute("""
                 INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes)
                 VALUES (?, ?, 'expense', 'Transportation', ?, ?, 'Fuel / Rideshare')
             """, (user_id, t_date, round(random.uniform(30, 80), 2), random.choice(payment_methods)))
 
-        if random.random() > 0.3:
+        if not is_current_month and random.random() > 0.3:
             s_day = random.randint(5, 25)
+            s_date = datetime.date(year, month, s_day).strftime("%Y-%m-%d")
+            cursor.execute("""
+                INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes)
+                VALUES (?, ?, 'expense', 'Shopping', ?, ?, 'Apparel / Gadgets')
+            """, (user_id, s_date, round(random.uniform(60, 250), 2), "Credit Card"))
+        elif is_current_month and max_day >= 5 and random.random() > 0.3:
+            s_day = random.randint(1, max_day)
             s_date = datetime.date(year, month, s_day).strftime("%Y-%m-%d")
             cursor.execute("""
                 INSERT INTO transactions (user_id, date, type, category, amount, payment_method, notes)

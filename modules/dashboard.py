@@ -81,9 +81,13 @@ def render_dashboard(user: dict):
 
     # Calculate date range
     today = datetime.date.today()
+    import calendar
+    _, last_day_cur_month = calendar.monthrange(today.year, today.month)
+    month_end_date = datetime.date(today.year, today.month, last_day_cur_month).strftime("%Y-%m-%d")
+
     if month_option == "Current Month":
         start_date = datetime.date(today.year, today.month, 1).strftime("%Y-%m-%d")
-        end_date = today.strftime("%Y-%m-%d")
+        end_date = month_end_date
     elif month_option == "Last 30 Days":
         start_date = (today - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
         end_date = today.strftime("%Y-%m-%d")
@@ -92,7 +96,7 @@ def render_dashboard(user: dict):
         end_date = today.strftime("%Y-%m-%d")
     elif month_option == "Year to Date":
         start_date = datetime.date(today.year, 1, 1).strftime("%Y-%m-%d")
-        end_date = today.strftime("%Y-%m-%d")
+        end_date = month_end_date
     else:
         start_date = "1970-01-01"
         end_date = "2099-12-31"

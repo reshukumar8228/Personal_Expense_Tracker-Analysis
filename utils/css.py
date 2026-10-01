@@ -18,7 +18,7 @@ def get_plotly_layout(theme: str = "Dark Fintech") -> dict:
         "paper_bgcolor": "rgba(0,0,0,0)",
         "plot_bgcolor": "rgba(0,0,0,0)",
         "font": dict(color=font_color, family="Plus Jakarta Sans, sans-serif", size=12),
-        "title": dict(font=dict(color=font_color, size=15, family="Plus Jakarta Sans, sans-serif")),
+        "title": dict(text="", font=dict(color=font_color, size=15, family="Plus Jakarta Sans, sans-serif")),
         "xaxis": dict(
             showgrid=False,
             color=secondary_color,
