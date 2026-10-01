@@ -1,96 +1,100 @@
 # Personal Expense Tracker — Finance & Intelligence Platform
 
-Personal Expense Tracker is a complete, modern, and fully functional web application built with **Python, Streamlit, SQLite, Pandas, NumPy, Plotly, Scikit-learn, OpenPyXL, and FPDF2**.
+Personal Expense Tracker is an enterprise-ready, modern, and comprehensive financial management and predictive analytics web application built with **Python, Streamlit, Supabase PostgreSQL / SQLite, Pandas, NumPy, Plotly, Scikit-learn, OpenPyXL, and FPDF2**.
 
 ---
 
-## 🌟 Key Features
+## Key Features
 
 1. **User Authentication & Session Security**:
    - Registration, login, logout, and salted PBKDF2-HMAC-SHA256 password hashing.
    - User preferences persistence (currency selection & dark/light theme).
-   - Quick Instant Demo mode populated with 6 months of realistic sample data.
+   - Instant Demo Mode populated with 6 months of realistic sample financial transactions.
 
 2. **Personal Executive Dashboard**:
-   - Financial KPI cards: Total Income, Total Expenses, Net Surplus, Savings Rate %, and Financial Health Index (0-100 score with visual badges).
+   - Financial KPI cards: Total Income, Total Expenses, Net Surplus, Savings Rate %, and Financial Health Index (0–100 score with dynamic visual badges).
    - Real-time Income vs Expense trend bars & Category breakdown pie chart.
    - Dynamic period filter (Current Month, Last 30 Days, Last 90 Days, YTD, All Time).
-   - Quick Add Transaction widget and active budget alert banners.
+   - Quick Add Transaction modal/widget and active budget alert banners.
 
 3. **Transactions Hub**:
-   - Full CRUD: Add, Edit, Delete, and Search transactions.
+   - Full CRUD operations: Add, Edit, Delete, and Search transactions.
    - Multi-criteria filtering (Date range, Transaction Type, Category, Payment Method, Text search in notes).
-   - Recurring Subscription & Expense Manager (Rent, Utilities, Streaming).
+   - Recurring Subscription & Expense Manager (Rent, Utilities, Streaming services, etc.).
 
 4. **Budget Management & Monitoring**:
-   - Set monthly category spending caps.
-   - Real-time color-coded progress indicators (<75% Green, 75-99% Amber Warning, ≥100% Critical Red Alert).
-   - Total monthly budget headroom tracking.
+   - Monthly category spending caps with real-time tracking.
+   - Color-coded visual progress indicators (<75% Green, 75–99% Amber Warning, ≥100% Critical Red Alert).
+   - Total monthly budget headroom calculation.
 
 5. **Advanced Analytics & Visualizations**:
-   - **Pie & Donut Charts**: Category expense & income distribution.
+   - **Pie & Donut Charts**: Category expense and income distribution.
    - **Bar Charts**: Side-by-side monthly income vs expense comparison.
-   - **Line Charts**: Cumulative cash flow & daily balance trajectory.
+   - **Line Charts**: Cumulative cash flow and daily balance trajectory.
    - **Histogram & Box Plots**: Transaction size frequency distribution and outlier purchase detection.
    - **Treemap**: Hierarchical spending tree (Type → Category → Payment Method).
    - **Heatmap**: Expenditure frequency by Day of Week vs Week of Month.
 
 6. **Machine Learning Expense Forecasting**:
    - `Scikit-learn` predictive model (Linear & Random Forest Regression) trained on historical monthly time-series.
-   - Forecasts total next-month expenses and category-wise predictions.
-   - 95% confidence interval estimation and trend direction indicators (Increasing / Decreasing / Stable).
+   - Next-month expenditure forecasting with category-wise breakdown.
+   - Trend direction indicators and confidence analysis.
 
 7. **Smart Insights & Financial Intelligence**:
    - 50/30/20 Rule compliance analyzer (Needs vs Wants vs Savings).
    - Category spending spike anomaly detector (>25% surge vs 3-month average).
-   - Recurring subscription auditor.
-   - Automated personalized financial recommendations.
+   - Recurring subscription auditor and automated personalized recommendations.
 
 8. **Savings Goals Tracker**:
    - Milestone tracking (Emergency Fund, Vacation, Car, Gadgets).
-   - Deposit logger & progress indicators.
+   - Deposit logger and progress tracking towards target dates.
 
 9. **Import & Export Hub**:
-   - **CSV & Excel Import**: Drag-and-drop upload with validation, column check, and preview before batch insertion.
+   - **CSV & Excel Import**: Drag-and-drop upload with validation, column checking, and preview before batch insertion.
    - **CSV & Excel Export**: Export full/filtered transaction logs and multi-sheet formatted Excel workbooks (`openpyxl`).
    - **PDF Report Generator**: Multi-page branded PDF reports (`FPDF2`) with executive summaries, budget progress, category tables, and recent logs.
 
-10. **Custom Fintech Design System**:
-    - Sleek modern UI custom CSS styling with rounded cards, metric badges, custom pills, responsive layouts, and Dark/Light mode toggle.
+10. **Fintech Design System**:
+    - Sleek modern custom CSS styling with rounded cards, metric badges, custom navigation pills, responsive layouts, and Dark/Light mode toggle.
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
-- **Frontend & App Framework**: Streamlit
-- **Database Layer**: Supabase PostgreSQL (Managed Cloud Database) with automatic local SQLite fallback for offline development
+- **Frontend & Application Framework**: [Streamlit](https://streamlit.io/)
+- **Database Layer**: Supabase PostgreSQL (Cloud Database) with automatic local SQLite fallback for offline execution
 - **Data Processing**: Pandas, NumPy
-- **Interactive Data Visualization**: Plotly Express & Plotly Graph Objects
-- **Machine Learning**: Scikit-Learn (LinearRegression, RandomForestRegressor)
+- **Interactive Visualizations**: Plotly Express & Plotly Graph Objects
+- **Machine Learning**: Scikit-Learn (`LinearRegression`, `RandomForestRegressor`)
 - **Excel & PDF Export**: OpenPyXL, FPDF2
+- **Testing**: Pytest & Unittest
 
 ---
 
-## ⚡ Supabase Database Setup
+## Database Configuration
 
-1. Create a free account at **[supabase.com](https://supabase.com)** and create a new project.
-2. Navigate to **Project Settings -> Database -> Connection String** and copy your URI connection string.
-3. Create a `.env` file in the project root:
+The application automatically connects to Supabase PostgreSQL when configured, or seamlessly falls back to a local SQLite database (`database/expense_tracker.db`) if no cloud credentials are provided.
+
+### Supabase Setup (Optional)
+1. Create a project at **[supabase.com](https://supabase.com)**.
+2. Navigate to **Project Settings -> Database -> Connection String** and copy your URI.
+3. Configure your `.env` file in the project root:
    ```env
    DATABASE_URL=postgresql://postgres.yourprojectref:yourpassword@aws-0-us-east-1.pooler.supabase.com:6543/postgres
    ```
-4. Alternatively, if deploying on **Streamlit Community Cloud**, paste your connection string under **App Settings -> Secrets**:
+4. Alternatively, for **Streamlit Community Cloud**, paste your connection string under **App Settings -> Secrets**:
    ```toml
    DATABASE_URL = "postgresql://postgres.yourprojectref:yourpassword@aws-0-us-east-1.pooler.supabase.com:6543/postgres"
    ```
 
 ---
 
-## 🚀 Quick Setup & Installation
+## Quick Setup & Installation
 
 ### 1. Clone & Navigate to Project Directory
 ```bash
-cd "d:\Projects\Personal_Expene_Tracker and Analysis"
+git clone <repository-url>
+cd Personal_Expense_Tracker_2
 ```
 
 ### 2. Install Dependencies
@@ -103,52 +107,63 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-### 4. Run Automated Unit Tests
+### 4. Run Automated Test Suite
+```bash
+pytest
+```
+*Or using unittest:*
 ```bash
 python -m unittest discover -s tests -p "test_*.py"
 ```
 
+---
+
+## Clean Project Structure
+
+```
+Personal_Expense_Tracker_2/
+├── .streamlit/                      # Streamlit theme & server configuration
+│   └── config.toml
+├── database/                        # Database manager & storage
+│   ├── db.py                        # Dual-engine DB layer (Supabase / SQLite) & seeders
+│   └── expense_tracker.db           # SQLite database
+├── modules/                         # Core application page modules
+│   ├── auth.py                      # User authentication & PBKDF2 hashing
+│   ├── dashboard.py                 # Executive KPI cards & financial health score
+│   ├── transactions.py              # Transaction CRUD, search, and recurring manager
+│   ├── budgets.py                   # Category budget limits & alert tracking
+│   ├── analytics.py                 # Interactive Plotly charts & spending heatmaps
+│   ├── ml_engine.py                 # Scikit-learn expense forecasting models
+│   ├── savings.py                   # Milestone savings goals & timelines
+│   ├── insights.py                  # Financial intelligence & 50/30/20 breakdown
+│   ├── import_export.py             # CSV/Excel/PDF import and export pipelines
+│   └── settings.py                  # User profile, currency selector, theme toggles
+├── utils/                           # Design system & utilities
+│   ├── css.py                       # Modern fintech CSS styling (Dark/Light mode)
+│   └── helpers.py                   # Currency formatters, date helpers, color tokens
+├── tests/                           # Pytest automated test suite
+│   ├── test_auth.py                 # Password hashing & auth tests
+│   ├── test_db.py                   # Database schema & CRUD tests
+│   ├── test_export.py               # Export engine tests
+│   └── test_ml.py                   # ML forecasting regression tests
+├── app.py                           # Application main entrypoint
+├── requirements.txt                 # Python dependencies
+├── .env.example                     # Environment variables template
+├── .gitignore                       # Git ignore configuration
+├── README.md                        # Primary project documentation
+│
+└── _archive_and_tools/              # Auxiliary assets & tools
+    ├── docs/                        # Architecture reports & presentation assets
+    ├── scripts/                     # Screen capture & SVG rendering scripts
+    └── web_showcase/                # Auxiliary web showcase boilerplate
+```
 
 ---
 
-## 📁 Folder Structure
+## Quality Assurance & Testing
 
-```
-.
-├── app.py                      # Main Streamlit application entrypoint & routing
-├── database/
-│   ├── db.py                   # DB connection (Supabase PostgreSQL / local SQLite), schema, CRUD & seeders
-│   └── expense_tracker.db      # Local SQLite database file
-├── modules/
-│   ├── auth.py                 # User authentication UI, session management, PBKDF2 hashing
-│   ├── dashboard.py            # Financial KPI cards, Financial Health Score index, mini-charts
-│   ├── transactions.py         # Transaction CRUD, search, filter, recurring expense logic
-│   ├── budgets.py              # Category budget management, progress tracking & alerts
-│   ├── analytics.py            # Plotly interactive charts (Pie, Bar, Line, Hist, Box, Treemap, Heatmap)
-│   ├── ml_engine.py            # Scikit-learn expense forecasting model & trend analysis
-│   ├── savings.py              # Savings goals tracker & estimated completion timeline
-│   ├── insights.py             # Rule-based & statistical financial intelligence & 50/30/20 breakdown
-│   ├── import_export.py        # CSV/Excel import with validation, CSV/Excel export, FPDF2 PDF report generator
-│   └── settings.py             # User profile, currency selector, theme configuration
-├── utils/
-│   ├── css.py                  # Custom CSS injection for modern fintech styling (Dark/Light)
-│   └── helpers.py              # Currency formatting, date helpers, color tokens
-├── tests/
-│   ├── test_db.py              # Database schema & transaction CRUD tests
-│   ├── test_auth.py            # Authentication & password hashing tests
-│   ├── test_ml.py              # Machine learning prediction pipeline unit tests
-│   └── test_export.py          # CSV/Excel/PDF export verification tests
-├── scripts/
-│   ├── capture_all_screens.mjs # Automated UI screenshot capture script
-│   └── render_svg_to_png.mjs   # Architecture SVG to PNG rendering script
-├── docs/
-│   ├── PROJECT_ANALYSIS_REPORT.md  # Comprehensive technical analysis report
-│   ├── EXECUTIVE_SUMMARY.md    # Executive summary report
-│   ├── PPT_CONTENT_BLUEPRINT.md # Presentation slides blueprint
-│   ├── VISUAL_ASSET_INDEX.md   # Visual asset index
-│   ├── PROJECT_FACTS.json      # Structured repository facts
-│   ├── presentation/           # PowerPoint presentation (.pptx)
-│   └── presentation_assets/    # Architecture SVGs, PNGs, and screen captures
-├── requirements.txt            # Python dependencies
-└── README.md                   # Full documentation & setup guide
-```
+All major subsystems are verified via automated unit and integration tests:
+- **Authentication**: Salted PBKDF2 password generation and validation.
+- **Database Engine**: Schema auto-initialization, dual-engine PostgreSQL/SQLite CRUD, and demo dataset population.
+- **Machine Learning Engine**: Regression forecasting accuracy and fallback behavior on sparse datasets.
+- **Export Formats**: Validates CSV structure, multi-sheet Excel generation, and PDF page construction.
