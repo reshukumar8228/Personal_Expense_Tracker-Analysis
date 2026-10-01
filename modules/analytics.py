@@ -26,6 +26,9 @@ def render_analytics(user: dict):
         st.warning("No transaction data available. Please add transactions or load demo data to view analytics.")
         return
 
+    if "amount" in tx_df.columns:
+        tx_df["amount"] = pd.to_numeric(tx_df["amount"], errors="coerce").fillna(0.0)
+
     tx_df["date"] = pd.to_datetime(tx_df["date"])
     tx_df["year_month"] = tx_df["date"].dt.strftime("%Y-%m")
     tx_df["day_name"] = tx_df["date"].dt.day_name()

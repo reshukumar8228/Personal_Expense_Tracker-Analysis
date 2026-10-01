@@ -26,6 +26,8 @@ def render_budgets(user: dict):
     budgets_df = pd.read_sql_query("""
         SELECT * FROM budgets WHERE user_id = ? AND year_month = ?
     """, conn, params=(user_id, selected_ym))
+    if not budgets_df.empty and "monthly_limit" in budgets_df.columns:
+        budgets_df["monthly_limit"] = pd.to_numeric(budgets_df["monthly_limit"], errors="coerce").fillna(0.0)
     budget_map = dict(zip(budgets_df["category"], budgets_df["monthly_limit"])) if not budgets_df.empty else {}
 
     # Load Actual Spend for selected month
@@ -37,6 +39,8 @@ def render_budgets(user: dict):
         WHERE user_id = ? AND type = 'expense' AND date >= ? AND date <= ?
         GROUP BY category
     """, conn, params=(user_id, start_d, end_d))
+    if not tx_df.empty and "actual_spent" in tx_df.columns:
+        tx_df["actual_spent"] = pd.to_numeric(tx_df["actual_spent"], errors="coerce").fillna(0.0)
 
     actual_map = dict(zip(tx_df["category"], tx_df["actual_spent"])) if not tx_df.empty else {}
 

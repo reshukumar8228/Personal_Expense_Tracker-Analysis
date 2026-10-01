@@ -53,6 +53,44 @@ def get_db_url() -> str | None:
 
     return url
 
+class PgRow:
+    """A row object matching sqlite3.Row behavior (supports both dict key and index access, and iterates over values)."""
+    __slots__ = ('_values', '_mapping')
+
+    def __init__(self, values, mapping):
+        self._values = values
+        self._mapping = mapping
+
+    def __getitem__(self, key):
+        if isinstance(key, (int, slice)):
+            return self._values[key]
+        return self._values[self._mapping[key]]
+
+    def get(self, key, default=None):
+        idx = self._mapping.get(key)
+        if idx is not None:
+            return self._values[idx]
+        return default
+
+    def keys(self):
+        return list(self._mapping.keys())
+
+    def values(self):
+        return self._values
+
+    def items(self):
+        return [(k, self._values[idx]) for k, idx in self._mapping.items()]
+
+    def __iter__(self):
+        return iter(self._values)
+
+    def __len__(self):
+        return len(self._values)
+
+    def __repr__(self):
+        return f"PgRow({dict(self.items())})"
+
+
 class PgCursorWrapper:
     """Wrapper cursor for PostgreSQL that translates SQLite queries to PostgreSQL dialect."""
 
@@ -60,7 +98,21 @@ class PgCursorWrapper:
         self._cursor = pg_cursor
         self.lastrowid = None
 
-    def _transform_sql(self, sql: str) -> str:
+    def _get_mapping(self):
+        if self._cursor.description:
+            return {desc[0]: i for i, desc in enumerate(self._cursor.description)}
+        return {}
+
+    def _wrap_row(self, row, mapping=None):
+        if row is None:
+            return None
+        if isinstance(row, PgRow):
+            return row
+        if mapping is None:
+            mapping = self._get_mapping()
+        return PgRow(list(row), mapping)
+
+    def _transform_sql(self, sql: str, is_executemany: bool = False) -> str:
         # 1. Replace sqlite_master query
         if "sqlite_master" in sql:
             sql = sql.replace(
@@ -74,17 +126,17 @@ class PgCursorWrapper:
             if "ON CONFLICT" not in sql:
                 sql += " ON CONFLICT DO NOTHING"
 
-        # 3. Handle lastrowid for INSERT statements
+        # 3. Handle lastrowid for single INSERT statements only
         is_insert = sql.strip().upper().startswith("INSERT")
-        if is_insert and "RETURNING" not in sql.upper():
-            sql = sql.rstrip("; ") + " RETURNING id"
+        if is_insert and not is_executemany and "RETURNING" not in sql.upper() and "ON CONFLICT" not in sql:
+            sql = sql.rstrip("; \n\r\t") + " RETURNING id"
 
         # 4. Replace positional ? with %s
         sql = sql.replace("?", "%s")
         return sql
 
     def execute(self, sql, params=None):
-        transformed_sql = self._transform_sql(sql)
+        transformed_sql = self._transform_sql(sql, is_executemany=False)
         is_insert = sql.strip().upper().startswith("INSERT")
 
         if params is not None:
@@ -94,38 +146,49 @@ class PgCursorWrapper:
         else:
             res = self._cursor.execute(transformed_sql)
 
-        if is_insert and "RETURNING id" in transformed_sql.upper():
+        if is_insert and "RETURNING" in transformed_sql.upper():
             try:
                 row = self._cursor.fetchone()
                 if row:
-                    if isinstance(row, dict):
+                    if isinstance(row, (list, tuple)):
+                        self.lastrowid = row[0]
+                    elif isinstance(row, dict):
                         self.lastrowid = row.get('id')
                     elif hasattr(row, 'get'):
                         self.lastrowid = row.get('id')
                     else:
                         self.lastrowid = row[0]
+                else:
+                    self.lastrowid = None
             except Exception:
-                pass
+                self.lastrowid = None
+        elif is_insert:
+            self.lastrowid = None
 
         return res
 
     def executemany(self, sql, seq_of_params):
-        transformed_sql = self._transform_sql(sql)
+        transformed_sql = self._transform_sql(sql, is_executemany=True)
         return self._cursor.executemany(transformed_sql, seq_of_params)
 
     def fetchone(self):
-        return self._cursor.fetchone()
+        row = self._cursor.fetchone()
+        return self._wrap_row(row)
 
     def fetchall(self):
-        return self._cursor.fetchall()
+        rows = self._cursor.fetchall()
+        mapping = self._get_mapping()
+        return [self._wrap_row(r, mapping) for r in rows]
 
     def fetchmany(self, size=None):
-        if size is None:
-            return self._cursor.fetchmany()
-        return self._cursor.fetchmany(size)
+        rows = self._cursor.fetchmany(size) if size is not None else self._cursor.fetchmany()
+        mapping = self._get_mapping()
+        return [self._wrap_row(r, mapping) for r in rows]
 
     def __iter__(self):
-        return iter(self._cursor)
+        mapping = self._get_mapping()
+        for row in self._cursor:
+            yield self._wrap_row(row, mapping)
 
     def __getattr__(self, name):
         return getattr(self._cursor, name)
@@ -138,14 +201,15 @@ class PgConnectionWrapper:
         self._conn = pg_conn
 
     def cursor(self):
-        import psycopg2.extras
-        return PgCursorWrapper(self._conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor))
+        return PgCursorWrapper(self._conn.cursor())
 
     def commit(self):
-        return self._conn.commit()
+        if not getattr(self._conn, "autocommit", False):
+            return self._conn.commit()
 
     def rollback(self):
-        return self._conn.rollback()
+        if not getattr(self._conn, "autocommit", False):
+            return self._conn.rollback()
 
     def close(self):
         return self._conn.close()
@@ -168,8 +232,8 @@ def get_connection():
     if db_url:
         try:
             import psycopg2
-            import psycopg2.extras
-            pg_conn = psycopg2.connect(db_url, connect_timeout=3)
+            pg_conn = psycopg2.connect(db_url, connect_timeout=5)
+            pg_conn.autocommit = True
             return PgConnectionWrapper(pg_conn)
         except Exception as e:
             print(f"[WARNING] Could not connect to PostgreSQL ({e}). Falling back to local SQLite.")

@@ -49,7 +49,8 @@ def register_user(full_name: str, email: str, password: str, currency: str = "US
         conn.commit()
 
         # Seed default categories for new user
-        seed_default_categories(user_id)
+        seed_default_categories(user_id, conn=conn)
+        conn.commit()
         return True, "Your account has been created successfully! Please log in to continue."
     except Exception as e:
         err_msg = str(e)

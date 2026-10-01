@@ -117,8 +117,13 @@ def render_dashboard(user: dict):
 
     conn.close()
 
-    total_income = tx_df[tx_df["type"] == "income"]["amount"].sum() if not tx_df.empty else 0.0
-    total_expenses = tx_df[tx_df["type"] == "expense"]["amount"].sum() if not tx_df.empty else 0.0
+    if not tx_df.empty and "amount" in tx_df.columns:
+        tx_df["amount"] = pd.to_numeric(tx_df["amount"], errors="coerce").fillna(0.0)
+    if not budgets_df.empty and "monthly_limit" in budgets_df.columns:
+        budgets_df["monthly_limit"] = pd.to_numeric(budgets_df["monthly_limit"], errors="coerce").fillna(0.0)
+
+    total_income = float(tx_df[tx_df["type"] == "income"]["amount"].sum()) if not tx_df.empty else 0.0
+    total_expenses = float(tx_df[tx_df["type"] == "expense"]["amount"].sum()) if not tx_df.empty else 0.0
     net_savings = total_income - total_expenses
     savings_rate = (net_savings / total_income * 100) if total_income > 0 else 0.0
 
