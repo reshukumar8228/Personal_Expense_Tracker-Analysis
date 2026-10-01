@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 650" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080D2B"/>
+      <stop offset="100%" stop-color="#0D1238"/>
+    </linearGradient>
+    <linearGradient id="stepBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4169E1"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="stepPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B3DCE"/>
+      <stop offset="100%" stop-color="#C52DDB"/>
+    </linearGradient>
+    <linearGradient id="stepGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="stepAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="cardGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#182254"/>
+      <stop offset="100%" stop-color="#121A42"/>
+    </linearGradient>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#040718" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="650" rx="16" fill="url(#bgGrad2)"/>
+
+  <!-- Title -->
+  <g transform="translate(60, 45)">
+    <text x="0" y="0" font-family="system-ui, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">
+      END-TO-END USER JOURNEY &amp; VALUE REALIZATION
+    </text>
+    <text x="0" y="24" font-family="system-ui, sans-serif" font-size="13" font-weight="500" fill="#879BFF">
+      HOW A USER PROGRESSES FROM RAW DATA ENTRY TO PREDICTIVE WEALTH ACCUMULATION
+    </text>
+  </g>
+
+  <!-- 5-Step Process Flow -->
+  <g transform="translate(60, 110)">
+    <!-- Stage 1 -->
+    <g transform="translate(0, 0)">
+      <rect width="200" height="460" rx="12" fill="url(#cardGrad2)" stroke="#34458A" stroke-width="1.5" filter="url(#shadow2)"/>
+      <rect width="200" height="45" rx="12" fill="url(#stepBlue)"/>
+      <rect y="30" width="200" height="15" fill="url(#stepBlue)"/>
+      <text x="16" y="28" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#FFFFFF">STEP 1: ONBOARD</text>
+      
+      <text x="16" y="75" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#38BDF8">Instant Access</text>
+      <text x="16" y="105" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Register or Login</text>
+      <text x="16" y="128" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• PBKDF2 Salted Auth</text>
+      <text x="16" y="151" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Currency Preference</text>
+      <text x="16" y="174" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Dark / Light Theme</text>
+      <text x="16" y="197" font-family="system-ui, sans-serif" font-size="11.5" fill="#10B981">• 1-Click Instant Demo</text>
+
+      <rect x="14" y="230" width="172" height="205" rx="8" fill="#11173E" stroke="#34458A"/>
+      <text x="24" y="255" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Outcome:</text>
+      <text x="24" y="278" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Personalized session</text>
+      <text x="24" y="296" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">seeded with 6 months</text>
+      <text x="24" y="314" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">of real financial history</text>
+      <text x="24" y="332" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">for immediate</text>
+      <text x="24" y="350" font-family="system-ui, sans-serif" font-size="10.5" fill="#38BDF8">value extraction.</text>
+      <text x="24" y="390" font-family="system-ui, sans-serif" font-size="18" fill="#38BDF8">🚀</text>
+    </g>
+
+    <!-- Arrow 1-2 -->
+    <path d="M 208 340 L 220 340" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 2 -->
+    <g transform="translate(220, 0)">
+      <rect width="200" height="460" rx="12" fill="url(#cardGrad2)" stroke="#34458A" stroke-width="1.5" filter="url(#shadow2)"/>
+      <rect width="200" height="45" rx="12" fill="url(#stepBlue)"/>
+      <rect y="30" width="200" height="15" fill="url(#stepBlue)"/>
+      <text x="16" y="28" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#FFFFFF">STEP 2: CAPTURE</text>
+
+      <text x="16" y="75" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#38BDF8">Financial Ingestion</text>
+      <text x="16" y="105" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Quick Entry Widget</text>
+      <text x="16" y="128" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Interactive Dataframe</text>
+      <text x="16" y="151" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Single-Row Selection</text>
+      <text x="16" y="174" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Recurring Subscriptions</text>
+      <text x="16" y="197" font-family="system-ui, sans-serif" font-size="11.5" fill="#C52DDB">• Batch CSV/XLSX Upload</text>
+
+      <rect x="14" y="230" width="172" height="205" rx="8" fill="#11173E" stroke="#34458A"/>
+      <text x="24" y="255" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Outcome:</text>
+      <text x="24" y="278" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">100% complete,</text>
+      <text x="24" y="296" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">categorized, and</text>
+      <text x="24" y="314" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">validated financial</text>
+      <text x="24" y="332" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">ledger stored in</text>
+      <text x="24" y="350" font-family="system-ui, sans-serif" font-size="10.5" fill="#38BDF8">ACID database.</text>
+      <text x="24" y="390" font-family="system-ui, sans-serif" font-size="18" fill="#38BDF8">💳</text>
+    </g>
+
+    <!-- Arrow 2-3 -->
+    <path d="M 428 340 L 440 340" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 3 -->
+    <g transform="translate(440, 0)">
+      <rect width="200" height="460" rx="12" fill="url(#cardGrad2)" stroke="#34458A" stroke-width="1.5" filter="url(#shadow2)"/>
+      <rect width="200" height="45" rx="12" fill="url(#stepAmber)"/>
+      <rect y="30" width="200" height="15" fill="url(#stepAmber)"/>
+      <text x="16" y="28" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#FFFFFF">STEP 3: MONITOR</text>
+
+      <text x="16" y="75" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#FBBF24">Spending Guardrails</text>
+      <text x="16" y="105" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Set Monthly Caps</text>
+      <text x="16" y="128" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Real-Time Progress</text>
+      <text x="16" y="151" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• &lt;75% Green Healthy</text>
+      <text x="16" y="174" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• 75-99% Amber Alert</text>
+      <text x="16" y="197" font-family="system-ui, sans-serif" font-size="11.5" fill="#EF4444">• ≥100% Critical Banner</text>
+
+      <rect x="14" y="230" width="172" height="205" rx="8" fill="#11173E" stroke="#34458A"/>
+      <text x="24" y="255" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Outcome:</text>
+      <text x="24" y="278" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Zero budget surprise;</text>
+      <text x="24" y="296" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">immediate visual</text>
+      <text x="24" y="314" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">warning triggers</text>
+      <text x="24" y="332" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">before dangerous</text>
+      <text x="24" y="350" font-family="system-ui, sans-serif" font-size="10.5" fill="#FBBF24">overspending occurs.</text>
+      <text x="24" y="390" font-family="system-ui, sans-serif" font-size="18" fill="#FBBF24">🎯</text>
+    </g>
+
+    <!-- Arrow 3-4 -->
+    <path d="M 648 340 L 660 340" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 4 -->
+    <g transform="translate(660, 0)">
+      <rect width="200" height="460" rx="12" fill="url(#cardGrad2)" stroke="#8B3DCE" stroke-width="1.5" filter="url(#shadow2)"/>
+      <rect width="200" height="45" rx="12" fill="url(#stepPurple)"/>
+      <rect y="30" width="200" height="15" fill="url(#stepPurple)"/>
+      <text x="16" y="28" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#FFFFFF">STEP 4: FORECAST</text>
+
+      <text x="16" y="75" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#E052F2">Machine Learning</text>
+      <text x="16" y="105" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Time-Series Regression</text>
+      <text x="16" y="128" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Lag &amp; Rolling Features</text>
+      <text x="16" y="151" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Next-Month Total</text>
+      <text x="16" y="174" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• 95% Confidence Band</text>
+      <text x="16" y="197" font-family="system-ui, sans-serif" font-size="11.5" fill="#C52DDB">• Category Forecast</text>
+
+      <rect x="14" y="230" width="172" height="205" rx="8" fill="#11173E" stroke="#8B3DCE"/>
+      <text x="24" y="255" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Outcome:</text>
+      <text x="24" y="278" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Proactive foresight;</text>
+      <text x="24" y="296" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">knowing expected</text>
+      <text x="24" y="314" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">outflows 30 days</text>
+      <text x="24" y="332" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">in advance to protect</text>
+      <text x="24" y="350" font-family="system-ui, sans-serif" font-size="10.5" fill="#E052F2">savings trajectory.</text>
+      <text x="24" y="390" font-family="system-ui, sans-serif" font-size="18" fill="#E052F2">🤖</text>
+    </g>
+
+    <!-- Arrow 4-5 -->
+    <path d="M 868 340 L 880 340" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 5 -->
+    <g transform="translate(880, 0)">
+      <rect width="200" height="460" rx="12" fill="url(#cardGrad2)" stroke="#34458A" stroke-width="1.5" filter="url(#shadow2)"/>
+      <rect width="200" height="45" rx="12" fill="url(#stepGreen)"/>
+      <rect y="30" width="200" height="15" fill="url(#stepGreen)"/>
+      <text x="16" y="28" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#FFFFFF">STEP 5: OPTIMIZE</text>
+
+      <text x="16" y="75" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#10B981">Wealth Intelligence</text>
+      <text x="16" y="105" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• 50/30/20 Rule Audit</text>
+      <text x="16" y="128" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Spending Spike Alert</text>
+      <text x="16" y="151" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Savings Milestone</text>
+      <text x="16" y="174" font-family="system-ui, sans-serif" font-size="11.5" fill="#9AA8D1">• Deposit Log Popover</text>
+      <text x="16" y="197" font-family="system-ui, sans-serif" font-size="11.5" fill="#38BDF8">• FPDF2 Branded Export</text>
+
+      <rect x="14" y="230" width="172" height="205" rx="8" fill="#11173E" stroke="#34458A"/>
+      <text x="24" y="255" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Outcome:</text>
+      <text x="24" y="278" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Continuous financial</text>
+      <text x="24" y="296" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">health improvement,</text>
+      <text x="24" y="314" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">goal completion &amp;</text>
+      <text x="24" y="332" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">executive presentation</text>
+      <text x="24" y="350" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">readiness.</text>
+      <text x="24" y="390" font-family="system-ui, sans-serif" font-size="18" fill="#10B981">🏆</text>
+    </g>
+  </g>
+</svg>

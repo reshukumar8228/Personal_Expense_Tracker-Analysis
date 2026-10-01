@@ -1,0 +1,57 @@
+graph TB
+    subgraph ClientLayer["🖥️ Presentation & Client Layer"]
+        Browser["Modern Web Browser<br/>(Chrome / Safari / Edge / Firefox)"]
+        CSS["Custom Fintech CSS Engine<br/>(Dark Fintech / Light Modern Themes)"]
+        UIComponents["Streamlit Reactive UI<br/>(Metric Badges, KPI Cards, Popovers)"]
+    end
+
+    subgraph AppLayer["⚙️ Application & Business Logic (Streamlit)"]
+        Router["app.py<br/>Session Router & Navigation"]
+        AuthModule["modules/auth.py<br/>PBKDF2 HMAC SHA-256 Auth"]
+        DashModule["modules/dashboard.py<br/>KPIs & Health Index Engine"]
+        TxModule["modules/transactions.py<br/>CRUD & Interactive Dataframe Sync"]
+        BudgetModule["modules/budgets.py<br/>Spending Caps & Alerts"]
+        AnalyticsModule["modules/analytics.py<br/>Plotly Multi-Dimensional Visuals"]
+        MLModule["modules/ml_engine.py<br/>Scikit-Learn Forecast Model"]
+        InsightsModule["modules/insights.py<br/>50/30/20 & Anomaly Detector"]
+        SavingsModule["modules/savings.py<br/>Goal Milestones & Deposit Tracker"]
+        IOModule["modules/import_export.py<br/>CSV/XLSX Parser & FPDF2 Engine"]
+        SettingsModule["modules/settings.py<br/>Currency & Profile Config"]
+    end
+
+    subgraph DataAccessLayer["💾 Data Access & Dual-Engine Abstraction"]
+        DBRouter["database/db.py<br/>Dual-Engine Connection Manager"]
+        PgWrapper["PgConnectionWrapper & PgCursorWrapper<br/>(Dialect Translation & RETURNING id)"]
+    end
+
+    subgraph StorageLayer["🗄️ Storage & Database Layer"]
+        Supabase["Cloud Supabase PostgreSQL<br/>(Production Remote Host)"]
+        SQLite["Local SQLite (WAL Mode)<br/>(Offline / Fallback Local Engine)"]
+    end
+
+    Browser --> Router
+    Router --> AuthModule
+    Router --> DashModule
+    Router --> TxModule
+    Router --> BudgetModule
+    Router --> AnalyticsModule
+    Router --> MLModule
+    Router --> InsightsModule
+    Router --> SavingsModule
+    Router --> IOModule
+    Router --> SettingsModule
+
+    AuthModule --> DBRouter
+    DashModule --> DBRouter
+    TxModule --> DBRouter
+    BudgetModule --> DBRouter
+    AnalyticsModule --> DBRouter
+    MLModule --> DBRouter
+    InsightsModule --> DBRouter
+    SavingsModule --> DBRouter
+    IOModule --> DBRouter
+    SettingsModule --> DBRouter
+
+    DBRouter -->|DATABASE_URL present| PgWrapper
+    DBRouter -->|Fallback / Offline| SQLite
+    PgWrapper --> Supabase

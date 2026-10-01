@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080D2B"/>
+      <stop offset="100%" stop-color="#0D1238"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#182254"/>
+      <stop offset="100%" stop-color="#121A42"/>
+    </linearGradient>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4169E1"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B3DCE"/>
+      <stop offset="100%" stop-color="#C52DDB"/>
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#FBBF24"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#040718" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" rx="16" fill="url(#bgGrad)"/>
+  
+  <!-- Header -->
+  <g transform="translate(60, 45)">
+    <text x="0" y="0" font-family="system-ui, -apple-system, sans-serif" font-size="26" font-weight="800" fill="#FFFFFF" letter-spacing="0.5">
+      SYSTEM ARCHITECTURE &amp; COMPONENT TOPOLOGY
+    </text>
+    <text x="0" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="500" fill="#879BFF" letter-spacing="1">
+      PERSONAL EXPENSE TRACKER &amp; FINANCIAL INTELLIGENCE PLATFORM
+    </text>
+  </g>
+
+  <!-- 1. Presentation & UI Layer -->
+  <g transform="translate(60, 100)">
+    <rect width="1080" height="135" rx="14" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="8" height="135" rx="4" fill="url(#blueGrad)"/>
+    <text x="28" y="28" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#38BDF8" letter-spacing="1">
+      LAYER 1: PRESENTATION &amp; CLIENT EXPERIENCE
+    </text>
+
+    <!-- Sub-cards -->
+    <g transform="translate(28, 42)">
+      <!-- Client Browser -->
+      <rect x="0" y="0" width="320" height="75" rx="10" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">🖥️ Modern Web Browser</text>
+      <text x="16" y="46" font-family="system-ui, sans-serif" font-size="11" fill="#9AA8D1">Chrome / Safari / Edge / Firefox</text>
+      <text x="16" y="62" font-family="system-ui, sans-serif" font-size="10" fill="#6C7BAE">Responsive 16:9 Viewport &amp; Mobile Ready</text>
+
+      <!-- Custom CSS Engine -->
+      <rect x="350" y="0" width="330" height="75" rx="10" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" transform="translate(350,0)">🎨 Fintech Design System</text>
+      <text x="16" y="46" font-family="system-ui, sans-serif" font-size="11" fill="#9AA8D1" transform="translate(350,0)">utils/css.py &amp; Modern Glassmorphism</text>
+      <text x="16" y="62" font-family="system-ui, sans-serif" font-size="10" fill="#6C7BAE" transform="translate(350,0)">Dark Fintech &amp; Light Modern Dynamic Theme</text>
+
+      <!-- Plotly Visuals -->
+      <rect x="710" y="0" width="320" height="75" rx="10" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" transform="translate(710,0)">📊 Reactive Charts &amp; Badges</text>
+      <text x="16" y="46" font-family="system-ui, sans-serif" font-size="11" fill="#9AA8D1" transform="translate(710,0)">Plotly Express &amp; Graph Objects</text>
+      <text x="16" y="62" font-family="system-ui, sans-serif" font-size="10" fill="#6C7BAE" transform="translate(710,0)">KPI Cards, Health Score Index &amp; Dataframes</text>
+    </g>
+  </g>
+
+  <!-- Downward connector 1 -->
+  <path d="M 600 235 L 600 265" stroke="#4169E1" stroke-width="2.5" stroke-dasharray="4,4"/>
+  <polygon points="595,265 605,265 600,273" fill="#4169E1"/>
+
+  <!-- 2. Application & Business Logic Layer -->
+  <g transform="translate(60, 275)">
+    <rect width="1080" height="230" rx="14" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="8" height="230" rx="4" fill="url(#purpleGrad)"/>
+    <text x="28" y="28" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#C52DDB" letter-spacing="1">
+      LAYER 2: APPLICATION &amp; BUSINESS LOGIC (STREAMLIT PYTHON RUNTIME)
+    </text>
+
+    <!-- app.py Router Box -->
+    <rect x="28" y="45" width="220" height="165" rx="10" fill="url(#cardGrad)" stroke="#879BFF" stroke-width="1.5"/>
+    <text x="44" y="75" font-family="system-ui, sans-serif" font-size="15" font-weight="800" fill="#FFFFFF">🚦 app.py</text>
+    <text x="44" y="95" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#879BFF">Central Router</text>
+    <text x="44" y="118" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Session Initialization</text>
+    <text x="44" y="136" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Auth Guard &amp; Gate</text>
+    <text x="44" y="154" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Theme Injection</text>
+    <text x="44" y="172" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• 9-Page Radio Router</text>
+    <text x="44" y="190" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Profile Sidebar Sync</text>
+
+    <!-- Modules Grid (8 Modules) -->
+    <g transform="translate(265, 45)">
+      <!-- Row 1 -->
+      <rect x="0" y="0" width="190" height="75" rx="8" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">🔒 modules/auth.py</text>
+      <text x="12" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">PBKDF2 HMAC-SHA256</text>
+      <text x="12" y="58" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">Instant Demo Seeder</text>
+
+      <rect x="202" y="0" width="190" height="75" rx="8" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">📊 modules/dashboard.py</text>
+      <text x="12" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">Financial Health Index</text>
+      <text x="12" y="58" font-family="system-ui, sans-serif" font-size="10" fill="#10B981">Real-time KPI Engine</text>
+
+      <rect x="404" y="0" width="190" height="75" rx="8" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">💳 modules/transactions.py</text>
+      <text x="12" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">Full CRUD &amp; Dataframe</text>
+      <text x="12" y="58" font-family="system-ui, sans-serif" font-size="10" fill="#C52DDB">Recurring Subscriptions</text>
+
+      <rect x="606" y="0" width="190" height="75" rx="8" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">🎯 modules/budgets.py</text>
+      <text x="12" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">Monthly Category Caps</text>
+      <text x="12" y="58" font-family="system-ui, sans-serif" font-size="10" fill="#F59E0B">Over-Budget Alerts</text>
+
+      <!-- Row 2 -->
+      <rect x="0" y="88" width="190" height="75" rx="8" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="12" y="112" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">📈 modules/analytics.py</text>
+      <text x="12" y="130" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">Treemap, Box, Hist, Heat</text>
+      <text x="12" y="146" font-family="system-ui, sans-serif" font-size="10" fill="#879BFF">Cashflow Trajectory</text>
+
+      <rect x="202" y="88" width="190" height="75" rx="8" fill="url(#cardGrad)" stroke="#8B3DCE" stroke-width="1.5"/>
+      <text x="12" y="112" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#E052F2">🤖 modules/ml_engine.py</text>
+      <text x="12" y="130" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">Linear &amp; RF Regression</text>
+      <text x="12" y="146" font-family="system-ui, sans-serif" font-size="10" fill="#C52DDB">Next-Month Spend Predict</text>
+
+      <rect x="404" y="88" width="190" height="75" rx="8" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="12" y="112" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">🧠 modules/insights.py</text>
+      <text x="12" y="130" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">50/30/20 Rule Analysis</text>
+      <text x="12" y="146" font-family="system-ui, sans-serif" font-size="10" fill="#10B981">Spending Spike Anomaly</text>
+
+      <rect x="606" y="88" width="190" height="75" rx="8" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="12" y="112" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">📥 modules/import_export.py</text>
+      <text x="12" y="130" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">CSV/XLSX Bulk Ingest</text>
+      <text x="12" y="146" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">FPDF2 Executive PDF</text>
+    </g>
+  </g>
+
+  <!-- Downward connector 2 -->
+  <path d="M 600 505 L 600 535" stroke="#C52DDB" stroke-width="2.5" stroke-dasharray="4,4"/>
+  <polygon points="595,535 605,535 600,543" fill="#C52DDB"/>
+
+  <!-- 3. Data Access & Dual-Engine Persistence Layer -->
+  <g transform="translate(60, 545)">
+    <rect width="1080" height="205" rx="14" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="8" height="205" rx="4" fill="url(#greenGrad)"/>
+    <text x="28" y="28" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#10B981" letter-spacing="1">
+      LAYER 3: DATA ACCESS &amp; DUAL-ENGINE STORAGE ABSTRACTION (database/db.py)
+    </text>
+
+    <!-- DB Router & Wrappers -->
+    <g transform="translate(28, 45)">
+      <!-- DB Manager Wrapper -->
+      <rect x="0" y="0" width="480" height="135" rx="10" fill="url(#cardGrad)" stroke="#34458A"/>
+      <text x="20" y="28" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">🔄 Dual-Engine DB Router &amp; Compatibility Layer</text>
+      <text x="20" y="52" font-family="system-ui, sans-serif" font-size="11" fill="#9AA8D1">• Auto-detects DATABASE_URL from .env or st.secrets</text>
+      <text x="20" y="72" font-family="system-ui, sans-serif" font-size="11" fill="#9AA8D1">• PgConnectionWrapper &amp; PgCursorWrapper emulate SQLite API</text>
+      <text x="20" y="92" font-family="system-ui, sans-serif" font-size="11" fill="#9AA8D1">• Automatic query translation: sqlite_master → information_schema</text>
+      <text x="20" y="112" font-family="system-ui, sans-serif" font-size="11" fill="#38BDF8">• Seamless placeholder adaptation: ? → %s with RETURNING id</text>
+
+      <!-- Target 1: Supabase PostgreSQL -->
+      <rect x="520" y="0" width="245" height="135" rx="10" fill="url(#cardGrad)" stroke="#38BDF8" stroke-width="1.5"/>
+      <text x="536" y="28" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#38BDF8">⚡ Primary Production Target</text>
+      <text x="536" y="50" font-family="system-ui, sans-serif" font-size="12" font-weight="800" fill="#FFFFFF">Supabase PostgreSQL</text>
+      <text x="536" y="72" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Cloud Managed DB</text>
+      <text x="536" y="90" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Transaction Pooler (pGBouncer)</text>
+      <text x="536" y="108" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Full ACID &amp; Foreign Keys</text>
+      <text x="536" y="126" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">Multi-user Concurrent Access</text>
+
+      <!-- Target 2: SQLite Local Fallback -->
+      <rect x="785" y="0" width="245" height="135" rx="10" fill="url(#cardGrad)" stroke="#10B981" stroke-width="1.5"/>
+      <text x="801" y="28" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#10B981">🛡️ Offline Local Fallback</text>
+      <text x="801" y="50" font-family="system-ui, sans-serif" font-size="12" font-weight="800" fill="#FFFFFF">SQLite 3 (WAL Mode)</text>
+      <text x="801" y="72" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• expense_tracker.db</text>
+      <text x="801" y="90" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Zero Config Offline Setup</text>
+      <text x="801" y="108" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Auto Fallback on Connection Err</text>
+      <text x="801" y="126" font-family="system-ui, sans-serif" font-size="10.5" fill="#F59E0B">Pre-seeded 3,700+ Records</text>
+    </g>
+  </g>
+</svg>

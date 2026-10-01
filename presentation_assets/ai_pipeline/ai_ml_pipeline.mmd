@@ -1,0 +1,24 @@
+flowchart TD
+    RawDB[("Historical Expense Data<br/>(user_id, date, category, amount)")] --> PreCheck{Data Quality Check<br/>Count &gt;= 5 rows &amp;<br/>Months &gt;= 2}
+
+    PreCheck -- Insufficient Data --> GracefulExit["Return Informative UI Notice<br/>('At least 5 transactions across 2 months required')"]
+    PreCheck -- Pass --> Grouping["Monthly Resampling<br/>Group by year_month: SUM(amount)"]
+
+    Grouping --> FeatureEng["Feature Engineering<br/>1. month_index (Linear Time Step: 0, 1, 2...)<br/>2. lag_1 (Previous Month Spend)<br/>3. rolling_avg_3 (3-Month Rolling Average)"]
+
+    FeatureEng --> TrainSplit["Model Training<br/>• X: [month_index, lag_1, rolling_avg_3]<br/>• y: [monthly total spend]"]
+
+    TrainSplit --> ModelFit["Scikit-Learn Regression<br/>LinearRegression() / RandomForestRegressor()"]
+
+    ModelFit --> NextFeature["Construct Next-Month Features<br/>X_next = [n_months, last_amount, rolling_3_mean]"]
+    NextFeature --> PredictTotal["Inference: Predicted Total Spend<br/>y_pred = model.predict(X_next)"]
+
+    PredictTotal --> ConfidenceBand["Residual & Uncertainty Estimation<br/>residuals = y - y_pred_train<br/>std_error = std(residuals)<br/>lower_bound = max(0, y_pred - std_error)<br/>upper_bound = y_pred + std_error"]
+
+    ModelFit --> CatPred["Category-Level Breakdown<br/>Weighted Blended Moving Average<br/>pred_cat = 0.6 * recent_cat + 0.4 * avg_cat"]
+
+    PredictTotal --> TrajectoryCalc["Spending Trajectory vs Baseline<br/>pct_change = (y_pred - last_month) / last_month * 100<br/>• &gt; +5%: Increasing (Spike Alert)<br/>• &lt; -5%: Decreasing (Surplus)<br/>• ±5%: Stable"]
+
+    ConfidenceBand --> UIOutput["Forecast UI Dashboard<br/>• 4 Metric Cards (Forecast, Range, Baseline, Trajectory)<br/>• Category Breakdown Table & Horizontal Bar Chart<br/>• Intelligent Actionable Advisory Banner"]
+    CatPred --> UIOutput
+    TrajectoryCalc --> UIOutput

@@ -1,0 +1,38 @@
+flowchart LR
+    subgraph DataSources["📥 Data Sources"]
+        Manual["Manual Form Entry<br/>(Quick Add / Transactions)"]
+        CSVFile["CSV / XLSX Spreadsheets<br/>(Batch Uploader)"]
+        DemoSeed["Demo Generator<br/>(6-Month Seed Data)"]
+    end
+
+    subgraph Validation["🧹 Cleansing & Validation"]
+        Val["Schema Validation<br/>• Date: YYYY-MM-DD<br/>• Type: income/expense<br/>• Amount: Float &gt; 0<br/>• Payment Method Normalization"]
+    end
+
+    subgraph Processing["⚙️ Data Processing & Analytics"]
+        PandasEngine["Pandas & NumPy Engines<br/>• Aggregations & Resampling (freq='ME')<br/>• 50/30/20 Classification<br/>• Anomaly Deviation vs 3-Mo Avg"]
+        MLEngine["Scikit-Learn Regression Pipeline<br/>• Lag-1 & Rolling 3-Month Window<br/>• Trend & Confidence Interval (95%)"]
+    end
+
+    subgraph Storage["💾 Persistence Layer"]
+        DB["PostgreSQL / SQLite Tables<br/>• users<br/>• categories<br/>• transactions<br/>• budgets<br/>• savings_goals"]
+    end
+
+    subgraph Outputs["📤 Presentation & Export"]
+        PlotlyUI["Plotly Visuals & KPIs<br/>(Charts, Health Index 0-100)"]
+        PDF["Branded PDF Report<br/>(FPDF2 Multi-page Document)"]
+        Excel["Formatted Excel Workbook<br/>(OpenPyXL Multi-sheet)"]
+    end
+
+    Manual --> Val
+    CSVFile --> Val
+    DemoSeed --> Val
+
+    Val --> DB
+    DB --> PandasEngine
+    DB --> MLEngine
+
+    PandasEngine --> PlotlyUI
+    MLEngine --> PlotlyUI
+    PandasEngine --> PDF
+    PandasEngine --> Excel

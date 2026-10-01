@@ -1,0 +1,35 @@
+flowchart TD
+    Start([User Request / HTTP Event]) --> AuthCheck{Session Authenticated?}
+    
+    AuthCheck -- No --> AuthUI[modules/auth.py: Render Auth Form]
+    AuthUI --> ProcessAuth[Validate Inputs & PBKDF2 Hash Verification]
+    ProcessAuth --> AuthSuccess{Credentials Valid?}
+    AuthSuccess -- No --> AuthErr[Display Inline Error & Return]
+    AuthSuccess -- Yes --> InitSession[Initialize Session State & User Dict]
+    InitSession --> InjectCSS[utils/css.py: Inject Dark/Light Custom Styles]
+
+    AuthCheck -- Yes --> InjectCSS
+    InjectCSS --> RenderSidebar[Render Sidebar User Info & Radio Navigation]
+    RenderSidebar --> PageSwitch{Selected Page}
+
+    PageSwitch -- Dashboard --> DashFlow[modules/dashboard.py: Query Tx & Budgets<br/>Compute Health Index 0-100<br/>Render KPI Cards & Plotly Trajectory Charts]
+    PageSwitch -- Transactions --> TxFlow[modules/transactions.py: Dynamic SQL Query<br/>Render Selection Dataframe<br/>Handle Add/Edit/Delete Form Actions]
+    PageSwitch -- Budgets --> BudgetFlow[modules/budgets.py: Fetch Budgets & Actuals<br/>Compute % Caps, Render Progress Bars & Alert Banners]
+    PageSwitch -- Analytics --> AnalyticsFlow[modules/analytics.py: Filter Date Window<br/>Generate Plotly Grouped Bar, Line, Box, Treemap, Heatmap]
+    PageSwitch -- Forecast --> MLFlow[modules/ml_engine.py: Time-Series Feature Eng<br/>Fit Linear & RF Regression Models<br/>Generate 95% Confidence Bounds & Category Spend]
+    PageSwitch -- Insights --> InsightsFlow[modules/insights.py: 50/30/20 Rule Computation<br/>Anomaly Spike Detection vs 3-Mo Avg<br/>Generate Rule-Based Recommendations]
+    PageSwitch -- Savings --> SavingsFlow[modules/savings.py: Query Active Milestones<br/>Render Progress & Process Deposit Popover]
+    PageSwitch -- Import/Export --> IOFlow[modules/import_export.py: Validate CSV/XLSX Ingestion<br/>Generate Multi-Page Branded FPDF2 PDF]
+    PageSwitch -- Settings --> SettingsFlow[modules/settings.py: Update Currency/Theme/Profile<br/>Re-seed Demo Data / Reset]
+
+    DashFlow --> DBCommit[database/db.py: Execute SQL via PgConnection or SQLite]
+    TxFlow --> DBCommit
+    BudgetFlow --> DBCommit
+    AnalyticsFlow --> DBCommit
+    MLFlow --> DBCommit
+    InsightsFlow --> DBCommit
+    SavingsFlow --> DBCommit
+    IOFlow --> DBCommit
+    SettingsFlow --> DBCommit
+
+    DBCommit --> UIUpdate([Browser DOM Render & Plotly WebGL/SVG Output])

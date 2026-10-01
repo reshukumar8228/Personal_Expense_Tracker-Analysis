@@ -1,0 +1,273 @@
+{
+  "project_name": "Personal Expense Tracker — Finance & Intelligence Platform",
+  "repository": "https://github.com/reshukumar8228/Personal_Expense_Tracker-Analysis.git",
+  "purpose": "A production-grade personal financial management and intelligence web platform providing multi-criteria transaction auditing, dynamic category budgeting with progressive alerts, multi-dimensional Plotly financial analytics, Scikit-learn machine learning expense forecasting, 50/30/20 rule intelligence, savings goals tracking, and automated multi-page PDF executive reporting.",
+  "primary_users": [
+    "Working professionals and executives managing personal budgets and savings rates",
+    "Freelancers and contractors tracking fluctuating multi-stream income and project cashflows",
+    "Household financial managers monitoring family living expenses against category spending caps",
+    "Students and young adults learning disciplined 50/30/20 budgeting and debt/savings allocation"
+  ],
+  "technologies": [
+    "Python 3.10+",
+    "Streamlit 1.35.0+",
+    "Pandas 2.0.0+ / 3.0.5",
+    "NumPy 1.24.0+ / 2.5.3",
+    "Plotly 5.20.0+ / 7.0.0",
+    "Scikit-learn 1.3.0+ / 1.9.1",
+    "FPDF2 2.7.0+ / 2.8.8",
+    "OpenPyXL 3.1.0+",
+    "psycopg2-binary 2.9.9+",
+    "python-dotenv 1.0.0+",
+    "SQLite 3 (WAL Mode)",
+    "PostgreSQL 15+ (Supabase)"
+  ],
+  "frameworks": [
+    "Streamlit (App & Navigation Framework)",
+    "Custom Vanilla CSS & Glassmorphism Design System",
+    "Plotly Express & Graph Objects (Data Visualization Engine)",
+    "Scikit-learn (Time-Series Regression & Anomaly Modeling)",
+    "Python Unittest (Automated Testing Framework)"
+  ],
+  "ai_components": [
+    {
+      "component": "Expense Trajectory Forecaster",
+      "model_type": "Scikit-learn LinearRegression with RandomForestRegressor fallback",
+      "feature_engineering": [
+        "month_index (Linear chronological time step)",
+        "lag_1 (Previous month expenditure baseline)",
+        "rolling_avg_3 (3-month rolling expenditure moving average)"
+      ],
+      "inference_outputs": [
+        "predicted_total (Point estimate for next month total expenditure)",
+        "confidence_interval_95 (Residual standard error bounds: lower_bound to upper_bound)",
+        "cat_predictions (Weighted moving average: 60% recent month + 40% historical mean)",
+        "trend_status (Increasing > +5%, Decreasing < -5%, or Stable within +/-5%)"
+      ],
+      "input_guardrails": "Enforces minimum 5 expense transactions across at least 2 distinct calendar months before fitting"
+    },
+    {
+      "component": "Rule-Based Financial Intelligence Engine",
+      "techniques": [
+        "50/30/20 Standard Financial Rule Evaluator (Needs vs Wants vs Savings)",
+        "Category Spending Spike Anomaly Detector (>25% surge vs 3-month rolling average)",
+        "Recurring Subscription Auditor (Aggregates fixed subscription charges & flags optimization opportunities)",
+        "Financial Health Score Index (0-100 score weighted across savings rate, expense-to-income ratio, and budget adherence)"
+      ]
+    }
+  ],
+  "databases": [
+    {
+      "type": "Cloud Managed RDBMS",
+      "engine": "Supabase PostgreSQL",
+      "connection_mode": "psycopg2-binary via Transaction Pooler (port 6543) or Direct (port 5432)",
+      "wrapper": "PgConnectionWrapper & PgCursorWrapper with SQLite dialect query translation and RETURNING id injection"
+    },
+    {
+      "type": "Local Embedded RDBMS",
+      "engine": "SQLite 3",
+      "file_path": "database/expense_tracker.db",
+      "mode": "WAL (Write-Ahead Logging) with 30s timeout and multi-thread support",
+      "role": "Offline-first development and automated connection error fallback"
+    }
+  ],
+  "database_tables": [
+    "users (id, username, full_name, email, password_hash, salt, currency, theme, created_at)",
+    "categories (id, user_id, name, type, icon, color, UNIQUE(user_id, name, type))",
+    "transactions (id, user_id, date, type, category, amount, payment_method, notes, is_recurring, recurring_frequency, created_at)",
+    "budgets (id, user_id, category, monthly_limit, year_month, created_at, UNIQUE(user_id, category, year_month))",
+    "savings_goals (id, user_id, name, target_amount, current_amount, target_date, status, notes, created_at)"
+  ],
+  "external_services": [
+    "Supabase Cloud Database (PostgreSQL hosting & transaction pooler)",
+    "Google Fonts CDN (Plus Jakarta Sans & JetBrains Mono typography)",
+    "GitHub (Remote repository version control)",
+    "Streamlit Community Cloud (Production application hosting platform)"
+  ],
+  "deployment_platform": "Streamlit Community Cloud (share.streamlit.io) / Local Streamlit Server (Uvicorn / WebSockets)",
+  "major_modules": [
+    {
+      "file": "app.py",
+      "role": "Application entrypoint, page routing, authentication gating, sidebar navigation, dynamic CSS injection"
+    },
+    {
+      "file": "database/db.py",
+      "role": "Dual-engine database layer, SQLite-to-Postgres dialect wrappers, schema migrations, demo data seeders"
+    },
+    {
+      "file": "modules/auth.py",
+      "role": "Salted PBKDF2-HMAC-SHA256 password hashing (100k rounds), registration, login, 1-click instant demo access"
+    },
+    {
+      "file": "modules/dashboard.py",
+      "role": "Executive financial KPI cards, Financial Health Score (0-100), income vs expense trends, spending pie chart"
+    },
+    {
+      "file": "modules/transactions.py",
+      "role": "Transaction ledger CRUD, multi-criteria filtering, single-row selection callback, recurring expenses tracker"
+    },
+    {
+      "file": "modules/budgets.py",
+      "role": "Monthly category spending caps, real-time progress bars, multi-tier budget alerts (<75%, 75-99%, >=100%)"
+    },
+    {
+      "file": "modules/analytics.py",
+      "role": "Plotly interactive analytics: grouped bars, cumulative cashflow line, box plot outlier detection, treemap, heatmap"
+    },
+    {
+      "file": "modules/ml_engine.py",
+      "role": "Scikit-learn time-series forecasting, next-month point estimate, 95% confidence bounds, category prediction"
+    },
+    {
+      "file": "modules/insights.py",
+      "role": "50/30/20 compliance auditor, category spending surge detector (>25% vs 3-month avg), rule-based financial advice"
+    },
+    {
+      "file": "modules/savings.py",
+      "role": "Financial milestones tracker, target completion dates, popover deposit logging, progress indicators"
+    },
+    {
+      "file": "modules/import_export.py",
+      "role": "Batch CSV/XLSX file ingestion with schema validation, CSV/XLSX export, branded multi-page FPDF2 PDF generation"
+    },
+    {
+      "file": "modules/settings.py",
+      "role": "User profile management, currency selector (USD, EUR, GBP, INR, JPY, CAD, AUD), theme toggle, data reset"
+    },
+    {
+      "file": "utils/css.py",
+      "role": "Fintech design system: deep navy dark theme, elevated card hierarchy, glowing borders, custom Plotly layouts"
+    },
+    {
+      "file": "utils/helpers.py",
+      "role": "Currency formatting, PDF Latin-1 sanitization, category icons/colors map, year-month string formatters"
+    }
+  ],
+  "major_workflows": [
+    "Authentication & Instant Demo Onboarding Workflow",
+    "Financial Ingestion & Interactive Single-Row Audit Workflow",
+    "Active Budget Monitoring & Progressive Alerting Workflow",
+    "Multi-Dimensional Plotly Visual Analytics & Outlier Detection",
+    "Machine Learning Next-Month Expense Forecasting & Confidence Intervals",
+    "Smart 50/30/20 Financial Intelligence & Anomaly Spike Detection",
+    "Wealth Goal Milestones & Deposit Accumulation Workflow",
+    "Batch Data Import & Multi-Page Branded PDF Report Generation"
+  ],
+  "verified_metrics": {
+    "modules_count": 10,
+    "pages_count": 9,
+    "database_tables_count": 5,
+    "unit_tests_count": 6,
+    "unit_tests_pass_rate": "100%",
+    "supported_currencies": ["USD", "EUR", "GBP", "INR", "JPY", "CAD", "AUD"],
+    "supported_themes": ["Dark Fintech", "Light Modern"],
+    "plotly_chart_types": ["Grouped Bar", "Donut Pie", "Cumulative Line", "Histogram", "Box Plot", "Hierarchical Treemap", "Day-of-Week Heatmap"],
+    "preseeded_transactions_count": 3721,
+    "max_upload_size_mb": 200,
+    "password_hashing_iterations": 100000
+  },
+  "screenshots": [
+    {
+      "filename": "presentation_assets/screenshots/01_auth_screen.png",
+      "title": "Authentication & Onboarding Screen",
+      "description": "Clean login card with pill toggle between Login and Sign Up, and 1-Click Instant Demo Access button."
+    },
+    {
+      "filename": "presentation_assets/screenshots/02_dashboard_overview.png",
+      "title": "Personal Executive Dashboard",
+      "description": "Hero welcome card, 5 Financial KPI cards (Income, Expense, Net Balance, Savings Rate, Health Index 95/100), and trend chart containers."
+    },
+    {
+      "filename": "presentation_assets/screenshots/03_transactions_hub.png",
+      "title": "Transactions Management Hub",
+      "description": "Multi-criteria search filters, summary stats bar (124 txs, Net ₹18,963.70), and interactive dataframe with single-row selection for edit/delete."
+    },
+    {
+      "filename": "presentation_assets/screenshots/04_budgets_monitoring.png",
+      "title": "Budgets & Spending Caps Monitor",
+      "description": "Monthly cap KPIs (₹3,760 total, 83.6% used), category progress bars, and multi-tier warning badges (Healthy, Warning 99%)."
+    },
+    {
+      "filename": "presentation_assets/screenshots/05_analytics_visualizations.png",
+      "title": "Interactive Analytics & Cash Flow Trajectory",
+      "description": "Multi-month income vs expense grouped bar chart and cumulative net balance trajectory line chart."
+    },
+    {
+      "filename": "presentation_assets/screenshots/06_forecast_ml_engine.png",
+      "title": "Machine Learning Expense Forecast Engine",
+      "description": "Scikit-learn predicted spend (₹3,181.30), 95% confidence range (₹3,126 - ₹3,236), Stable trajectory indicator, and category bar breakdown."
+    },
+    {
+      "filename": "presentation_assets/screenshots/07_insights_intelligence.png",
+      "title": "Smart Insights & Anomaly Detector",
+      "description": "50/30/20 rule breakdown metrics, spending spike anomaly alerts (+423% Dining Out surge), and tailored financial advice."
+    },
+    {
+      "filename": "presentation_assets/screenshots/08_savings_goals.png",
+      "title": "Savings Goals & Wealth Accumulation",
+      "description": "Milestone cards (Emergency Fund 65%, Japan Vacation 51.4%, Macbook Pro 100%), progress bars, and deposit funds popovers."
+    },
+    {
+      "filename": "presentation_assets/screenshots/09_import_export_hub.png",
+      "title": "Data Import & Export Hub",
+      "description": "CSV/Excel batch file uploader (up to 200MB), template downloader, Excel multi-sheet export, and FPDF2 PDF report generator."
+    },
+    {
+      "filename": "presentation_assets/screenshots/10_settings_preferences.png",
+      "title": "Account Settings & Preferences",
+      "description": "Profile editing, currency selector, Dark/Light theme toggle, and data reset / demo re-seeder controls."
+    }
+  ],
+  "diagrams": [
+    {
+      "filename": "presentation_assets/architecture/system_architecture.svg",
+      "png": "presentation_assets/architecture/system_architecture.png",
+      "source": "presentation_assets/architecture/system_architecture.mmd",
+      "type": "System Architecture Diagram"
+    },
+    {
+      "filename": "presentation_assets/workflow/user_journey.svg",
+      "png": "presentation_assets/workflow/user_journey.png",
+      "source": "presentation_assets/workflow/user_journey.mmd",
+      "type": "End-to-End User Journey Diagram"
+    },
+    {
+      "filename": "presentation_assets/workflow/technical_workflow.svg",
+      "png": "presentation_assets/workflow/technical_workflow.png",
+      "source": "presentation_assets/workflow/technical_workflow.mmd",
+      "type": "Technical Execution Flow Diagram"
+    },
+    {
+      "filename": "presentation_assets/dataflow/data_flow.svg",
+      "png": "presentation_assets/dataflow/data_flow.png",
+      "source": "presentation_assets/dataflow/data_flow.mmd",
+      "type": "Data Flow Lifecycle Diagram"
+    },
+    {
+      "filename": "presentation_assets/ai_pipeline/ai_ml_pipeline.svg",
+      "png": "presentation_assets/ai_pipeline/ai_ml_pipeline.png",
+      "source": "presentation_assets/ai_pipeline/ai_ml_pipeline.mmd",
+      "type": "Machine Learning Pipeline Diagram"
+    },
+    {
+      "filename": "presentation_assets/deployment/deployment_architecture.svg",
+      "png": "presentation_assets/deployment/deployment_architecture.png",
+      "source": "presentation_assets/deployment/deployment_architecture.mmd",
+      "type": "Deployment & Cloud Infrastructure Diagram"
+    },
+    {
+      "filename": "presentation_assets/technology_stack/technology_stack.svg",
+      "png": "presentation_assets/technology_stack/technology_stack.png",
+      "source": "presentation_assets/technology_stack/technology_stack.mmd",
+      "type": "Technology Stack Ecosystem Diagram"
+    }
+  ],
+  "verified_limitations": [
+    "Remote Supabase connection failure triggers graceful fallback to SQLite, but remote DNS resolution failed on this host",
+    "Credentials were committed in local .env rather than loaded exclusively via environment variables or secret vaults",
+    "Streamlit session state is tab/browser scoped; browser refreshes without query parameters reset session unless user stays authenticated in session",
+    "Scikit-learn model retrains synchronously on page load rather than using asynchronous worker queues or serialized model artifacts",
+    "Single-row dataframe selection requires table rerun cycle which can induce brief Streamlit widget rehydration delay",
+    "No multi-factor authentication (MFA) or email verification service currently integrated into registration flow"
+  ]
+}

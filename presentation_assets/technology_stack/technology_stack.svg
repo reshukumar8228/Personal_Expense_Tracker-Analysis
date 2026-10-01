@@ -1,0 +1,178 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgStack" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080D2B"/>
+      <stop offset="100%" stop-color="#0D1238"/>
+    </linearGradient>
+    <linearGradient id="stBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E40AF"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="stPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6B21A8"/>
+      <stop offset="100%" stop-color="#C52DDB"/>
+    </linearGradient>
+    <linearGradient id="stGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#065F46"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="stAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#92400E"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="stCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E7490"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="stRose" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9F1239"/>
+      <stop offset="100%" stop-color="#F43F5E"/>
+    </linearGradient>
+    <filter id="stackShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#040718" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="680" rx="16" fill="url(#bgStack)"/>
+
+  <!-- Header -->
+  <g transform="translate(60, 45)">
+    <text x="0" y="0" font-family="system-ui, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">TECHNOLOGY STACK &amp; ENGINEERING ECOSYSTEM</text>
+    <text x="0" y="24" font-family="system-ui, sans-serif" font-size="13" font-weight="500" fill="#879BFF">PRODUCTION-VERIFIED TOOLS, LIBRARIES, FRAMEWORKS, AND CLOUD INFRASTRUCTURE</text>
+  </g>
+
+  <!-- 6 Stack Categories Grid -->
+  <g transform="translate(60, 105)">
+    <!-- Row 1: Frontend & UI -->
+    <g transform="translate(0, 0)">
+      <rect width="345" height="240" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#stackShadow)"/>
+      <rect width="345" height="38" rx="12" fill="url(#stBlue)"/>
+      <rect y="23" width="345" height="15" fill="url(#stBlue)"/>
+      <text x="16" y="25" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">🖥️ FRONTEND &amp; UI FRAMEWORK</text>
+
+      <g transform="translate(16, 52)">
+        <text x="0" y="16" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Streamlit (v1.35.0+ / 1.63.0)</text>
+        <text x="0" y="32" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Core reactive web application framework &amp; router</text>
+
+        <text x="0" y="60" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Custom CSS Fintech Engine</text>
+        <text x="0" y="76" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Dynamic glassmorphic styling, Dark/Light modes</text>
+
+        <text x="0" y="104" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Google Fonts Typography</text>
+        <text x="0" y="120" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Plus Jakarta Sans (Body), JetBrains Mono (Numbers)</text>
+
+        <text x="0" y="148" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#38BDF8">Interactive Dataframes &amp; Popovers</text>
+        <text x="0" y="164" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Single-row selection callback &amp; modal dialogs</text>
+      </g>
+    </g>
+
+    <!-- Row 1: Data Visualization -->
+    <g transform="translate(365, 0)">
+      <rect width="345" height="240" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#stackShadow)"/>
+      <rect width="345" height="38" rx="12" fill="url(#stPurple)"/>
+      <rect y="23" width="345" height="15" fill="url(#stPurple)"/>
+      <text x="16" y="25" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">📊 INTERACTIVE VISUALIZATION</text>
+
+      <g transform="translate(16, 52)">
+        <text x="0" y="16" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Plotly Express &amp; Graph Objects (v5.20+)</text>
+        <text x="0" y="32" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">WebGL hardware-accelerated interactive charting</text>
+
+        <text x="0" y="60" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">7 Visualization Topologies</text>
+        <text x="0" y="76" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Bar, Donut, Line, Histogram, Box, Treemap, Heatmap</text>
+
+        <text x="0" y="104" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Theme-Aware Layouts</text>
+        <text x="0" y="120" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Dynamic transparent backgrounds &amp; neon palettes</text>
+
+        <text x="0" y="148" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#E052F2">Outlier Detection Boxplots</text>
+        <text x="0" y="164" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Statistical IQR boundary &amp; whisker visualization</text>
+      </g>
+    </g>
+
+    <!-- Row 1: Machine Learning & AI -->
+    <g transform="translate(730, 0)">
+      <rect width="350" height="240" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#stackShadow)"/>
+      <rect width="350" height="38" rx="12" fill="url(#stRose)"/>
+      <rect y="23" width="350" height="15" fill="url(#stRose)"/>
+      <text x="16" y="25" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">🤖 MACHINE LEARNING &amp; PREDICTION</text>
+
+      <g transform="translate(16, 52)">
+        <text x="0" y="16" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Scikit-Learn (v1.3.0+ / 1.9.1)</text>
+        <text x="0" y="32" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Time-series expenditure forecasting models</text>
+
+        <text x="0" y="60" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Linear &amp; Random Forest Regressors</text>
+        <text x="0" y="76" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Lag-1 feature, 3-month rolling mean, trend index</text>
+
+        <text x="0" y="104" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">95% Confidence Intervals</text>
+        <text x="0" y="120" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Residual standard error mathematical bounds</text>
+
+        <text x="0" y="148" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#F43F5E">Rule-Based Anomaly Detector</text>
+        <text x="0" y="164" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">&gt;25% surge vs 3-month average expenditure</text>
+      </g>
+    </g>
+
+    <!-- Row 2: Database Layer -->
+    <g transform="translate(0, 260)">
+      <rect width="345" height="240" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#stackShadow)"/>
+      <rect width="345" height="38" rx="12" fill="url(#stGreen)"/>
+      <rect y="23" width="345" height="15" fill="url(#stGreen)"/>
+      <text x="16" y="25" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">💾 DUAL PERSISTENCE DATABASE</text>
+
+      <g transform="translate(16, 52)">
+        <text x="0" y="16" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Supabase PostgreSQL 15+</text>
+        <text x="0" y="32" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Cloud managed DB via psycopg2-binary &amp; pooler</text>
+
+        <text x="0" y="60" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">SQLite 3 (WAL Journal Mode)</text>
+        <text x="0" y="76" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Local zero-configuration resilient offline fallback</text>
+
+        <text x="0" y="104" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Database Compatibility Wrappers</text>
+        <text x="0" y="120" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">PgCursorWrapper translates ? to %s &amp; schema queries</text>
+
+        <text x="0" y="148" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#10B981">Relational Foreign Keys &amp; Cascades</text>
+        <text x="0" y="164" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">users → categories, transactions, budgets, goals</text>
+      </g>
+    </g>
+
+    <!-- Row 2: Data Processing & Ingestion -->
+    <g transform="translate(365, 260)">
+      <rect width="345" height="240" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#stackShadow)"/>
+      <rect width="345" height="38" rx="12" fill="url(#stCyan)"/>
+      <rect y="23" width="345" height="15" fill="url(#stCyan)"/>
+      <text x="16" y="25" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">⚙️ DATA PROCESSING &amp; EXPORT</text>
+
+      <g transform="translate(16, 52)">
+        <text x="0" y="16" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Pandas (v2.0.0+ / 3.0.5)</text>
+        <text x="0" y="32" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Dataframe transformations, grouping, ME resampling</text>
+
+        <text x="0" y="60" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">NumPy (v1.24.0+ / 2.5.3)</text>
+        <text x="0" y="76" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Mathematical operations, residual standard deviations</text>
+
+        <text x="0" y="104" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">FPDF2 (v2.7.0+ / 2.8.8)</text>
+        <text x="0" y="120" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Multi-page branded PDF financial report generator</text>
+
+        <text x="0" y="148" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#06B6D4">OpenPyXL (v3.1.0+)</text>
+        <text x="0" y="164" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Multi-sheet Excel workbook export with styling</text>
+      </g>
+    </g>
+
+    <!-- Row 2: Security & DevOps -->
+    <g transform="translate(730, 260)">
+      <rect width="350" height="240" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#stackShadow)"/>
+      <rect width="350" height="38" rx="12" fill="url(#stAmber)"/>
+      <rect y="23" width="350" height="15" fill="url(#stAmber)"/>
+      <text x="16" y="25" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">🛡️ SECURITY, TESTING &amp; DEVOPS</text>
+
+      <g transform="translate(16, 52)">
+        <text x="0" y="16" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">PBKDF2 HMAC-SHA256</text>
+        <text x="0" y="32" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">100,000 hash iterations + 16-byte crypt hex salt</text>
+
+        <text x="0" y="60" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Python Unittest Suite (6 Tests)</text>
+        <text x="0" y="76" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">100% test pass rate across db, auth, ml &amp; export</text>
+
+        <text x="0" y="104" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Python Dotenv &amp; Streamlit Secrets</text>
+        <text x="0" y="120" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Zero-credential leakage architecture</text>
+
+        <text x="0" y="148" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#F59E0B">Git &amp; Streamlit Cloud Ready</text>
+        <text x="0" y="164" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Continuous deployment webhook integration</text>
+      </g>
+    </g>
+  </g>
+</svg>

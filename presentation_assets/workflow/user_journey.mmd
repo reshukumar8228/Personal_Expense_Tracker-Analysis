@@ -1,0 +1,34 @@
+sequenceDiagram
+    autonumber
+    actor User as 👤 End User
+    participant Auth as 🔒 Auth Page
+    participant Dash as 📊 Executive Dashboard
+    participant Tx as 💳 Transactions Hub
+    participant Budget as 🎯 Budgets & Caps
+    participant Analytics as 📈 Analytics & Heatmap
+    participant ML as 🤖 Forecast Engine
+    participant Export as 📥 Export Hub
+
+    User->>Auth: Opens App / Enters Credentials or Clicks Demo
+    Auth->>Dash: Authenticated & Session Initialized
+    Note over Dash: Displays Financial Health Score (0-100),<br/>Income/Expense KPI Cards, Trend Bar & Donut Charts
+
+    alt Record Financial Activity
+        User->>Dash: Fills Quick Entry Form
+        Dash-->>Dash: Reruns with updated KPIs & Balances
+    else Manage & Audit History
+        User->>Tx: Navigates to Transactions Hub
+        User->>Tx: Filters by Date/Category/Payment Method
+        User->>Tx: Selects row in table to Edit or Delete
+    else Enforce Spending Discipline
+        User->>Budget: Views Category Progress Bars
+        Budget-->>User: Displays Over-Budget Alert (>100% Red)
+        User->>Budget: Adjusts Monthly Caps
+    else Strategic Intelligence
+        User->>Analytics: Explores Treemap, Boxplot & Outliers
+        User->>ML: Triggers Next-Month Regression Forecast
+        ML-->>User: Outputs Predicted Spend & 95% Confidence Interval
+    else Report Generation
+        User->>Export: Requests Monthly Financial Report
+        Export-->>User: Downloads Branded FPDF2 Multi-page PDF
+    end

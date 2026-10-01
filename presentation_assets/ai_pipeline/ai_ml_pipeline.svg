@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgML" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080D2B"/>
+      <stop offset="100%" stop-color="#0D1238"/>
+    </linearGradient>
+    <linearGradient id="mlPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7E22CE"/>
+      <stop offset="100%" stop-color="#C52DDB"/>
+    </linearGradient>
+    <linearGradient id="mlBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1D4ED8"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="mlGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="cardGradML" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#182254"/>
+      <stop offset="100%" stop-color="#121A42"/>
+    </linearGradient>
+    <filter id="mlShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#040718" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="680" rx="16" fill="url(#bgML)"/>
+
+  <!-- Header -->
+  <g transform="translate(60, 40)">
+    <text x="0" y="0" font-family="system-ui, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">MACHINE LEARNING EXPENSE FORECASTING PIPELINE</text>
+    <text x="0" y="24" font-family="system-ui, sans-serif" font-size="13" font-weight="500" fill="#879BFF">SCIKIT-LEARN TIME-SERIES REGRESSION &amp; UNCERTAINTY ESTIMATION (modules/ml_engine.py)</text>
+  </g>
+
+  <!-- 4-Stage Horizontal Pipeline -->
+  <g transform="translate(60, 100)">
+    <!-- Stage 1: Ingestion & Feature Engineering -->
+    <g transform="translate(0, 0)">
+      <rect width="250" height="520" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#mlShadow)"/>
+      <rect width="250" height="42" rx="12" fill="url(#mlBlue)"/>
+      <rect y="27" width="250" height="15" fill="url(#mlBlue)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">1. FEATURE MATRIX</text>
+
+      <g transform="translate(16, 55)">
+        <rect width="218" height="100" rx="8" fill="#182254" stroke="#4169E1"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Historical Filter</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• user_id scoped query</text>
+        <text x="12" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• type = 'expense' only</text>
+        <text x="12" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#38BDF8">• Require: N &gt;= 5 &amp; M &gt;= 2</text>
+      </g>
+
+      <g transform="translate(16, 170)">
+        <rect width="218" height="130" rx="8" fill="#182254" stroke="#4169E1"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Engineered Features (X)</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">1. <b fill="#FFFFFF">month_index:</b> (0, 1, 2...)</text>
+        <text x="24" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#6C7BAE">Captures secular trend</text>
+        <text x="12" y="78" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">2. <b fill="#FFFFFF">lag_1:</b> Amount(t - 1)</text>
+        <text x="24" y="94" font-family="system-ui, sans-serif" font-size="10" fill="#6C7BAE">Recent baseline inertia</text>
+        <text x="12" y="112" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">3. <b fill="#FFFFFF">rolling_avg_3:</b> 3-Mo Mean</text>
+      </g>
+
+      <g transform="translate(16, 315)">
+        <rect width="218" height="90" rx="8" fill="#182254" stroke="#4169E1"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Target Variable (y)</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Total monthly spend</text>
+        <text x="12" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Continuous float series</text>
+        <text x="12" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">• Grouped by year_month</text>
+      </g>
+    </g>
+
+    <!-- Connector 1 -->
+    <path d="M 255 350 L 270 350" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 2: Model Training -->
+    <g transform="translate(275, 0)">
+      <rect width="250" height="520" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#mlShadow)"/>
+      <rect width="250" height="42" rx="12" fill="url(#mlPurple)"/>
+      <rect y="27" width="250" height="15" fill="url(#mlPurple)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">2. MODEL TRAINING</text>
+
+      <g transform="translate(16, 55)">
+        <rect width="218" height="120" rx="8" fill="#182254" stroke="#C52DDB"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#E052F2">Scikit-Learn Regressor</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• LinearRegression()</text>
+        <text x="12" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• RandomForest fallback</text>
+        <text x="12" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Ordinary Least Squares fit</text>
+        <text x="12" y="98" font-family="system-ui, sans-serif" font-size="10.5" fill="#38BDF8">• Real-time model.fit(X, y)</text>
+      </g>
+
+      <g transform="translate(16, 190)">
+        <rect width="218" height="120" rx="8" fill="#182254" stroke="#C52DDB"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#E052F2">Inference Vector (next_X)</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• month_index = n_months</text>
+        <text x="12" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• lag_1 = last_month_val</text>
+        <text x="12" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• rolling_3 = rolling_mean</text>
+        <text x="12" y="98" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">• model.predict(next_X)</text>
+      </g>
+
+      <g transform="translate(16, 325)">
+        <rect width="218" height="120" rx="8" fill="#182254" stroke="#C52DDB"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#E052F2">Category Blending</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Weighted Time-Series:</text>
+        <text x="12" y="64" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">pred_cat = 0.6 * recent</text>
+        <text x="56" y="80" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">+ 0.4 * history_avg</text>
+        <text x="12" y="100" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">Per-category expenditure</text>
+      </g>
+    </g>
+
+    <!-- Connector 2 -->
+    <path d="M 530 350 L 545 350" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 3: Statistical Uncertainty & Validation -->
+    <g transform="translate(550, 0)">
+      <rect width="250" height="520" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#mlShadow)"/>
+      <rect width="250" height="42" rx="12" fill="url(#mlGreen)"/>
+      <rect y="27" width="250" height="15" fill="url(#mlGreen)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">3. UNCERTAINTY BAND</text>
+
+      <g transform="translate(16, 55)">
+        <rect width="218" height="135" rx="8" fill="#182254" stroke="#10B981"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">95% Confidence Interval</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Residual Standard Error:</text>
+        <text x="12" y="62" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">residuals = y - y_pred</text>
+        <text x="12" y="78" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">std_error = std(residuals)</text>
+        <text x="12" y="98" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">lower = pred - std_error</text>
+        <text x="12" y="116" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">upper = pred + std_error</text>
+      </g>
+
+      <g transform="translate(16, 205)">
+        <rect width="218" height="135" rx="8" fill="#182254" stroke="#10B981"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Trajectory Classification</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">pct_change = (pred - prev)</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">             / prev * 100</text>
+        <text x="12" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#EF4444">• &gt; +5.0% : Increasing 📈</text>
+        <text x="12" y="98" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">• &lt; -5.0% : Decreasing 📉</text>
+        <text x="12" y="116" font-family="system-ui, sans-serif" font-size="10.5" fill="#38BDF8">• ±5.0%   : Stable ➡️</text>
+      </g>
+    </g>
+
+    <!-- Connector 3 -->
+    <path d="M 805 350 L 820 350" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 4: Executive UI & Actionable Insights -->
+    <g transform="translate(825, 0)">
+      <rect width="255" height="520" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#mlShadow)"/>
+      <rect width="255" height="42" rx="12" fill="url(#mlBlue)"/>
+      <rect y="27" width="255" height="15" fill="url(#mlBlue)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">4. PREDICTIVE OUTPUTS</text>
+
+      <g transform="translate(16, 55)">
+        <rect width="223" height="95" rx="8" fill="#182254" stroke="#38BDF8"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Forecast KPI Grid</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#38BDF8">Predicted: ₹3,181.30</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">Range: ₹3,126 - ₹3,236</text>
+        <text x="12" y="78" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">Trajectory: Stable (+1.2%)</text>
+      </g>
+
+      <g transform="translate(16, 165)">
+        <rect width="223" height="120" rx="8" fill="#182254" stroke="#38BDF8"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Category Predictions</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Housing &amp; Rent: ₹1,650</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Groceries: ₹515.01</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Dining Out: ₹325.39</text>
+        <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Transportation: ₹218.90</text>
+        <text x="12" y="108" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">Horizontal Bar Chart (px.bar)</text>
+      </g>
+
+      <g transform="translate(16, 300)">
+        <rect width="223" height="105" rx="8" fill="#182254" stroke="#F59E0B"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Intelligent Advice Banner</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#F59E0B">⚠️ Spike Warning if &gt;5%:</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="9.5" fill="#9AA8D1">Recommends trimming Dining</text>
+        <text x="12" y="74" font-family="system-ui, sans-serif" font-size="9.5" fill="#9AA8D1">Out or Shopping categories</text>
+        <text x="12" y="90" font-family="system-ui, sans-serif" font-size="10" fill="#10B981">✅ Healthy Forecast if stable</text>
+      </g>
+    </g>
+  </g>
+</svg>

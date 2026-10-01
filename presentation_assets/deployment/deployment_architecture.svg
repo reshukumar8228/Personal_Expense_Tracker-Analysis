@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgDeploy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080D2B"/>
+      <stop offset="100%" stop-color="#0D1238"/>
+    </linearGradient>
+    <linearGradient id="depBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E40AF"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="depPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6B21A8"/>
+      <stop offset="100%" stop-color="#A855F7"/>
+    </linearGradient>
+    <linearGradient id="depGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#065F46"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="cardGradDep" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#182254"/>
+      <stop offset="100%" stop-color="#121A42"/>
+    </linearGradient>
+    <filter id="depShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#040718" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="680" rx="16" fill="url(#bgDeploy)"/>
+
+  <!-- Title -->
+  <g transform="translate(60, 40)">
+    <text x="0" y="0" font-family="system-ui, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">DEPLOYMENT ARCHITECTURE &amp; CLOUD INFRASTRUCTURE</text>
+    <text x="0" y="24" font-family="system-ui, sans-serif" font-size="13" font-weight="500" fill="#879BFF">CONTINUOUS INTEGRATION, STREAMLIT CLOUD HOSTING, AND CLOUD DATABASE TOPOLOGY</text>
+  </g>
+
+  <!-- 3 Major Deployment Zones -->
+  <g transform="translate(60, 100)">
+    <!-- Zone 1: Source Control & Developer Workflow -->
+    <g transform="translate(0, 0)">
+      <rect width="320" height="520" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#depShadow)"/>
+      <rect width="320" height="42" rx="12" fill="url(#depBlue)"/>
+      <rect y="27" width="320" height="15" fill="url(#depBlue)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">1. SOURCE &amp; WORKFLOW</text>
+
+      <g transform="translate(16, 60)">
+        <rect width="288" height="115" rx="8" fill="#182254" stroke="#4169E1"/>
+        <text x="14" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Developer Workstation</text>
+        <text x="14" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Python 3.10+ / VSCode / IDE</text>
+        <text x="14" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Automated unit tests (`test_*.py`)</text>
+        <text x="14" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#38BDF8">• Local offline SQLite testing</text>
+        <text x="14" y="98" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">• Headless Streamlit runner</text>
+      </g>
+
+      <!-- Arrow -->
+      <path d="M 160 185 L 160 215" stroke="#879BFF" stroke-width="2" stroke-dasharray="3,3"/>
+      <polygon points="156,215 164,215 160,223" fill="#879BFF"/>
+
+      <g transform="translate(16, 230)">
+        <rect width="288" height="130" rx="8" fill="#182254" stroke="#4169E1"/>
+        <text x="14" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">GitHub Remote Repository</text>
+        <text x="14" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• reshukumar8228/...</text>
+        <text x="14" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Git commit history verified</text>
+        <text x="14" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Webhook triggers on push</text>
+        <text x="14" y="98" font-family="system-ui, sans-serif" font-size="10.5" fill="#38BDF8">• .gitignore protects local .db &amp; .env</text>
+        <text x="14" y="116" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">• requirements.txt pinned specs</text>
+      </g>
+    </g>
+
+    <!-- Connector 1 -->
+    <path d="M 325 360 L 350 360" stroke="#879BFF" stroke-width="2.5" stroke-dasharray="4,4"/>
+    <polygon points="350,355 360,360 350,365" fill="#879BFF"/>
+
+    <!-- Zone 2: Streamlit Community Cloud Hosting -->
+    <g transform="translate(365, 0)">
+      <rect width="360" height="520" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#depShadow)"/>
+      <rect width="360" height="42" rx="12" fill="url(#depPurple)"/>
+      <rect y="27" width="360" height="15" fill="url(#depPurple)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">2. RUNTIME HOSTING PLATFORM</text>
+
+      <g transform="translate(16, 60)">
+        <rect width="328" height="135" rx="8" fill="#182254" stroke="#A855F7"/>
+        <text x="14" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Streamlit Community Cloud (share.streamlit.io)</text>
+        <text x="14" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Linux container instance (Debian/Ubuntu)</text>
+        <text x="14" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Auto dependency install (`pip install -r reqs`)</text>
+        <text x="14" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• WebSockets / Uvicorn server runtime (port 8501)</text>
+        <text x="14" y="98" font-family="system-ui, sans-serif" font-size="10.5" fill="#38BDF8">• Streamlit Page Config: wide layout, dark theme</text>
+        <text x="14" y="118" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">• Headless execution &amp; auto-reboot on crash</text>
+      </g>
+
+      <g transform="translate(16, 210)">
+        <rect width="328" height="130" rx="8" fill="#182254" stroke="#A855F7"/>
+        <text x="14" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#E052F2">Secrets &amp; Config Vault</text>
+        <text x="14" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• .streamlit/config.toml (headless=true)</text>
+        <text x="14" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Streamlit Cloud App Settings → Secrets</text>
+        <text x="14" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#38BDF8">• DATABASE_URL connection string injection</text>
+        <text x="14" y="98" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• URL password masking in error logs</text>
+        <text x="14" y="116" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">• Redacted credential handling</text>
+      </g>
+    </g>
+
+    <!-- Connector 2 -->
+    <path d="M 730 360 L 755 360" stroke="#879BFF" stroke-width="2.5" stroke-dasharray="4,4"/>
+    <polygon points="755,355 765,360 755,365" fill="#879BFF"/>
+
+    <!-- Zone 3: Cloud Database & Infrastructure -->
+    <g transform="translate(770, 0)">
+      <rect width="310" height="520" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#depShadow)"/>
+      <rect width="310" height="42" rx="12" fill="url(#depGreen)"/>
+      <rect y="27" width="310" height="15" fill="url(#depGreen)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">3. DATA PERSISTENCE &amp; EDGE</text>
+
+      <g transform="translate(16, 60)">
+        <rect width="278" height="135" rx="8" fill="#182254" stroke="#10B981"/>
+        <text x="14" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#38BDF8">Supabase Cloud PostgreSQL</text>
+        <text x="14" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Managed PostgreSQL 15+ (AWS)</text>
+        <text x="14" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Transaction Pooler (pGBouncer 6543)</text>
+        <text x="14" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Dialect wrapper in database/db.py</text>
+        <text x="14" y="98" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• ON CONFLICT DO UPDATE support</text>
+        <text x="14" y="118" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">• Multi-tenant ACID transaction safety</text>
+      </g>
+
+      <g transform="translate(16, 210)">
+        <rect width="278" height="120" rx="8" fill="#182254" stroke="#F59E0B"/>
+        <text x="14" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#F59E0B">Local SQLite Fallback Engine</text>
+        <text x="14" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• database/expense_tracker.db</text>
+        <text x="14" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Auto fallback on network failure</text>
+        <text x="14" y="80" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• PRAGMA journal_mode = WAL</text>
+        <text x="14" y="98" font-family="system-ui, sans-serif" font-size="10.5" fill="#10B981">• Fully operational offline</text>
+      </g>
+
+      <g transform="translate(16, 345)">
+        <rect width="278" height="85" rx="8" fill="#182254" stroke="#4169E1"/>
+        <text x="14" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Google Fonts CDN</text>
+        <text x="14" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• Plus Jakarta Sans (UI body &amp; cards)</text>
+        <text x="14" y="62" font-family="system-ui, sans-serif" font-size="10.5" fill="#9AA8D1">• JetBrains Mono (Financial numerals)</text>
+      </g>
+    </g>
+  </g>
+</svg>

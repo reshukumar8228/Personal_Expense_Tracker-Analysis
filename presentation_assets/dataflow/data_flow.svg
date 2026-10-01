@@ -1,0 +1,204 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgData" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080D2B"/>
+      <stop offset="100%" stop-color="#0D1238"/>
+    </linearGradient>
+    <linearGradient id="gBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1D4ED8"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="gPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6B21A8"/>
+      <stop offset="100%" stop-color="#C52DDB"/>
+    </linearGradient>
+    <linearGradient id="gGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="gAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B45309"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <filter id="fShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#040718" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="680" rx="16" fill="url(#bgData)"/>
+
+  <!-- Header -->
+  <g transform="translate(60, 45)">
+    <text x="0" y="0" font-family="system-ui, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">DATA FLOW PIPELINE &amp; TRANSFORMATION LIFECYCLE</text>
+    <text x="0" y="24" font-family="system-ui, sans-serif" font-size="13" font-weight="500" fill="#879BFF">FROM MULTI-SOURCE INGESTION TO PREDICTIVE MODELING AND MULTI-FORMAT REPORTING</text>
+  </g>
+
+  <!-- Pipeline Stages -->
+  <g transform="translate(60, 105)">
+    <!-- Stage 1: Ingestion -->
+    <g transform="translate(0, 0)">
+      <rect width="200" height="510" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#fShadow)"/>
+      <rect width="200" height="42" rx="12" fill="url(#gBlue)"/>
+      <rect y="27" width="200" height="15" fill="url(#gBlue)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">1. INGESTION</text>
+
+      <g transform="translate(14, 60)">
+        <rect width="172" height="95" rx="8" fill="#182254" stroke="#4169E1"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Manual UI Entry</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Quick Add widget</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Full Transactions Tab</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">• Real-time date picker</text>
+      </g>
+
+      <g transform="translate(14, 175)">
+        <rect width="172" height="105" rx="8" fill="#182254" stroke="#4169E1"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Spreadsheet Ingestion</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• CSV drag-and-drop</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Excel XLSX parsing</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Auto column mapping</text>
+        <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#C52DDB">• Up to 200MB files</text>
+      </g>
+
+      <g transform="translate(14, 300)">
+        <rect width="172" height="95" rx="8" fill="#182254" stroke="#4169E1"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Synthetic Seeder</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• 6-Month Demo Data</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Realistic variances</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#10B981">• Pre-seeded 3,700+ rows</text>
+      </g>
+    </g>
+
+    <!-- Connector 1 -->
+    <path d="M 205 340 L 215 340" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 2: Validation & Cleansing -->
+    <g transform="translate(220, 0)">
+      <rect width="200" height="510" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#fShadow)"/>
+      <rect width="200" height="42" rx="12" fill="url(#gAmber)"/>
+      <rect y="27" width="200" height="15" fill="url(#gAmber)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">2. VALIDATION</text>
+
+      <g transform="translate(14, 60)">
+        <rect width="172" height="120" rx="8" fill="#182254" stroke="#F59E0B"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Schema Enforcement</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Date: YYYY-MM-DD</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Type: income/expense</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Amount: Float &gt; 0.00</text>
+        <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• User ID Foreign Key</text>
+        <text x="12" y="108" font-family="system-ui, sans-serif" font-size="10" fill="#F59E0B">• Category Sanitization</text>
+      </g>
+
+      <g transform="translate(14, 200)">
+        <rect width="172" height="120" rx="8" fill="#182254" stroke="#F59E0B"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Security Guard</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• User data isolation</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Parameterized queries (?)</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• SQL injection prevention</text>
+        <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Latin-1 text sanitize</text>
+        <text x="12" y="108" font-family="system-ui, sans-serif" font-size="10" fill="#10B981">• Unicode fallback</text>
+      </g>
+    </g>
+
+    <!-- Connector 2 -->
+    <path d="M 425 340 L 435 340" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 3: Storage -->
+    <g transform="translate(440, 0)">
+      <rect width="200" height="510" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#fShadow)"/>
+      <rect width="200" height="42" rx="12" fill="url(#gGreen)"/>
+      <rect y="27" width="200" height="15" fill="url(#gGreen)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">3. DUAL-STORAGE</text>
+
+      <g transform="translate(14, 60)">
+        <rect width="172" height="135" rx="8" fill="#182254" stroke="#10B981"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">5 Normalized Entities</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• users (Auth &amp; Salt)</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• categories (Icons/Colors)</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• transactions (Ledger)</text>
+        <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• budgets (Monthly caps)</text>
+        <text x="12" y="108" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• savings_goals (Milestones)</text>
+        <text x="12" y="124" font-family="system-ui, sans-serif" font-size="10" fill="#10B981">ON DELETE CASCADE</text>
+      </g>
+
+      <g transform="translate(14, 215)">
+        <rect width="172" height="110" rx="8" fill="#182254" stroke="#10B981"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Persistence Engines</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">Supabase PostgreSQL</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">Cloud transaction pool</text>
+        <text x="12" y="78" font-family="system-ui, sans-serif" font-size="10" fill="#10B981">SQLite 3 (WAL Mode)</text>
+        <text x="12" y="94" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">Local resilient fallback</text>
+      </g>
+    </g>
+
+    <!-- Connector 3 -->
+    <path d="M 645 340 L 655 340" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 4: Processing & ML -->
+    <g transform="translate(660, 0)">
+      <rect width="200" height="510" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#fShadow)"/>
+      <rect width="200" height="42" rx="12" fill="url(#gPurple)"/>
+      <rect y="27" width="200" height="15" fill="url(#gPurple)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">4. ANALYTICS &amp; ML</text>
+
+      <g transform="translate(14, 60)">
+        <rect width="172" height="135" rx="8" fill="#182254" stroke="#C52DDB"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Statistical Aggregation</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Pandas ME resampling</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• 50/30/20 Ratio compute</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Health Index (0-100 pts)</text>
+        <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Anomaly detection: &gt;25%</text>
+        <text x="12" y="108" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">surge vs 3-month baseline</text>
+        <text x="12" y="124" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">Day-of-Week pivot table</text>
+      </g>
+
+      <g transform="translate(14, 215)">
+        <rect width="172" height="135" rx="8" fill="#182254" stroke="#C52DDB"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#E052F2">Scikit-Learn Pipeline</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Feature matrix generation</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Lag-1 &amp; Rolling-3 average</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• LinearRegression fit</text>
+        <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Residual standard error</text>
+        <text x="12" y="108" font-family="system-ui, sans-serif" font-size="10" fill="#E052F2">• 95% Confidence bounds</text>
+        <text x="12" y="124" font-family="system-ui, sans-serif" font-size="10" fill="#10B981">• Category trend blending</text>
+      </g>
+    </g>
+
+    <!-- Connector 4 -->
+    <path d="M 865 340 L 875 340" stroke="#879BFF" stroke-width="2"/>
+
+    <!-- Stage 5: Presentation & Output -->
+    <g transform="translate(880, 0)">
+      <rect width="200" height="510" rx="12" fill="#151D4D" stroke="#34458A" stroke-width="1.5" filter="url(#fShadow)"/>
+      <rect width="200" height="42" rx="12" fill="url(#gBlue)"/>
+      <rect y="27" width="200" height="15" fill="url(#gBlue)"/>
+      <text x="16" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">5. MULTI-OUTPUT</text>
+
+      <g transform="translate(14, 60)">
+        <rect width="172" height="110" rx="8" fill="#182254" stroke="#38BDF8"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Interactive UI</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Plotly charts (7 types)</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• KPI Metric Cards</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Interactive Dataframe</text>
+        <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#38BDF8">• Real-time progress bars</text>
+      </g>
+
+      <g transform="translate(14, 190)">
+        <rect width="172" height="100" rx="8" fill="#182254" stroke="#38BDF8"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Executive PDF</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• FPDF2 document engine</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Branded header/footer</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Summary KPI table</text>
+        <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#10B981">• Full audit trail table</text>
+      </g>
+
+      <g transform="translate(14, 310)">
+        <rect width="172" height="100" rx="8" fill="#182254" stroke="#38BDF8"/>
+        <text x="12" y="24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Spreadsheet Export</text>
+        <text x="12" y="44" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Raw CSV export</text>
+        <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• Multi-tab Excel (.xlsx)</text>
+        <text x="12" y="76" font-family="system-ui, sans-serif" font-size="10" fill="#9AA8D1">• OpenPyXL styled cells</text>
+        <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#C52DDB">• Accounting format</text>
+      </g>
+    </g>
+  </g>
+</svg>

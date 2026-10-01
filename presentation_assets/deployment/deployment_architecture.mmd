@@ -1,0 +1,38 @@
+flowchart TB
+    subgraph DevEnvironment["👨‍💻 Development & Source Control"]
+        LocalDev["Local Workstation / IDE<br/>(Windows / macOS / Linux)"]
+        GitRepo["GitHub Remote Repository<br/>(github.com/reshukumar8228/...git)"]
+    end
+
+    subgraph HostingPlatforms["☁️ Deployment Platforms & Hosting Targets"]
+        StreamlitCloud["Streamlit Community Cloud<br/>(share.streamlit.io)"]
+        DockerHost["Containerized PaaS / VPS<br/>(Render / Railway / AWS ECS)"]
+    end
+
+    subgraph RuntimeEnv["📦 Streamlit Runtime Environment"]
+        PythonRuntime["Python 3.10+ Container"]
+        Reqs["requirements.txt Dependencies<br/>(streamlit, pandas, plotly, scikit-learn, psycopg2-binary, fpdf2)"]
+        SecretsMgr["Streamlit Secrets / Environment Variables<br/>(DATABASE_URL = postgresql://...)"]
+    end
+
+    subgraph ExternalServices["🌐 Managed Cloud Infrastructure"]
+        SupabasePostgres["Supabase Managed PostgreSQL<br/>(AWS us-east-1 Pooler / Direct port 5432 / 6543)"]
+        GoogleFonts["Google Fonts CDN<br/>(Plus Jakarta Sans & JetBrains Mono)"]
+    end
+
+    subgraph FallbackEnv["🛡️ Resilient Local Fallback Engine"]
+        SQLiteEngine["Local SQLite Database<br/>(database/expense_tracker.db in WAL mode)"]
+    end
+
+    LocalDev -->|git push origin main| GitRepo
+    GitRepo -->|Auto-deploy Webhook| StreamlitCloud
+    GitRepo -->|CI/CD Pipeline| DockerHost
+
+    StreamlitCloud --> PythonRuntime
+    DockerHost --> PythonRuntime
+    PythonRuntime --> Reqs
+    PythonRuntime --> SecretsMgr
+
+    SecretsMgr -->|Cloud DB Connection| SupabasePostgres
+    SecretsMgr -.->|Connection Timeout / DNS Error| SQLiteEngine
+    PythonRuntime -->|Styles & Fonts| GoogleFonts
