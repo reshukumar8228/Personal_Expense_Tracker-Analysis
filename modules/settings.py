@@ -6,10 +6,10 @@ def render_settings(user: dict):
     """Render User Profile Settings & App Configuration page."""
     user_id = user["id"]
 
-    st.markdown("## ⚙️ Account Settings & Preferences")
+    st.markdown("## Account Settings & Preferences")
     st.markdown("<p class='page-subtitle'>Customize your currency, visual theme, and profile details</p>", unsafe_allow_html=True)
 
-    tab_profile, tab_preferences, tab_danger = st.tabs(["👤 Profile Information", "🎨 Preferences & Theme", "⚠️ Data Management"])
+    tab_profile, tab_preferences, tab_danger = st.tabs(["Profile Information", "Preferences & Theme", "Data Management"])
 
     # Tab 1: Profile Information
     with tab_profile:
@@ -73,13 +73,13 @@ def render_settings(user: dict):
 
         d_col1, d_col2 = st.columns(2)
         with d_col1:
-            if st.button("🚀 Reload Demo Sample Data", use_container_width=True, type="primary"):
+            if st.button("Reload Demo Sample Data", use_container_width=True, type="primary"):
                 seed_demo_data(user_id)
                 st.success("Sample transaction, budget, and goal data loaded!")
                 st.rerun()
 
         with d_col2:
-            if st.button("🗑️ Clear All My Data", use_container_width=True):
+            if st.button("Clear All My Data", use_container_width=True):
                 conn = get_connection()
                 cursor = conn.cursor()
                 cursor.execute("DELETE FROM transactions WHERE user_id = ?", (user_id,))

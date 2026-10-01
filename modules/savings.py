@@ -9,7 +9,7 @@ def render_savings(user: dict):
     currency = user.get("currency", "USD")
     user_id = user["id"]
 
-    st.markdown("## 🎯 Savings Goals & Wealth Accumulation")
+    st.markdown("## Savings Goals & Wealth Accumulation")
     st.markdown("<p class='page-subtitle'>Track progress towards major financial milestones and long-term targets</p>", unsafe_allow_html=True)
 
     conn = get_connection()
@@ -17,7 +17,7 @@ def render_savings(user: dict):
         SELECT * FROM savings_goals WHERE user_id = ? ORDER BY created_at DESC
     """, conn, params=(user_id,))
 
-    tab_goals, tab_add = st.tabs(["🏆 Active Savings Goals", "➕ Create Savings Goal"])
+    tab_goals, tab_add = st.tabs(["Active Savings Goals", "Create Savings Goal"])
 
     with tab_goals:
         if not goals_df.empty:
@@ -37,7 +37,7 @@ def render_savings(user: dict):
                     st.markdown(f"""
                     <div class="spend-card">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 style="margin: 0; color: #0284c7;" class="kpi-value-heading">🎯 {name}</h3>
+                            <h3 style="margin: 0; color: #0284c7;" class="kpi-value-heading">{name}</h3>
                             <span class="health-badge {'health-excellent' if pct >= 1.0 else 'health-good'}">{status} ({pct*100:.1f}%)</span>
                         </div>
                         <p class="sidebar-user-sub" style="margin-top: 4px; font-size: 0.9rem;">Target Date: <b>{target_date}</b> | {notes or 'No notes'}</p>
@@ -48,10 +48,10 @@ def render_savings(user: dict):
 
                     with c_prog:
                         st.progress(pct_clamped)
-                        st.caption(f"Saved **{format_currency(current, currency)}** of **{format_currency(target, currency)}** | Remaining: **{format_currency(max(0.0, target - current), currency)}**")
+                        st.caption(f"Saved **{format_currency(current, currency, escape_md=True)}** of **{format_currency(target, currency, escape_md=True)}** | Remaining: **{format_currency(max(0.0, target - current), currency, escape_md=True)}**")
 
                     with c_action:
-                        with st.popover("💰 Deposit Funds"):
+                        with st.popover("Deposit Funds"):
                             with st.form(f"deposit_form_{g_id}"):
                                 add_amt = st.number_input("Deposit Amount", min_value=1.0, step=25.0, value=100.0)
                                 if st.form_submit_button("Add to Goal", type="primary"):
@@ -73,7 +73,7 @@ def render_savings(user: dict):
             st.info("No savings goals active. Switch to 'Create Savings Goal' to set your first target!")
 
     with tab_add:
-        st.subheader("➕ Create New Savings Target")
+        st.subheader("Create New Savings Target")
         with st.form("add_goal_form"):
             g_name = st.text_input("Goal Name", placeholder="e.g. Emergency Fund, House Downpayment, Vacation")
             g_col1, g_col2 = st.columns(2)

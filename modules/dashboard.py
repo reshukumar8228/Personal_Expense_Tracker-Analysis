@@ -68,13 +68,13 @@ def render_dashboard(user: dict):
     with h_col1:
         st.markdown(f"""
         <div class="hero-card">
-            <div class="hero-title">Welcome back, {display_name}! 👋</div>
+            <div class="hero-title">Welcome back, {display_name}!</div>
             <div class="hero-subtitle">Personal Expense Tracker Intelligence Overview & Real-Time Analytics</div>
         </div>
         """, unsafe_allow_html=True)
     with h_col2:
         month_option = st.selectbox(
-            "📅 Analysis Period",
+            "Analysis Period",
             ["Current Month", "Last 30 Days", "Last 90 Days", "Year to Date", "All Time"],
             index=0
         )
@@ -135,18 +135,18 @@ def render_dashboard(user: dict):
     with kpi1:
         st.markdown(f"""
         <div class="kpi-card border-income">
-            <div class="kpi-title">💰 Total Income</div>
-            <div class="kpi-value text-green">{format_currency(total_income, currency)}</div>
-            <div class="kpi-subtext">↑ Gross Inflow</div>
+            <div class="kpi-title">Total Income</div>
+            <div class="kpi-value text-green">{format_currency(total_income, currency, escape_md=True)}</div>
+            <div class="kpi-subtext">Gross Inflow</div>
         </div>
         """, unsafe_allow_html=True)
 
     with kpi2:
         st.markdown(f"""
         <div class="kpi-card border-expense">
-            <div class="kpi-title">💸 Total Expenses</div>
-            <div class="kpi-value text-red">{format_currency(total_expenses, currency)}</div>
-            <div class="kpi-subtext">↓ Total Outflow</div>
+            <div class="kpi-title">Total Expenses</div>
+            <div class="kpi-value text-red">{format_currency(total_expenses, currency, escape_md=True)}</div>
+            <div class="kpi-subtext">Total Outflow</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -154,8 +154,8 @@ def render_dashboard(user: dict):
         net_color = "text-green" if net_savings >= 0 else "text-red"
         st.markdown(f"""
         <div class="kpi-card border-balance">
-            <div class="kpi-title">⚖️ Net Balance</div>
-            <div class="kpi-value {net_color}">{format_currency(net_savings, currency)}</div>
+            <div class="kpi-title">Net Balance</div>
+            <div class="kpi-value {net_color}">{format_currency(net_savings, currency, escape_md=True)}</div>
             <div class="kpi-subtext">Net Surplus</div>
         </div>
         """, unsafe_allow_html=True)
@@ -164,7 +164,7 @@ def render_dashboard(user: dict):
         sr_color = "text-green" if savings_rate >= 20 else ("text-amber" if savings_rate >= 10 else "text-red")
         st.markdown(f"""
         <div class="kpi-card border-savings">
-            <div class="kpi-title">📈 Savings Rate</div>
+            <div class="kpi-title">Savings Rate</div>
             <div class="kpi-value {sr_color}">{savings_rate:.1f}%</div>
             <div class="kpi-subtext">Target: 20%+</div>
         </div>
@@ -173,7 +173,7 @@ def render_dashboard(user: dict):
     with kpi5:
         st.markdown(f"""
         <div class="kpi-card border-health">
-            <div class="kpi-title">🛡️ Health Index</div>
+            <div class="kpi-title">Health Index</div>
             <div class="kpi-value">{health_score} <span style="font-size: 0.85rem; color: #64748b;">/ 100</span></div>
             <div style="margin-top: 4px;"><span class="health-badge {health_class}">{health_status}</span></div>
         </div>
@@ -195,10 +195,10 @@ def render_dashboard(user: dict):
                     over_cats.append((c_name, c_spent, c_limit))
 
             if over_cats:
-                alert_text = " &nbsp;•&nbsp; ".join([f"<b>{c}</b>: Spent {format_currency(s, currency)} (Limit: {format_currency(l, currency)})" for c, s, l in over_cats])
+                alert_text = " &nbsp;•&nbsp; ".join([f"<b>{c}</b>: Spent {format_currency(s, currency, escape_md=True)} (Limit: {format_currency(l, currency, escape_md=True)})" for c, s, l in over_cats])
                 st.markdown(f"""
                 <div class="custom-alert alert-danger">
-                    🚨 <b>Budget Warning:</b> You have exceeded your monthly limit in {len(over_cats)} category/categories:<br>{alert_text}
+                    <b>Budget Warning:</b> You have exceeded your monthly limit in {len(over_cats)} category/categories:<br>{alert_text}
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -206,7 +206,7 @@ def render_dashboard(user: dict):
     c_chart1, c_chart2 = st.columns([3, 2])
 
     with c_chart1:
-        st.subheader("📊 Income vs Expense Monthly Trajectory")
+        st.subheader("Income vs Expense Monthly Trajectory")
         if not tx_df.empty:
             df_grouped = tx_df.copy()
             df_grouped["date"] = pd.to_datetime(df_grouped["date"])
@@ -253,7 +253,7 @@ def render_dashboard(user: dict):
             st.info("No transaction data available for the selected period.")
 
     with c_chart2:
-        st.subheader("🍕 Spending Distribution")
+        st.subheader("Spending Distribution")
         exp_df = tx_df[tx_df["type"] == "expense"] if not tx_df.empty else pd.DataFrame()
         if not exp_df.empty:
             cat_sum = exp_df.groupby("category")["amount"].sum().reset_index()
@@ -284,7 +284,7 @@ def render_dashboard(user: dict):
     r_col1, r_col2 = st.columns([3, 2])
 
     with r_col1:
-        st.subheader("🕒 Recent Audit Log")
+        st.subheader("Recent Audit Log")
         if not tx_df.empty:
             display_df = tx_df[["date", "type", "category", "amount", "payment_method", "notes"]].head(8).copy()
             display_df["amount"] = display_df.apply(
@@ -296,7 +296,7 @@ def render_dashboard(user: dict):
             st.info("No recent entries.")
 
     with r_col2:
-        st.subheader("⚡ Quick Entry")
+        st.subheader("Quick Entry")
         q_type = st.radio("Transaction Type", ["income", "expense"], horizontal=True, key="dash_q_type")
         q_categories = get_user_categories(user_id, q_type)
 
@@ -324,7 +324,7 @@ def render_dashboard(user: dict):
                     cursor = conn.cursor()
                     cursor.execute("""
                         INSERT OR IGNORE INTO categories (user_id, name, type, icon, color)
-                        VALUES (?, ?, ?, '🏷️', '#38bdf8')
+                        VALUES (?, ?, ?, '', '#38bdf8')
                     """, (user_id, final_cat, q_type))
                     conn.commit()
                     conn.close()

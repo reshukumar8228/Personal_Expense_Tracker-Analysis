@@ -24,37 +24,37 @@ PDF_CURRENCY_SYMBOLS = {
 
 CATEGORY_ICONS = {
     # Income
-    "Salary": "💰",
-    "Freelance": "💻",
-    "Business": "🏢",
-    "Investment": "📈",
-    "Investments": "📈",
-    "Interest": "🪙",
-    "Bonus": "🎁",
-    "Gift": "🎈",
-    "Rental Income": "🔑",
-    "Refund": "↩️",
-    "Other Income": "💵",
+    "Salary": "",
+    "Freelance": "",
+    "Business": "",
+    "Investment": "",
+    "Investments": "",
+    "Interest": "",
+    "Bonus": "",
+    "Gift": "",
+    "Rental Income": "",
+    "Refund": "",
+    "Other Income": "",
     
     # Expense
-    "Food & Dining": "🍽️",
-    "Dining Out": "🍽️",
-    "Groceries": "🛒",
-    "Rent / Housing": "🏠",
-    "Housing & Rent": "🏠",
-    "Transportation": "🚗",
-    "Shopping": "🛍️",
-    "Utilities & Bills": "💡",
-    "Utilities": "💡",
-    "Healthcare": "🏥",
-    "Education": "📚",
-    "Entertainment": "🎬",
-    "Travel": "✈️",
-    "Insurance": "🛡️",
-    "Subscriptions": "📱",
-    "Personal Care": "💅",
-    "Miscellaneous": "📦",
-    "Other": "🏷️",
+    "Food & Dining": "",
+    "Dining Out": "",
+    "Groceries": "",
+    "Rent / Housing": "",
+    "Housing & Rent": "",
+    "Transportation": "",
+    "Shopping": "",
+    "Utilities & Bills": "",
+    "Utilities": "",
+    "Healthcare": "",
+    "Education": "",
+    "Entertainment": "",
+    "Travel": "",
+    "Insurance": "",
+    "Subscriptions": "",
+    "Personal Care": "",
+    "Miscellaneous": "",
+    "Other": "",
 }
 
 CATEGORY_COLORS = {
@@ -108,12 +108,19 @@ def get_user_categories(user_id: int, tx_type: str) -> list[str]:
     combined.append("Other")
     return combined
 
-def format_currency(amount: float, currency_code: str = "USD") -> str:
-    """Format float amount into currency string for web display."""
+def format_currency(amount: float, currency_code: str = "USD", escape_md: bool = False) -> str:
+    """Format float amount into currency string for web display. Set escape_md=True for markdown/st.info/st.caption."""
     symbol = CURRENCY_SYMBOLS.get(currency_code, "$")
+    if escape_md and "$" in symbol:
+        symbol = symbol.replace("$", r"\$")
     if amount is None:
         amount = 0.0
     return f"{symbol}{amount:,.2f}"
+
+def format_currency_md(amount: float, currency_code: str = "USD") -> str:
+    """Format currency safely escaping $ as \\$ to prevent Streamlit KaTeX math parser issues."""
+    return format_currency(amount, currency_code, escape_md=True)
+
 
 def format_pdf_currency(amount: float, currency_code: str = "USD") -> str:
     """Format currency for FPDF standard font compatibility (strips non-Latin1 symbols)."""

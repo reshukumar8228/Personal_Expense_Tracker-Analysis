@@ -9,16 +9,16 @@ def render_transactions(user: dict):
     currency = user.get("currency", "USD")
     user_id = user["id"]
 
-    st.markdown("## 💳 Transactions")
+    st.markdown("## Transactions")
     st.markdown("<p class='page-subtitle'>Add, manage, filter, and audit all your financial records with direct row selection</p>", unsafe_allow_html=True)
 
-    tab_view, tab_add, tab_recurring = st.tabs(["📋 View & Filter", "➕ Add Transaction", "🔁 Recurring Expenses"])
+    tab_view, tab_add, tab_recurring = st.tabs(["View & Filter", "Add Transaction", "Recurring Expenses"])
 
     conn = get_connection()
 
     # Tab 1: View & Filter Transactions
     with tab_view:
-        with st.expander("🔍 Search & Multi-Criteria Filters", expanded=True):
+        with st.expander("Search & Multi-Criteria Filters", expanded=True):
             f_col1, f_col2, f_col3, f_col4 = st.columns(4)
             with f_col1:
                 filter_type = st.selectbox("Transaction Type", ["All", "income", "expense"], key="tx_filter_type")
@@ -72,12 +72,11 @@ def render_transactions(user: dict):
             # Stats Summary Bar
             total_inc = tx_df[tx_df["type"] == "income"]["amount"].sum()
             total_exp = tx_df[tx_df["type"] == "expense"]["amount"].sum()
-            st.info(f"Showing **{len(tx_df)}** transactions | Total Income: **{format_currency(total_inc, currency)}** | Total Expenses: **{format_currency(total_exp, currency)}** | Net: **{format_currency(total_inc - total_exp, currency)}**")
+            st.info(f"Showing **{len(tx_df)}** transactions | Total Income: **{format_currency(total_inc, currency, escape_md=True)}** | Total Expenses: **{format_currency(total_exp, currency, escape_md=True)}** | Net: **{format_currency(total_inc - total_exp, currency, escape_md=True)}**")
 
             # Table view with direct single-row selection
             display_df = tx_df.copy()
-            display_df["icon"] = display_df["category"].apply(lambda c: CATEGORY_ICONS.get(c, "🏷️"))
-            display_df["Formatted Category"] = display_df["icon"] + " " + display_df["category"]
+            display_df["Formatted Category"] = display_df["category"]
             display_df["Formatted Amount"] = display_df.apply(
                 lambda r: f"+{format_currency(r['amount'], currency)}" if r['type'] == 'income' else f"-{format_currency(r['amount'], currency)}",
                 axis=1
@@ -123,7 +122,7 @@ def render_transactions(user: dict):
                 default_dd_index = selected_row_indices[0] + 1
 
             selected_dd_text = st.selectbox(
-                "🎯 Active Transaction Selection:",
+                "Active Transaction Selection:",
                 tx_options,
                 index=min(default_dd_index, len(tx_options) - 1),
                 key="tx_selector_dd_sync"
@@ -141,7 +140,7 @@ def render_transactions(user: dict):
                     selected_tx_id = int(tx_df.iloc[sel_idx]["id"])
 
             st.markdown("---")
-            st.markdown("### 🛠️ Transaction Operations")
+            st.markdown("### Transaction Operations")
 
             if selected_tx_id is not None:
                 target_tx = tx_df[tx_df["id"] == selected_tx_id]
@@ -152,7 +151,7 @@ def render_transactions(user: dict):
                     st.markdown(f"""
                         <div class="selected-tx-card">
                             <div class="selected-tx-header">
-                                <div class="selected-tx-title">📌 Selected Transaction #{tx_row['id']}</div>
+                                <div class="selected-tx-title">Selected Transaction #{tx_row['id']}</div>
                                 <span class="selected-tx-badge" style="background: {'rgba(56, 189, 248, 0.2)' if tx_row['type']=='income' else 'rgba(197, 45, 219, 0.2)'}; color: {'#38BDF8' if tx_row['type']=='income' else '#C52DDB'}; border: 1px solid {'#38BDF8' if tx_row['type']=='income' else '#C52DDB'};">
                                     {tx_row['type'].upper()}
                                 </span>
@@ -160,7 +159,7 @@ def render_transactions(user: dict):
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; font-size: 0.9rem;">
                                 <div><span style="color: #6C7BAE; font-size: 0.78rem;">Date</span><br><b>{tx_row['date']}</b></div>
                                 <div><span style="color: #6C7BAE; font-size: 0.78rem;">Category</span><br><b>{tx_row['category']}</b></div>
-                                <div><span style="color: #6C7BAE; font-size: 0.78rem;">Amount</span><br><b style="color: {'#38BDF8' if tx_row['type']=='income' else '#C52DDB'}">{format_currency(tx_row['amount'], currency)}</b></div>
+                                <div><span style="color: #6C7BAE; font-size: 0.78rem;">Amount</span><br><b style="color: {'#38BDF8' if tx_row['type']=='income' else '#C52DDB'}">{format_currency(tx_row['amount'], currency, escape_md=True)}</b></div>
                                 <div><span style="color: #6C7BAE; font-size: 0.78rem;">Payment Method</span><br><b>{tx_row['payment_method']}</b></div>
                                 <div><span style="color: #6C7BAE; font-size: 0.78rem;">Notes</span><br><b>{tx_row['notes'] or 'None'}</b></div>
                                 <div><span style="color: #6C7BAE; font-size: 0.78rem;">Recurring?</span><br><b>{'Yes' if tx_row['is_recurring'] else 'No'}</b></div>
@@ -170,9 +169,9 @@ def render_transactions(user: dict):
 
                     btn_col1, btn_col2 = st.columns(2)
                     with btn_col1:
-                        toggle_edit = st.button("✏️ Edit Selected Transaction", type="primary", use_container_width=True, key=f"btn_edit_trigger_{selected_tx_id}")
+                        toggle_edit = st.button("Edit Selected Transaction", type="primary", use_container_width=True, key=f"btn_edit_trigger_{selected_tx_id}")
                     with btn_col2:
-                        toggle_del = st.button("🗑️ Delete Selected Transaction", use_container_width=True, key=f"btn_del_trigger_{selected_tx_id}")
+                        toggle_del = st.button("Delete Selected Transaction", use_container_width=True, key=f"btn_del_trigger_{selected_tx_id}")
 
                     # Edit Interface
                     if toggle_edit:
@@ -185,24 +184,24 @@ def render_transactions(user: dict):
 
                     # Render Delete Confirmation Prompt
                     if st.session_state.get(f"show_del_confirm_{selected_tx_id}", False):
-                        st.error(f"⚠️ **Delete Confirmation**: Are you sure you want to permanently delete Transaction **#{selected_tx_id}** ({tx_row['category']} — {format_currency(tx_row['amount'], currency)})?")
+                        st.error(f"**Delete Confirmation**: Are you sure you want to permanently delete Transaction **#{selected_tx_id}** ({tx_row['category']} — {format_currency(tx_row['amount'], currency, escape_md=True)})?")
                         dc_1, dc_2 = st.columns(2)
                         with dc_1:
-                            if st.button("🚨 Yes, Delete Transaction", type="primary", use_container_width=True, key=f"confirm_del_btn_{selected_tx_id}"):
+                            if st.button("Yes, Delete Transaction", type="primary", use_container_width=True, key=f"confirm_del_btn_{selected_tx_id}"):
                                 cursor = conn.cursor()
                                 cursor.execute("DELETE FROM transactions WHERE id = ? AND user_id = ?", (selected_tx_id, user_id))
                                 conn.commit()
                                 st.session_state[f"show_del_confirm_{selected_tx_id}"] = False
-                                st.success(f"✅ Transaction #{selected_tx_id} deleted successfully!")
+                                st.success(f"Transaction #{selected_tx_id} deleted successfully!")
                                 st.rerun()
                         with dc_2:
-                            if st.button("❌ Cancel Deletion", use_container_width=True, key=f"cancel_del_btn_{selected_tx_id}"):
+                            if st.button("Cancel Deletion", use_container_width=True, key=f"cancel_del_btn_{selected_tx_id}"):
                                 st.session_state[f"show_del_confirm_{selected_tx_id}"] = False
                                 st.rerun()
 
                     # Render Edit Form Container
                     if st.session_state.get(f"show_edit_form_{selected_tx_id}", False):
-                        with st.expander(f"✏️ Modify Transaction #{selected_tx_id}", expanded=True):
+                        with st.expander(f"Modify Transaction #{selected_tx_id}", expanded=True):
                             edit_type = st.radio("Transaction Type", ["income", "expense"], index=0 if tx_row["type"] == "income" else 1, horizontal=True, key=f"edit_type_radio_{selected_tx_id}")
                             edit_cats = get_user_categories(user_id, edit_type)
 
@@ -227,9 +226,9 @@ def render_transactions(user: dict):
 
                                 ef_act1, ef_act2 = st.columns(2)
                                 with ef_act1:
-                                    save_btn = st.form_submit_button("💾 Save Changes", type="primary", use_container_width=True)
+                                    save_btn = st.form_submit_button("Save Changes", type="primary", use_container_width=True)
                                 with ef_act2:
-                                    cancel_btn = st.form_submit_button("❌ Cancel Edit", use_container_width=True)
+                                    cancel_btn = st.form_submit_button("Cancel Edit", use_container_width=True)
 
                                 if save_btn:
                                     final_edit_cat = edit_cat
@@ -241,7 +240,7 @@ def render_transactions(user: dict):
                                         cursor = conn.cursor()
                                         cursor.execute("""
                                             INSERT OR IGNORE INTO categories (user_id, name, type, icon, color)
-                                            VALUES (?, ?, ?, '🏷️', '#38bdf8')
+                                            VALUES (?, ?, ?, '', '#38bdf8')
                                         """, (user_id, final_edit_cat, edit_type))
                                         conn.commit()
 
@@ -253,7 +252,7 @@ def render_transactions(user: dict):
                                     """, (edit_date.strftime("%Y-%m-%d"), edit_type, final_edit_cat, edit_amount, edit_method, edit_notes, 1 if edit_rec else 0, selected_tx_id, user_id))
                                     conn.commit()
                                     st.session_state[f"show_edit_form_{selected_tx_id}"] = False
-                                    st.success(f"✅ Transaction #{selected_tx_id} updated successfully!")
+                                    st.success(f"Transaction #{selected_tx_id} updated successfully!")
                                     st.rerun()
 
                                 if cancel_btn:
@@ -261,19 +260,19 @@ def render_transactions(user: dict):
                                     st.rerun()
 
             else:
-                st.info("💡 **No transaction currently selected.** Click any row in the table above or pick from the dropdown to edit or delete.")
+                st.info("No transaction currently selected. Click any row in the table above or pick from the dropdown to edit or delete.")
                 b_col1, b_col2 = st.columns(2)
                 with b_col1:
-                    st.button("✏️ Edit Selected Transaction", disabled=True, use_container_width=True, help="Select a transaction row first")
+                    st.button("Edit Selected Transaction", disabled=True, use_container_width=True, help="Select a transaction row first")
                 with b_col2:
-                    st.button("🗑️ Delete Selected Transaction", disabled=True, use_container_width=True, help="Select a transaction row first")
+                    st.button("Delete Selected Transaction", disabled=True, use_container_width=True, help="Select a transaction row first")
 
         else:
             st.warning("No transactions found matching the selected criteria.")
 
     # Tab 2: Add New Transaction
     with tab_add:
-        st.subheader("➕ Create New Financial Entry")
+        st.subheader("Create New Financial Entry")
         a_type = st.radio("Transaction Type", ["income", "expense"], horizontal=True, key="tx_tab_add_type")
         available_cats = get_user_categories(user_id, a_type)
 
@@ -302,7 +301,7 @@ def render_transactions(user: dict):
             with a_col_rec2:
                 a_rec_freq = st.selectbox("Recurring Frequency", ["Weekly", "Monthly", "Yearly"])
 
-            sub_btn = st.form_submit_button("➕ Add Transaction", type="primary", use_container_width=True)
+            sub_btn = st.form_submit_button("Add Transaction", type="primary", use_container_width=True)
             if sub_btn:
                 final_a_cat = a_category
                 if a_category == "Other":
@@ -313,7 +312,7 @@ def render_transactions(user: dict):
                     cursor = conn.cursor()
                     cursor.execute("""
                         INSERT OR IGNORE INTO categories (user_id, name, type, icon, color)
-                        VALUES (?, ?, ?, '🏷️', '#38bdf8')
+                        VALUES (?, ?, ?, '', '#38bdf8')
                     """, (user_id, final_a_cat, a_type))
                     conn.commit()
 
@@ -328,7 +327,7 @@ def render_transactions(user: dict):
 
     # Tab 3: Recurring Expenses & Subscriptions
     with tab_recurring:
-        st.subheader("🔁 Subscription & Recurring Expense Tracker")
+        st.subheader("Subscription & Recurring Expense Tracker")
         rec_df = pd.read_sql_query("""
             SELECT * FROM transactions
             WHERE user_id = ? AND is_recurring = 1

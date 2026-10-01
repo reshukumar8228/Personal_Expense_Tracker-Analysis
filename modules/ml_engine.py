@@ -84,13 +84,13 @@ def predict_next_month_expenses(user_id: int) -> dict:
     pct_change = ((predicted_total - prev_month_spend) / prev_month_spend * 100) if prev_month_spend > 0 else 0.0
 
     if pct_change > 5.0:
-        trend_status = "Increasing 📈"
+        trend_status = "Increasing"
         trend_class = "text-red"
     elif pct_change < -5.0:
-        trend_status = "Decreasing 📉"
+        trend_status = "Decreasing"
         trend_class = "text-green"
     else:
-        trend_status = "Stable ➡️"
+        trend_status = "Stable"
         trend_class = "text-blue"
 
     return {
@@ -112,7 +112,7 @@ def render_ml_engine(user: dict):
     user_theme = user.get("theme", "Dark Fintech")
     user_id = user["id"]
 
-    st.markdown("## 🤖 Forecast & Expense Trajectory")
+    st.markdown("## Forecast & Expense Trajectory")
     st.markdown("<p class='page-subtitle'>Scikit-learn predictive model estimating your next-month spending trajectory</p>", unsafe_allow_html=True)
 
     with st.spinner("Training predictive machine learning model..."):
@@ -129,7 +129,7 @@ def render_ml_engine(user: dict):
         st.markdown(f"""
         <div class="kpi-card">
             <div class="kpi-title">Predicted Next-Month Spend</div>
-            <div class="kpi-value text-blue">{format_currency(res['predicted_total'], currency)}</div>
+            <div class="kpi-value text-blue">{format_currency(res['predicted_total'], currency, escape_md=True)}</div>
             <div class="kpi-subtext">Based on {res['n_months_trained']} months history</div>
         </div>
         """, unsafe_allow_html=True)
@@ -138,7 +138,7 @@ def render_ml_engine(user: dict):
         st.markdown(f"""
         <div class="kpi-card">
             <div class="kpi-title">Expected Range (95% Conf)</div>
-            <div class="kpi-value" style="font-size: 1.2rem;">{format_currency(res['lower_bound'], currency)} - {format_currency(res['upper_bound'], currency)}</div>
+            <div class="kpi-value" style="font-size: 1.2rem;">{format_currency(res['lower_bound'], currency, escape_md=True)} - {format_currency(res['upper_bound'], currency, escape_md=True)}</div>
             <div class="kpi-subtext">Confidence Margin</div>
         </div>
         """, unsafe_allow_html=True)
@@ -147,7 +147,7 @@ def render_ml_engine(user: dict):
         st.markdown(f"""
         <div class="kpi-card">
             <div class="kpi-title">Previous Month Spend</div>
-            <div class="kpi-value">{format_currency(res['prev_month_spend'], currency)}</div>
+            <div class="kpi-value">{format_currency(res['prev_month_spend'], currency, escape_md=True)}</div>
             <div class="kpi-subtext">Baseline</div>
         </div>
         """, unsafe_allow_html=True)
@@ -162,24 +162,23 @@ def render_ml_engine(user: dict):
         """, unsafe_allow_html=True)
 
     st.markdown("---")
-    st.subheader("🎯 Category-wise Next-Month Forecast Breakdown")
+    st.subheader("Category-wise Next-Month Forecast Breakdown")
 
     cat_preds = res["cat_predictions"]
     pred_df = pd.DataFrame([
-        {"Category": cat, "Icon": CATEGORY_ICONS.get(cat, "🏷️"), "Predicted Spend": amt}
+        {"Category": cat, "Predicted Spend": amt}
         for cat, amt in cat_preds.items()
     ]).sort_values("Predicted Spend", ascending=False)
 
     c_left, c_right = st.columns([3, 2])
 
     with c_left:
-        pred_df["Formatted"] = pred_df.apply(lambda r: f"{r['Icon']} {r['Category']}", axis=1)
         st.dataframe(
-            pred_df[["Formatted", "Predicted Spend"]],
+            pred_df[["Category", "Predicted Spend"]],
             use_container_width=True,
             hide_index=True,
             column_config={
-                "Formatted": st.column_config.TextColumn("Category"),
+                "Category": st.column_config.TextColumn("Category"),
                 "Predicted Spend": st.column_config.NumberColumn(f"Forecast ({currency})", format="%.2f")
             }
         )
@@ -201,16 +200,16 @@ def render_ml_engine(user: dict):
         st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("---")
-    st.subheader("💡 Intelligent ML Recommendations")
+    st.subheader("Intelligent ML Recommendations")
     if res['pct_change'] > 5.0:
         st.markdown(f"""
         <div class="custom-alert alert-warning">
-            ⚠️ <b>Spending Spike Detected:</b> Your predicted next-month expenditure is <b>{res['pct_change']:.1f}% higher</b> than last month. Consider trimming variable expense categories like <b>Dining Out</b> or <b>Shopping</b> to keep your savings rate on target.
+            <b>Spending Spike Detected:</b> Your predicted next-month expenditure is <b>{res['pct_change']:.1f}% higher</b> than last month. Consider trimming variable expense categories like <b>Dining Out</b> or <b>Shopping</b> to keep your savings rate on target.
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
         <div class="custom-alert alert-success">
-            ✅ <b>Healthy Spending Forecast:</b> Your predicted next-month budget remains stable with an estimated surplus of <b>{format_currency(res['lower_bound'], currency)} - {format_currency(res['upper_bound'], currency)}</b>.
+            <b>Healthy Spending Forecast:</b> Your predicted next-month budget remains stable with an estimated surplus of <b>{format_currency(res['lower_bound'], currency, escape_md=True)} - {format_currency(res['upper_bound'], currency, escape_md=True)}</b>.
         </div>
         """, unsafe_allow_html=True)

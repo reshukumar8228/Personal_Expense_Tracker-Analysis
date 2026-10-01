@@ -9,7 +9,7 @@ def render_budgets(user: dict):
     currency = user.get("currency", "USD")
     user_id = user["id"]
 
-    st.markdown("## 🎯 Budgets & Monitoring")
+    st.markdown("## Budgets & Monitoring")
     st.markdown("<p class='page-subtitle'>Set spending caps, track limits, and receive over-budget alerts</p>", unsafe_allow_html=True)
 
     b_col1, b_col2 = st.columns([2, 1])
@@ -44,7 +44,7 @@ def render_budgets(user: dict):
 
     actual_map = dict(zip(tx_df["category"], tx_df["actual_spent"])) if not tx_df.empty else {}
 
-    tab_overview, tab_set = st.tabs(["📊 Budget Progress Overview", "⚙️ Configure Budget Limits"])
+    tab_overview, tab_set = st.tabs(["Budget Progress Overview", "Configure Budget Limits"])
 
     with tab_overview:
         if budget_map:
@@ -71,18 +71,17 @@ def render_budgets(user: dict):
                     limit = budget_map[cat]
                     spent = actual_map.get(cat, 0.0)
                     pct = (spent / limit) if limit > 0 else 0.0
-                    icon = CATEGORY_ICONS.get(cat, "🏷️")
 
                     col_info, col_bar = st.columns([2, 3])
                     with col_info:
                         if pct >= 1.0:
-                            badge = f"<span class='text-red' style='font-weight:700;'>🚨 OVER BUDGET ({pct*100:.0f}%)</span>"
+                            badge = f"<span class='text-red' style='font-weight:700;'>OVER BUDGET ({pct*100:.0f}%)</span>"
                         elif pct >= 0.75:
-                            badge = f"<span class='text-amber' style='font-weight:700;'>⚠️ Warning ({pct*100:.0f}%)</span>"
+                            badge = f"<span class='text-amber' style='font-weight:700;'>Warning ({pct*100:.0f}%)</span>"
                         else:
-                            badge = f"<span class='text-green' style='font-weight:700;'>✅ Healthy ({pct*100:.0f}%)</span>"
+                            badge = f"<span class='text-green' style='font-weight:700;'>Healthy ({pct*100:.0f}%)</span>"
 
-                        st.markdown(f"**{icon} {cat}**: Spent **{format_currency(spent, currency)}** of **{format_currency(limit, currency)}** | {badge}", unsafe_allow_html=True)
+                        st.markdown(f"**{cat}**: Spent **{format_currency(spent, currency, escape_md=True)}** of **{format_currency(limit, currency, escape_md=True)}** | {badge}", unsafe_allow_html=True)
 
                     with col_bar:
                         st.progress(min(1.0, float(pct)))
@@ -99,12 +98,11 @@ def render_budgets(user: dict):
             grid_cols = st.columns(2)
             for idx, cat in enumerate(expense_cats):
                 col = grid_cols[idx % 2]
-                icon = CATEGORY_ICONS.get(cat, "🏷️")
                 existing_val = float(budget_map.get(cat, 0.0))
                 with col:
-                    new_budgets[cat] = st.number_input(f"{icon} {cat}", min_value=0.0, step=25.0, value=existing_val, key=f"b_in_{cat}")
+                    new_budgets[cat] = st.number_input(cat, min_value=0.0, step=25.0, value=existing_val, key=f"b_in_{cat}")
 
-            save_budgets_btn = st.form_submit_button("💾 Save Budget Limits", type="primary", use_container_width=True)
+            save_budgets_btn = st.form_submit_button("Save Budget Limits", type="primary", use_container_width=True)
             if save_budgets_btn:
                 cursor = conn.cursor()
                 for cat, limit in new_budgets.items():

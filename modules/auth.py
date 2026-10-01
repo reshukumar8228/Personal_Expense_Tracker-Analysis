@@ -180,12 +180,12 @@ def render_auth_page():
     # Error & Success message banners
     error_html = ""
     if "auth_error" in st.session_state and st.session_state.auth_error:
-        error_html = f'<div style="background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; text-align: center; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;"><span>❌</span> <span>{st.session_state.auth_error}</span></div>'
+        error_html = f'<div style="background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; text-align: center; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;"><span>{st.session_state.auth_error}</span></div>'
         del st.session_state.auth_error
 
     success_html = ""
     if "auth_success" in st.session_state and st.session_state.auth_success:
-        success_html = f'<div style="background: #dcfce7; border: 1px solid #22c55e; color: #15803d; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; text-align: center; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);"><span>✅</span> <span>{st.session_state.auth_success}</span></div>'
+        success_html = f'<div style="background: #dcfce7; border: 1px solid #22c55e; color: #15803d; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; text-align: center; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);"><span>{st.session_state.auth_success}</span></div>'
         del st.session_state.auth_success
 
     auth_ui_html = f"""
@@ -548,7 +548,7 @@ def render_auth_page():
     </div>
 
     <div class="demo-btn-wrapper">
-      <a href="?auth_action=demo" class="demo-link-btn">⚡ Instant Demo Access</a>
+      <a href="?auth_action=demo" class="demo-link-btn">Instant Demo Access</a>
     </div>
 
     <script>

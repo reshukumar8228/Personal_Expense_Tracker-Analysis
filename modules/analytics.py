@@ -13,7 +13,7 @@ def render_analytics(user: dict):
     user_theme = user.get("theme", "Dark Fintech")
     user_id = user["id"]
 
-    st.markdown("## 📈 Analytics & Financial Intelligence")
+    st.markdown("## Analytics & Financial Intelligence")
     st.markdown("<p class='page-subtitle'>Multi-dimensional interactive charts, spending heatmaps, treemaps, and outlier detection</p>", unsafe_allow_html=True)
 
     conn = get_connection()
@@ -49,10 +49,10 @@ def render_analytics(user: dict):
         filtered_df = tx_df.copy()
 
     tab_overview, tab_distribution, tab_treemap, tab_heatmap = st.tabs([
-        "📊 Monthly & Trend Analysis",
-        "📦 Distribution & Outliers (Box Plot & Hist)",
-        "🌳 Category Treemap",
-        "🔥 Spending Heatmap"
+        "Monthly & Trend Analysis",
+        "Distribution & Outliers (Box Plot & Hist)",
+        "Category Treemap",
+        "Spending Heatmap"
     ])
 
     # Tab 1: Monthly Trends & Cumulative Balance Line Chart
@@ -60,7 +60,7 @@ def render_analytics(user: dict):
         c1, c2 = st.columns(2)
 
         with c1:
-            st.subheader("🗓️ Monthly Income vs Expenses")
+            st.subheader("Monthly Income vs Expenses")
             m_summary = filtered_df.groupby(["year_month", "type"])["amount"].sum().unstack(fill_value=0).reset_index()
             fig_bar = go.Figure()
             if "income" in m_summary.columns:
@@ -73,7 +73,7 @@ def render_analytics(user: dict):
             st.plotly_chart(fig_bar, use_container_width=True)
 
         with c2:
-            st.subheader("📈 Cumulative Cash Flow Trajectory")
+            st.subheader("Cumulative Cash Flow Trajectory")
             cum_df = filtered_df.sort_values("date").copy()
             cum_df["signed_amount"] = cum_df.apply(lambda r: r["amount"] if r["type"] == "income" else -r["amount"], axis=1)
             cum_df["cumulative_balance"] = cum_df["signed_amount"].cumsum()
@@ -99,7 +99,7 @@ def render_analytics(user: dict):
             theme_palette = ["#4169E1", "#879BFF", "#C52DDB", "#8B3DCE", "#38BDF8", "#F59E0B", "#E052F2"]
 
             with d1:
-                st.subheader("📊 Expense Transaction Size Histogram")
+                st.subheader("Expense Transaction Size Histogram")
                 fig_hist = px.histogram(
                     exp_df,
                     x="amount",
@@ -115,7 +115,7 @@ def render_analytics(user: dict):
                 st.plotly_chart(fig_hist, use_container_width=True)
 
             with d2:
-                st.subheader("📦 Category Spending Box Plot (Outliers)")
+                st.subheader("Category Spending Box Plot (Outliers)")
                 fig_box = px.box(
                     exp_df,
                     x="category",
@@ -132,7 +132,7 @@ def render_analytics(user: dict):
 
     # Tab 3: Hierarchical Category Treemap
     with tab_treemap:
-        st.subheader("🌳 Category Expenditure Treemap")
+        st.subheader("Category Expenditure Treemap")
         exp_df = filtered_df[filtered_df["type"] == "expense"]
         if not exp_df.empty:
             fig_tree = px.treemap(
@@ -150,7 +150,7 @@ def render_analytics(user: dict):
 
     # Tab 4: Spending Heatmap (Day of Week vs Week of Month)
     with tab_heatmap:
-        st.subheader("🔥 Day of Week Spending Heatmap")
+        st.subheader("Day of Week Spending Heatmap")
         exp_df = filtered_df[filtered_df["type"] == "expense"]
         if not exp_df.empty:
             days_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]

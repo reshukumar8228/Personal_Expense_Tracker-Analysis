@@ -3,7 +3,6 @@ import streamlit as st
 # Page Configuration
 st.set_page_config(
     page_title="Personal Expense Tracker — Finance & Intelligence",
-    page_icon="💳",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -22,8 +21,10 @@ from modules.import_export import render_import_export
 from modules.settings import render_settings
 
 def main():
-    # 1. Initialize DB tables
-    init_db()
+    # 1. Initialize DB tables (runs once)
+    if not st.session_state.get("_db_initialized", False):
+        init_db()
+        st.session_state["_db_initialized"] = True
 
     # 2. Initialize Auth Session State
     init_session_state()
@@ -44,8 +45,8 @@ def main():
     st.sidebar.markdown("""
         <div style="padding: 12px 6px 16px 6px; border-bottom: 1px solid rgba(135, 155, 255, 0.15); margin-bottom: 16px;">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #4169E1, #C52DDB); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(65, 105, 225, 0.35);">
-                    📉
+                <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #4169E1, #C52DDB); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; font-weight: 800; color: #ffffff; letter-spacing: -0.02em; box-shadow: 0 4px 12px rgba(65, 105, 225, 0.35);">
+                    PF
                 </div>
                 <div>
                     <div style="font-weight: 800; font-size: 0.98rem; letter-spacing: 0.05em; background: linear-gradient(135deg, #FFFFFF 0%, #879BFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">PERSONAL FINANCE</div>
@@ -75,41 +76,41 @@ def main():
     page = st.sidebar.radio(
         "Navigation",
         [
-            "📊 Dashboard",
-            "💳 Transactions",
-            "🎯 Budgets",
-            "📈 Analytics",
-            "🤖 Forecast",
-            "🧠 Insights",
-            "🎯 Savings Goals",
-            "📥 Import & Export",
-            "⚙️ Settings"
+            "Dashboard",
+            "Transactions",
+            "Budgets",
+            "Analytics",
+            "Forecast",
+            "Insights",
+            "Savings Goals",
+            "Import & Export",
+            "Settings"
         ],
         index=0
     )
 
     st.sidebar.markdown("---")
-    if st.sidebar.button("🚪 Log Out", use_container_width=True):
+    if st.sidebar.button("Log Out", use_container_width=True):
         logout_user()
 
     # 6. Page Router
-    if page == "📊 Dashboard":
+    if page == "Dashboard":
         render_dashboard(user)
-    elif page == "💳 Transactions":
+    elif page == "Transactions":
         render_transactions(user)
-    elif page == "🎯 Budgets":
+    elif page == "Budgets":
         render_budgets(user)
-    elif page == "📈 Analytics":
+    elif page == "Analytics":
         render_analytics(user)
-    elif page == "🤖 Forecast":
+    elif page == "Forecast":
         render_ml_engine(user)
-    elif page == "🧠 Insights":
+    elif page == "Insights":
         render_insights(user)
-    elif page == "🎯 Savings Goals":
+    elif page == "Savings Goals":
         render_savings(user)
-    elif page == "📥 Import & Export":
+    elif page == "Import & Export":
         render_import_export(user)
-    elif page == "⚙️ Settings":
+    elif page == "Settings":
         render_settings(user)
 
 if __name__ == "__main__":

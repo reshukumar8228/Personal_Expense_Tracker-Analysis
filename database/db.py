@@ -218,6 +218,9 @@ class PgConnectionWrapper:
         return getattr(self._conn, name)
 
 
+_pg_pool = None
+_db_initialized = False
+
 def is_postgres(conn=None) -> bool:
     """Check if PostgreSQL/Supabase is configured and currently active."""
     if conn is not None:
@@ -226,17 +229,37 @@ def is_postgres(conn=None) -> bool:
 
 
 def get_connection():
-    """Get database connection (Supabase PostgreSQL if configured, otherwise local SQLite)."""
+    """Get database connection (Supabase PostgreSQL if configured with connection pooling, otherwise local SQLite)."""
     db_url = get_db_url()
 
     if db_url:
         try:
             import psycopg2
-            pg_conn = psycopg2.connect(db_url, connect_timeout=5)
-            pg_conn.autocommit = True
-            return PgConnectionWrapper(pg_conn)
-        except Exception as e:
-            print(f"[WARNING] Could not connect to PostgreSQL ({e}). Falling back to local SQLite.")
+            from psycopg2 import pool
+            global _pg_pool
+            if _pg_pool is None or getattr(_pg_pool, "closed", False):
+                _pg_pool = pool.ThreadedConnectionPool(1, 10, db_url, connect_timeout=5)
+
+            raw_conn = _pg_pool.getconn()
+            raw_conn.autocommit = True
+
+            class PooledPgConnectionWrapper(PgConnectionWrapper):
+                def close(self):
+                    try:
+                        if _pg_pool and not getattr(_pg_pool, "closed", False):
+                            _pg_pool.putconn(self._conn)
+                    except Exception:
+                        pass
+
+            return PooledPgConnectionWrapper(raw_conn)
+        except Exception:
+            try:
+                import psycopg2
+                pg_conn = psycopg2.connect(db_url, connect_timeout=5)
+                pg_conn.autocommit = True
+                return PgConnectionWrapper(pg_conn)
+            except Exception as e:
+                print(f"[WARNING] Could not connect to PostgreSQL ({e}). Falling back to local SQLite.")
 
     # SQLite fallback
     conn = sqlite3.connect(DB_PATH, timeout=30.0, check_same_thread=False)
@@ -245,8 +268,11 @@ def get_connection():
     return conn
 
 
-def init_db():
-    """Initialize database tables if they do not exist."""
+def init_db(force: bool = False):
+    """Initialize database tables if they do not exist. Runs only once per server process unless force=True."""
+    global _db_initialized
+    if _db_initialized and not force:
+        return
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -272,7 +298,7 @@ def init_db():
                 user_id INTEGER NOT NULL,
                 name VARCHAR(255) NOT NULL,
                 type VARCHAR(20) CHECK(type IN ('income', 'expense')) NOT NULL,
-                icon VARCHAR(50) DEFAULT '🏷️',
+                icon VARCHAR(50) DEFAULT '',
                 color VARCHAR(50) DEFAULT '#3b82f6',
                 UNIQUE(user_id, name, type),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
@@ -345,7 +371,7 @@ def init_db():
                 user_id INTEGER NOT NULL,
                 name TEXT NOT NULL,
                 type TEXT CHECK(type IN ('income', 'expense')) NOT NULL,
-                icon TEXT DEFAULT '🏷️',
+                icon TEXT DEFAULT '',
                 color TEXT DEFAULT '#3b82f6',
                 UNIQUE(user_id, name, type),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
@@ -431,36 +457,36 @@ def seed_default_categories(user_id: int, conn=None):
 
     default_cats = [
         # Income categories
-        ("Salary", "income", "💰", "#10b981"),
-        ("Freelance", "income", "💻", "#059669"),
-        ("Business", "income", "🏢", "#047857"),
-        ("Investment", "income", "📈", "#34d399"),
-        ("Interest", "income", "🪙", "#6ee7b7"),
-        ("Bonus", "income", "🎁", "#a7f3d0"),
-        ("Gift", "income", "🎈", "#10b981"),
-        ("Rental Income", "income", "🔑", "#059669"),
-        ("Refund", "income", "↩️", "#34d399"),
-        ("Investments", "income", "📈", "#34d399"),
-        ("Other Income", "income", "💵", "#34d399"),
+        ("Salary", "income", "", "#10b981"),
+        ("Freelance", "income", "", "#059669"),
+        ("Business", "income", "", "#047857"),
+        ("Investment", "income", "", "#34d399"),
+        ("Interest", "income", "", "#6ee7b7"),
+        ("Bonus", "income", "", "#a7f3d0"),
+        ("Gift", "income", "", "#10b981"),
+        ("Rental Income", "income", "", "#059669"),
+        ("Refund", "income", "", "#34d399"),
+        ("Investments", "income", "", "#34d399"),
+        ("Other Income", "income", "", "#34d399"),
 
         # Expense categories
-        ("Food & Dining", "expense", "🍽️", "#ec4899"),
-        ("Rent / Housing", "expense", "🏠", "#ef4444"),
-        ("Transportation", "expense", "🚗", "#3b82f6"),
-        ("Shopping", "expense", "🛍️", "#f97316"),
-        ("Utilities & Bills", "expense", "💡", "#6366f1"),
-        ("Healthcare", "expense", "🏥", "#14b8a6"),
-        ("Education", "expense", "📚", "#64748b"),
-        ("Entertainment", "expense", "🎬", "#8b5cf6"),
-        ("Travel", "expense", "✈️", "#06b6d4"),
-        ("Insurance", "expense", "🛡️", "#38bdf8"),
-        ("Subscriptions", "expense", "📱", "#a855f7"),
-        ("Personal Care", "expense", "💅", "#e11d48"),
-        ("Housing & Rent", "expense", "🏠", "#ef4444"),
-        ("Groceries", "expense", "🛒", "#f59e0b"),
-        ("Dining Out", "expense", "🍽️", "#ec4899"),
-        ("Utilities", "expense", "💡", "#6366f1"),
-        ("Miscellaneous", "expense", "📦", "#64748b"),
+        ("Food & Dining", "expense", "", "#ec4899"),
+        ("Rent / Housing", "expense", "", "#ef4444"),
+        ("Transportation", "expense", "", "#3b82f6"),
+        ("Shopping", "expense", "", "#f97316"),
+        ("Utilities & Bills", "expense", "", "#6366f1"),
+        ("Healthcare", "expense", "", "#14b8a6"),
+        ("Education", "expense", "", "#64748b"),
+        ("Entertainment", "expense", "", "#8b5cf6"),
+        ("Travel", "expense", "", "#06b6d4"),
+        ("Insurance", "expense", "", "#38bdf8"),
+        ("Subscriptions", "expense", "", "#a855f7"),
+        ("Personal Care", "expense", "", "#e11d48"),
+        ("Housing & Rent", "expense", "", "#ef4444"),
+        ("Groceries", "expense", "", "#f59e0b"),
+        ("Dining Out", "expense", "", "#ec4899"),
+        ("Utilities", "expense", "", "#6366f1"),
+        ("Miscellaneous", "expense", "", "#64748b"),
     ]
 
     for name, c_type, icon, color in default_cats:
@@ -616,3 +642,5 @@ def seed_demo_data(user_id: int):
 
     conn.commit()
     conn.close()
+    _db_initialized = True
+

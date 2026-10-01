@@ -109,7 +109,7 @@ def render_import_export(user: dict):
     currency = user.get("currency", "USD")
     user_id = user["id"]
 
-    st.markdown("## 📥 Import & Export")
+    st.markdown("## Import & Export")
     st.markdown("<p class='page-subtitle'>Import CSV/Excel data, export spreadsheets, and generate professional PDF reports</p>", unsafe_allow_html=True)
 
     conn = get_connection()
@@ -117,11 +117,11 @@ def render_import_export(user: dict):
     budgets_df = pd.read_sql_query("SELECT * FROM budgets WHERE user_id = ?", conn, params=(user_id,))
     conn.close()
 
-    tab_import, tab_export, tab_pdf = st.tabs(["📤 CSV / Excel Import", "📥 Excel & CSV Export", "📄 PDF Report Generator"])
+    tab_import, tab_export, tab_pdf = st.tabs(["CSV / Excel Import", "Excel & CSV Export", "PDF Report Generator"])
 
     # Tab 1: CSV / Excel File Import
     with tab_import:
-        st.subheader("📤 Batch Upload Financial Data")
+        st.subheader("Batch Upload Financial Data")
         st.markdown("Upload a CSV or Excel file containing transaction entries.")
 
         # Template Downloaders
@@ -133,7 +133,7 @@ def render_import_export(user: dict):
         ])
 
         csv_tmpl = sample_df.to_csv(index=False).encode('utf-8')
-        st.download_button("📥 Download Sample CSV Template", data=csv_tmpl, file_name="expense_tracker_import_template.csv", mime="text/csv")
+        st.download_button("Download Sample CSV Template", data=csv_tmpl, file_name="expense_tracker_import_template.csv", mime="text/csv")
 
         uploaded_file = st.file_uploader("Choose CSV or XLSX file", type=["csv", "xlsx"])
         if uploaded_file:
@@ -143,7 +143,7 @@ def render_import_export(user: dict):
                 else:
                     df_upload = pd.read_excel(uploaded_file)
 
-                st.subheader("📋 Import Data Preview & Validation")
+                st.subheader("Import Data Preview & Validation")
                 required_cols = {"date", "type", "category", "amount", "payment_method"}
                 uploaded_cols = set(df_upload.columns.str.lower())
 
@@ -154,7 +154,7 @@ def render_import_export(user: dict):
                     st.success(f"File validated successfully! Found {len(df_upload)} rows.")
                     st.dataframe(df_upload.head(10), use_container_width=True)
 
-                    if st.button("🚀 Confirm & Import Rows into Database", type="primary"):
+                    if st.button("Confirm & Import Rows into Database", type="primary"):
                         conn = get_connection()
                         cursor = conn.cursor()
                         imported_count = 0
@@ -175,7 +175,7 @@ def render_import_export(user: dict):
 
     # Tab 2: Excel & CSV Export
     with tab_export:
-        st.subheader("📥 Export Financial Records")
+        st.subheader("Export Financial Records")
         if not tx_df.empty:
             e_col1, e_col2 = st.columns(2)
 
@@ -183,7 +183,7 @@ def render_import_export(user: dict):
                 st.markdown("#### Export as CSV")
                 csv_data = tx_df.to_csv(index=False).encode('utf-8')
                 st.download_button(
-                    "📥 Download Transactions CSV",
+                    "Download Transactions CSV",
                     data=csv_data,
                     file_name=f"expense_tracker_transactions_{datetime.date.today()}.csv",
                     mime="text/csv",
@@ -202,7 +202,7 @@ def render_import_export(user: dict):
                         budgets_df.to_excel(writer, sheet_name="Budgets", index=False)
 
                 st.download_button(
-                    "📊 Download Excel Workbook (.xlsx)",
+                    "Download Excel Workbook (.xlsx)",
                     data=excel_buffer.getvalue(),
                     file_name=f"expense_tracker_full_report_{datetime.date.today()}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -213,14 +213,14 @@ def render_import_export(user: dict):
 
     # Tab 3: PDF Report Generator
     with tab_pdf:
-        st.subheader("📄 Professional PDF Executive Report")
+        st.subheader("Professional PDF Executive Report")
         st.markdown("Generate a print-ready PDF financial report complete with executive metrics and transaction tables.")
         if not tx_df.empty:
-            if st.button("⚙️ Generate PDF Report", type="primary", use_container_width=True):
+            if st.button("Generate PDF Report", type="primary", use_container_width=True):
                 with st.spinner("Building PDF document..."):
                     pdf_bytes = generate_pdf_report(user, tx_df, budgets_df)
                     st.download_button(
-                        "📄 Download PDF Financial Report",
+                        "Download PDF Financial Report",
                         data=pdf_bytes,
                         file_name=f"expense_tracker_report_{datetime.date.today()}.pdf",
                         mime="application/pdf",
