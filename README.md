@@ -117,7 +117,8 @@ python -m unittest discover -s tests -p "test_*.py"
 .
 ├── app.py                      # Main Streamlit application entrypoint & routing
 ├── database/
-│   └── db.py                   # SQLite DB initialization, models, CRUD operations, seed data generator
+│   ├── db.py                   # DB connection (Supabase PostgreSQL / local SQLite), schema, CRUD & seeders
+│   └── expense_tracker.db      # Local SQLite database file
 ├── modules/
 │   ├── auth.py                 # User authentication UI, session management, PBKDF2 hashing
 │   ├── dashboard.py            # Financial KPI cards, Financial Health Score index, mini-charts
@@ -128,15 +129,26 @@ python -m unittest discover -s tests -p "test_*.py"
 │   ├── savings.py              # Savings goals tracker & estimated completion timeline
 │   ├── insights.py             # Rule-based & statistical financial intelligence & 50/30/20 breakdown
 │   ├── import_export.py        # CSV/Excel import with validation, CSV/Excel export, FPDF2 PDF report generator
-│   └── settings.py             # User profile, currency selector ($/€/£/₹/¥/etc.), theme configuration
+│   └── settings.py             # User profile, currency selector, theme configuration
 ├── utils/
 │   ├── css.py                  # Custom CSS injection for modern fintech styling (Dark/Light)
 │   └── helpers.py              # Currency formatting, date helpers, color tokens
 ├── tests/
-│   ├── test_db.py              # SQLite database schema & transaction CRUD tests
+│   ├── test_db.py              # Database schema & transaction CRUD tests
 │   ├── test_auth.py            # Authentication & password hashing tests
 │   ├── test_ml.py              # Machine learning prediction pipeline unit tests
 │   └── test_export.py          # CSV/Excel/PDF export verification tests
+├── scripts/
+│   ├── capture_all_screens.mjs # Automated UI screenshot capture script
+│   └── render_svg_to_png.mjs   # Architecture SVG to PNG rendering script
+├── docs/
+│   ├── PROJECT_ANALYSIS_REPORT.md  # Comprehensive technical analysis report
+│   ├── EXECUTIVE_SUMMARY.md    # Executive summary report
+│   ├── PPT_CONTENT_BLUEPRINT.md # Presentation slides blueprint
+│   ├── VISUAL_ASSET_INDEX.md   # Visual asset index
+│   ├── PROJECT_FACTS.json      # Structured repository facts
+│   ├── presentation/           # PowerPoint presentation (.pptx)
+│   └── presentation_assets/    # Architecture SVGs, PNGs, and screen captures
 ├── requirements.txt            # Python dependencies
 └── README.md                   # Full documentation & setup guide
 ```

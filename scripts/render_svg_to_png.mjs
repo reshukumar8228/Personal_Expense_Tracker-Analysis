@@ -1,6 +1,10 @@
 import puppeteer from 'puppeteer-core';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ASSETS_DIR = path.resolve(__dirname, '..', 'docs', 'presentation_assets');
 
 const files = [
   'architecture/system_architecture',
@@ -22,8 +26,8 @@ async function convert() {
   const page = await browser.newPage();
 
   for (const f of files) {
-    const svgPath = path.resolve('presentation_assets', `${f}.svg`);
-    const pngPath = path.resolve('presentation_assets', `${f}.png`);
+    const svgPath = path.resolve(ASSETS_DIR, `${f}.svg`);
+    const pngPath = path.resolve(ASSETS_DIR, `${f}.png`);
     if (fs.existsSync(svgPath)) {
       const svgContent = fs.readFileSync(svgPath, 'utf8');
       await page.setViewport({ width: 1200, height: 800, deviceScaleFactor: 2 });

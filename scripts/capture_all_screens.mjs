@@ -1,7 +1,9 @@
 import puppeteer from 'puppeteer-core';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const SCREENSHOT_DIR = path.resolve('presentation_assets', 'screenshots');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const SCREENSHOT_DIR = path.resolve(__dirname, '..', 'docs', 'presentation_assets', 'screenshots');
 
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
