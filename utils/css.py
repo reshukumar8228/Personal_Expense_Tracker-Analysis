@@ -468,12 +468,180 @@ def inject_custom_css(theme: str = "Dark Fintech"):
         transform: translateY(-1px);
     }}
 
-    /* Form Controls & Inputs */
-    .stTextInput input, .stNumberInput input, .stSelectbox select, .stDateInput input, [data-baseweb="select"] {{
+    /* Form Controls & Inputs - Consistent Dark Fintech Input Styling */
+    /* Outer Containers for all input types: TextInput, NumberInput, DateInput, Selectbox, MultiSelect, TextArea */
+    [data-testid="stTextInputRootElement"],
+    [data-testid="stNumberInputContainer"],
+    [data-testid="stDateInputField"],
+    [data-testid="stSelectbox"] div[role="group"],
+    [data-testid="stSelectbox"] div[data-baseweb="select"] > div,
+    [data-testid="stSelectbox"] [data-baseweb="select"],
+    [data-testid="stMultiSelect"] div[role="group"],
+    [data-testid="stMultiSelect"] div[data-baseweb="select"] > div,
+    [data-testid="stMultiSelect"] [data-baseweb="select"],
+    [data-testid="stTextAreaRootElement"],
+    [data-testid="stTimeInput"] div[data-baseweb="input"],
+    [data-baseweb="input"],
+    [data-baseweb="base-input"],
+    [data-baseweb="select"] > div,
+    [data-baseweb="textarea"] {{
         border-radius: 12px !important;
         border: 1px solid {border_color} !important;
         background-color: {bg_input} !important;
         color: {text_primary} !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }}
+
+    /* Hover States for all form controls */
+    [data-testid="stTextInputRootElement"]:hover,
+    [data-testid="stNumberInputContainer"]:hover,
+    [data-testid="stDateInputField"]:hover,
+    [data-testid="stSelectbox"] div[role="group"]:hover,
+    [data-testid="stSelectbox"] div[data-baseweb="select"] > div:hover,
+    [data-testid="stMultiSelect"] div[role="group"]:hover,
+    [data-testid="stMultiSelect"] div[data-baseweb="select"] > div:hover,
+    [data-testid="stTextAreaRootElement"]:hover,
+    [data-baseweb="input"]:hover,
+    [data-baseweb="select"] > div:hover,
+    [data-baseweb="textarea"]:hover {{
+        border-color: {border_color_hover} !important;
+    }}
+
+    /* Focus States for all form controls */
+    [data-testid="stTextInputRootElement"]:focus-within,
+    [data-testid="stNumberInputContainer"]:focus-within,
+    [data-testid="stDateInputField"]:focus-within,
+    [data-testid="stSelectbox"] div[role="group"]:focus-within,
+    [data-testid="stSelectbox"] div[data-baseweb="select"] > div:focus-within,
+    [data-testid="stMultiSelect"] div[role="group"]:focus-within,
+    [data-testid="stMultiSelect"] div[data-baseweb="select"] > div:focus-within,
+    [data-testid="stTextAreaRootElement"]:focus-within,
+    [data-baseweb="input"]:focus-within,
+    [data-baseweb="select"] > div:focus-within,
+    [data-baseweb="textarea"]:focus-within {{
+        border-color: {accent_blue} !important;
+        box-shadow: 0 0 0 2px rgba(65, 105, 225, 0.35) !important;
+        outline: none !important;
+    }}
+
+    /* Inner input/textarea elements seamlessly inherit or transparent inside the styled containers */
+    .stTextInput input,
+    .stNumberInput input,
+    .stDateInput input,
+    [data-testid="stTextInputField"],
+    [data-testid="stNumberInputField"],
+    [data-testid="stSelectbox"] input,
+    [data-testid="stMultiSelect"] input,
+    [data-testid="stTextArea"] textarea {{
+        border-radius: 12px !important;
+        border: none !important;
+        background-color: transparent !important;
+        color: {text_primary} !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }}
+
+    /* NumberInput increment/decrement stepper buttons */
+    [data-testid="stNumberInputContainer"] button,
+    [data-testid="stNumberInputStepDown"],
+    [data-testid="stNumberInputStepUp"],
+    .stNumberInput button {{
+        background-color: transparent !important;
+        color: {text_primary} !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 8px !important;
+        transition: background-color 0.15s ease !important;
+    }}
+
+    [data-testid="stNumberInputContainer"] button:hover,
+    [data-testid="stNumberInputStepDown"]:hover,
+    [data-testid="stNumberInputStepUp"]:hover,
+    .stNumberInput button:hover {{
+        background-color: rgba(65, 105, 225, 0.25) !important;
+        color: #FFFFFF !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }}
+
+    [data-testid="stNumberInputContainer"] svg {{
+        fill: {text_primary} !important;
+        color: {text_primary} !important;
+    }}
+
+    /* Datepicker internal spinbuttons and calendar icon */
+    [data-testid="stDateInput"] [role="spinbutton"],
+    [data-testid="stDateInputField"] span,
+    [data-testid="stDateInputField"] div {{
+        color: {text_primary} !important;
+        background-color: transparent !important;
+    }}
+
+    [data-testid="stDateInputField"] svg,
+    [data-testid="stDateInput"] svg,
+    [data-testid="stSelectbox"] svg {{
+        fill: {text_secondary} !important;
+        color: {text_secondary} !important;
+    }}
+
+    [data-testid="stDateInput"] button,
+    [data-testid="stSelectbox"] button {{
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }}
+
+    /* Dropdown menus, Popovers, and Options */
+    div[data-baseweb="popover"],
+    div[data-baseweb="menu"],
+    ul[data-baseweb="menu"],
+    div[role="listbox"],
+    div[data-rac][role="listbox"] {{
+        background-color: {bg_card} !important;
+        border: 1px solid {border_color} !important;
+        border-radius: 12px !important;
+        box-shadow: {card_shadow} !important;
+        padding: 6px !important;
+    }}
+
+    li[data-baseweb="menu-item"],
+    div[role="option"],
+    div[data-rac][role="option"] {{
+        background-color: transparent !important;
+        color: {text_primary} !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        padding: 8px 12px !important;
+        transition: background-color 0.15s ease !important;
+    }}
+
+    li[data-baseweb="menu-item"]:hover,
+    div[role="option"]:hover,
+    div[data-rac][role="option"]:hover,
+    div[role="option"][aria-selected="true"],
+    div[data-rac][role="option"][data-selected="true"] {{
+        background-color: rgba(65, 105, 225, 0.25) !important;
+        color: #FFFFFF !important;
+    }}
+
+    /* Calendar dialog popover */
+    div[data-baseweb="calendar"],
+    div[role="dialog"] div[data-rac] {{
+        background-color: {bg_card} !important;
+        border: 1px solid {border_color} !important;
+        border-radius: 14px !important;
+        color: {text_primary} !important;
+    }}
+
+    /* File Uploader Dropzone */
+    [data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"] {{
+        background-color: {bg_input} !important;
+        border: 1px dashed {border_color} !important;
+        border-radius: 14px !important;
+    }}
+
+    [data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"]:hover {{
+        border-color: {accent_blue} !important;
     }}
 
     /* Dataframe container */
